@@ -8,7 +8,7 @@ public class TurismoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "turismoId")
-    private Integer idTurismo;
+    private Integer turismoId;
 
     @Column(name = "titulo", nullable = false,length = 200)
     private String titulo;
@@ -20,12 +20,12 @@ public class TurismoEntity {
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
 
-    public Integer getIdTurismo() {
-        return idTurismo;
+    public Integer getTurismoId() {
+        return turismoId;
     }
 
-    public void setIdTurismo(Integer idTurismo) {
-        this.idTurismo = idTurismo;
+    public void setTurismoId(Integer turismoId) {
+        this.turismoId = turismoId;
     }
 
     public String getTitulo() {

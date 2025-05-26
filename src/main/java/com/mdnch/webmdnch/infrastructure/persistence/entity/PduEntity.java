@@ -8,7 +8,7 @@ public class PduEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pduId")
-    private Integer idPdu;
+    private Integer pduId;
 
     @Column(name = "titulo", nullable = false,length = 200)
     private String titulo;
@@ -19,12 +19,12 @@ public class PduEntity {
     @Column(name = "linkDocumento", nullable = false)
     private String linkDocumento;
 
-    public Integer getIdPdu() {
-        return idPdu;
+    public Integer getPduId() {
+        return pduId;
     }
 
-    public void setIdPdu(Integer idPdu) {
-        this.idPdu = idPdu;
+    public void setPduId(Integer pduId) {
+        this.pduId = pduId;
     }
 
     public String getTitulo() {

@@ -8,7 +8,7 @@ public class FuncionariosEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "funcionarioId")
-    private Integer idFuncionario;
+    private Integer funcionarioId;
 
     @Column(name = "nombre", nullable = false,length = 100)
     private String nombre;
@@ -25,12 +25,12 @@ public class FuncionariosEntity {
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
 
-    public Integer getIdFuncionario() {
-        return idFuncionario;
+    public Integer getFuncionarioId() {
+        return funcionarioId;
     }
 
-    public void setIdFuncionario(Integer idFuncionario) {
-        this.idFuncionario = idFuncionario;
+    public void setFuncionarioId(Integer funcionarioId) {
+        this.funcionarioId = funcionarioId;
     }
 
     public String getNombre() {

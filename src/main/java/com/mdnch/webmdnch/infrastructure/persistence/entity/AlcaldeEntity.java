@@ -8,7 +8,7 @@ public class AlcaldeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alcaldeId")
-    private Integer idAlcalde;
+    private Integer alcaldeId;
 
     @Column(name = "nombre", nullable = false,length = 50)
     private String nombre;
@@ -43,12 +43,12 @@ public class AlcaldeEntity {
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
 
-    public Integer getIdAlcalde() {
-        return idAlcalde;
+    public Integer getAlcaldeId() {
+        return alcaldeId;
     }
 
-    public void setIdAlcalde(Integer idAlcalde) {
-        this.idAlcalde = idAlcalde;
+    public void setAlcaldeId(Integer alcaldeId) {
+        this.alcaldeId = alcaldeId;
     }
 
     public String getNombre() {
