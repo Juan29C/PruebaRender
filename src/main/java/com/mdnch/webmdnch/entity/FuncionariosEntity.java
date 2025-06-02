@@ -1,4 +1,4 @@
-package com.mdnch.webmdnch.infrastructure.persistence.entity;
+package com.mdnch.webmdnch.entity;
 
 import jakarta.persistence.*;
 
