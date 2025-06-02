@@ -1,4 +1,7 @@
 package com.mdnch.webmdnch.repository;
 
-public interface NoticiasRepository {
+import com.mdnch.webmdnch.entity.NoticiasEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface NoticiasRepository extends JpaRepository<NoticiasEntity, Integer> {
 }
