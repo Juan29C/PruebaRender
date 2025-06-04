@@ -31,7 +31,7 @@ public class FuncionariosController {
         List<FuncionariosDto> funcionarios = funcionariosService.obtenerFuncionarios();
         return ResponseEntity.ok(new ResponseBase<>(true, "Funcionarios obtenidos con éxito", funcionarios));
     }
-
+ 
     @GetMapping("/funcionarios/{id}")
     public ResponseEntity<ResponseBase<FuncionariosDto>> obtenerFuncionario(@PathVariable Integer id) {
         FuncionariosDto funcionario = funcionariosService.obtenerFuncionarioPorId(id);
