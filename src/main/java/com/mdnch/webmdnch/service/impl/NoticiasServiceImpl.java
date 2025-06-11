@@ -73,7 +73,7 @@ public class NoticiasServiceImpl implements NoticiasService {
     @Override
     public void UpdateNoticias(Integer noticiaId, NoticiasDto noticiasDto) {
         NoticiasEntity noticiasEntity = noticiasRepository.findById(noticiaId)
-                .orElseThrow((() -> new RuntimeException("Noticia no encontrada")));
+                .orElseThrow((() -> new ResourceNotFoundException("Noticia no encontrada")));
         noticiasEntity.setTitulo(noticiasDto.getTitulo());
         noticiasEntity.setCategoria(noticiasDto.getCategoria());
         noticiasEntity.setDescripcion(noticiasDto.getDescripcion());

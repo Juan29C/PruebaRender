@@ -21,7 +21,7 @@ public class NoticiasController {
     @Autowired
     NoticiasService noticiasService;
 
-    @PostMapping
+    @PostMapping("noticias/crear")
     public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(@Valid @RequestBody NoticiasDto noticiasDto) {
         NoticiasDto creada = noticiasService.createNoticias(noticiasDto);
         return ResponseEntity.status(201).body(
@@ -30,7 +30,7 @@ public class NoticiasController {
     }
 
 
-    @GetMapping
+    @GetMapping("/noticias")
     public ResponseEntity<ResponseBase<List<NoticiasDto>>> listarNoticias() {
         List<NoticiasDto> noticias = noticiasService.getAllNoticias();
         return ResponseEntity.ok(
@@ -39,7 +39,7 @@ public class NoticiasController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/noticias/{id}")
     public ResponseEntity<ResponseBase<NoticiasDto>> obtenerNoticiaPorId(@PathVariable Integer id) {
         NoticiasDto noticia = noticiasService.findByIdNoticias(id);
         return ResponseEntity.ok(
@@ -48,7 +48,7 @@ public class NoticiasController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("noticias/{id}")
     public ResponseEntity<ResponseBase<Void>> actualizarNoticia(
             @PathVariable Integer id,
             @Valid @RequestBody NoticiasDto noticiasDto) {
@@ -59,7 +59,7 @@ public class NoticiasController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("noticias/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarNoticia(@PathVariable Integer id) {
         noticiasService.deleteNoticias(id);
         return ResponseEntity.ok(

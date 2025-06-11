@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface AlcaldeService {
     AlcaldeDto createAlcalde(AlcaldeDto alcaldeDto);
     List<AlcaldeDto> getAllAlcaldes();
-    Optional<AlcaldeDto> findByIdAlcalde(Integer alcaldeId);
-    Optional<AlcaldeDto> updateAlcalde(Integer alcaldeId, AlcaldeDto alcaldeDto);
-    boolean deleteAlcalde(Integer alcaldeId);
+    AlcaldeDto findByIdAlcalde(Integer alcaldeId);
+    void updateAlcalde(Integer alcaldeId, AlcaldeDto alcaldeDto);
+    void deleteAlcalde(Integer alcaldeId);
 }

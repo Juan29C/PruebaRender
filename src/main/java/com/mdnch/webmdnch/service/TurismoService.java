@@ -8,8 +8,8 @@ import java.util.Optional;
 public interface TurismoService {
     TurismoDto createTurismo(TurismoDto turismoDto);
     List<TurismoDto> getAllTurismos();
-    Optional<TurismoDto> findById(int turismoId);
-    Optional<TurismoDto> updateTurismo(Integer turismoId, TurismoDto turismoDto);
-    boolean deleteTurismo(Integer turismoId);
+    TurismoDto findById(int turismoId);
+    void updateTurismo(Integer turismoId, TurismoDto turismoDto);
+    void deleteTurismo(Integer turismoId);
 
 }
