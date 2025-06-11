@@ -1,40 +1,17 @@
-package com.mdnch.webmdnch.entity;
-
-import jakarta.persistence.*;
+package com.mdnch.webmdnch.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
-@Table(name = "Agendas")
-public class AgendaEntity {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column(name = "agendaId")
+public class AgendaDto {
     private Integer agendaId;
-
-    @Column(name = "titulo", nullable = false, length = 250)
     private String titulo;
-
-    @Column(name = "organizador", nullable = false, length = 150)
     private String organizador;
-
-    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
-
-    @Column(name = "hora", nullable = false)
     private LocalTime hora;
-
-    @Column(name = "descripcion", nullable = false, length = 1000)
     private String descripcion;
-
-    @Column(name = "direccion", nullable = false, length = 500)
     private String direccion;
-
-    @Column(name = "categoria", nullable = false, length = 100)
     private String categoria;
-
-    @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
 
     public Integer getAgendaId() {
@@ -108,4 +85,5 @@ public class AgendaEntity {
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
     }
+
 }

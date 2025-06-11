@@ -1,23 +1,10 @@
-package com.mdnch.webmdnch.entity;
+package com.mdnch.webmdnch.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table (name = "Banner")
-public class BannerEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bannerId")
+public class BannerDto {
     private Integer bannerId;
-
-    @Column(name = "titulo", nullable = false, length = 100)
     private String titulo;
-
-    @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
-
-    @Column(name = "activo", nullable = false)
-    private Boolean activo = true;
+    private Boolean activo;
 
     public Integer getBannerId() {
         return bannerId;
@@ -46,9 +33,7 @@ public class BannerEntity {
     public Boolean getActivo() {
         return activo;
     }
-
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
-public class ContactanosDTO {
+public class ContactanosDto {
+    private Integer contactanosId;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String nombres;
@@ -8,6 +9,14 @@ public class ContactanosDTO {
     private String telefono;
     private String asunto;
     private String mensaje;
+
+    public Integer getContactanosId() {
+        return contactanosId;
+    }
+
+    public void setContactanosId(Integer contactanosId) {
+        this.contactanosId = contactanosId;
+    }
 
     public String getApellidoPaterno() {
         return apellidoPaterno;

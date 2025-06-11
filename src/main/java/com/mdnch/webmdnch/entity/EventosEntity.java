@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 @Entity
 @Table (name = "Eventos")
-public class Eventos {
+public class EventosEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "eventoId")
