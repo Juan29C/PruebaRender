@@ -2,6 +2,7 @@ package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.FuncionariosDto;
 import com.mdnch.webmdnch.entity.FuncionariosEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.repository.FuncionariosRepository;
 import com.mdnch.webmdnch.service.FuncionariosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,9 @@ public class FuncionariosServiceImpl implements FuncionariosService {
     @Override
     public FuncionariosDto obtenerFuncionarioPorId(Integer id) {
         FuncionariosEntity f = funcionariosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado"));
         FuncionariosDto dto = new FuncionariosDto();
+        dto.setFuncionarioId(f.getFuncionarioId());
         dto.setNombre(f.getNombre());
         dto.setApellido(f.getApellido());
         dto.setCargo(f.getCargo());
@@ -61,7 +63,7 @@ public class FuncionariosServiceImpl implements FuncionariosService {
     @Override
     public void actualizarFuncionario(Integer id, FuncionariosDto dto) {
         FuncionariosEntity f = funcionariosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado"));
         f.setNombre(dto.getNombre());
         f.setApellido(dto.getApellido());
         f.setCargo(dto.getCargo());
@@ -73,7 +75,7 @@ public class FuncionariosServiceImpl implements FuncionariosService {
     @Override
     public void eliminarFuncionario(Integer id) {
         if (!funcionariosRepository.existsById(id)) {
-            throw new RuntimeException("Funcionario no encontrado");
+            throw new ResourceNotFoundException("Funcionario no encontrado");
         }
         funcionariosRepository.deleteById(id);
     }
