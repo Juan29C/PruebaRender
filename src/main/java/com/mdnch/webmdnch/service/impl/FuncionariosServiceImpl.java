@@ -51,6 +51,7 @@ public class FuncionariosServiceImpl implements FuncionariosService {
         FuncionariosEntity f = funcionariosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado"));
         FuncionariosDto dto = new FuncionariosDto();
+        dto.setFuncionarioId(f.getFuncionarioId());
         dto.setNombre(f.getNombre());
         dto.setApellido(f.getApellido());
         dto.setCargo(f.getCargo());
