@@ -7,7 +7,13 @@ import com.mdnch.webmdnch.repository.NoticiasRepository;
 import com.mdnch.webmdnch.service.NoticiasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,23 +30,42 @@ public class NoticiasServiceImpl implements NoticiasService {
     }
 
     @Override
-    public NoticiasDto createNoticias(NoticiasDto noticiasDto) {
-        NoticiasEntity noticiasEntity = new NoticiasEntity();
-        noticiasEntity.setTitulo(noticiasDto.getTitulo());
-        noticiasEntity.setCategoria(noticiasDto.getCategoria());
-        noticiasEntity.setDescripcion(noticiasDto.getDescripcion());
-        noticiasEntity.setDireccionImagen(noticiasDto.getDireccionImagen());
+    public NoticiasDto  createNoticias(String titulo, String categoria, String descripcion, MultipartFile imagen) {
+        try {
+            // Crear nombre único para el archivo
+            String nombreArchivo = System.currentTimeMillis() + "_" + imagen.getOriginalFilename();
+            String rutaCarpeta = "imagenes/noticias/"; // asegúrate de que esta carpeta exista
+            File carpeta = new File(rutaCarpeta);
+            if (!carpeta.exists()) {
+                carpeta.mkdirs();
+            }
 
-        NoticiasEntity saved = noticiasRepository.save(noticiasEntity);
+            // Ruta absoluta donde guardar
+            Path rutaArchivo = Paths.get(rutaCarpeta + nombreArchivo);
+            Files.write(rutaArchivo, imagen.getBytes());
 
-        NoticiasDto responseDto = new NoticiasDto();
-        responseDto.setNoticiaId(saved.getNoticiaId());
-        responseDto.setTitulo(saved.getTitulo());
-        responseDto.setCategoria(saved.getCategoria());
-        responseDto.setDescripcion(saved.getDescripcion());
-        responseDto.setDireccionImagen(saved.getDireccionImagen());
-        return responseDto;
+            // Guardar entidad
+            NoticiasEntity noticiasEntity = new NoticiasEntity();
+            noticiasEntity.setTitulo(titulo);
+            noticiasEntity.setCategoria(categoria);
+            noticiasEntity.setDescripcion(descripcion);
+            noticiasEntity.setDireccionImagen("/imagenes/noticias/" + nombreArchivo); // solo la ruta
+
+            NoticiasEntity saved = noticiasRepository.save(noticiasEntity);
+
+            NoticiasDto responseDto = new NoticiasDto();
+            responseDto.setNoticiaId(saved.getNoticiaId());
+            responseDto.setTitulo(saved.getTitulo());
+            responseDto.setCategoria(saved.getCategoria());
+            responseDto.setDescripcion(saved.getDescripcion());
+            responseDto.setDireccionImagen(saved.getDireccionImagen());
+            return responseDto;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la imagen", e);
+        }
     }
+
 
     @Override
     public List<NoticiasDto> getAllNoticias() {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,12 +23,18 @@ public class NoticiasController {
     NoticiasService noticiasService;
 
     @PostMapping("noticias/crear")
-    public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(@Valid @RequestBody NoticiasDto noticiasDto) {
-        NoticiasDto creada = noticiasService.createNoticias(noticiasDto);
+    public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(
+            @RequestParam("titulo") String titulo,
+            @RequestParam("categoria") String categoria,
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("imagen") MultipartFile imagen
+    ) {
+        NoticiasDto creado = noticiasService.createNoticias(titulo, categoria, descripcion, imagen);
         return ResponseEntity.status(201).body(
-                new ResponseBase<>(true, "Noticia creada correctamente", creada)
+                new ResponseBase<>(true, "Noticia creada correctamente", creado)
         );
     }
+
 
 
     @GetMapping("/noticias")
