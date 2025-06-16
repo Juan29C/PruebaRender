@@ -44,7 +44,7 @@ public class NoticiasServiceImpl implements NoticiasService {
         MultipartFile archivo = noticiaForm.getImagen();
 
         String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path rutaDestino = Paths.get(directorioImagenes, nombreArchivo);
+        Path rutaDestino = Paths.get(directorioImagenes + "Noticias", nombreArchivo);
 
         try {
             Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
@@ -57,16 +57,15 @@ public class NoticiasServiceImpl implements NoticiasService {
         entity.setTitulo(noticiaForm.getTitulo());
         entity.setDescripcion(noticiaForm.getDescripcion());
         entity.setCategoria(noticiaForm.getCategoria());
-        entity.setDireccionImagen(nombreArchivo); // Solo el nombre
+        entity.setDireccionImagen(nombreArchivo);
 
         NoticiasEntity saved = noticiasRepository.save(entity);
 
-        // Armar DTO con la URL completa
         NoticiasDto dto = new NoticiasDto();
         dto.setTitulo(saved.getTitulo());
         dto.setDescripcion(saved.getDescripcion());
         dto.setCategoria(saved.getCategoria());
-        dto.setDireccionImagen(urlBase + "noticias/" + saved.getDireccionImagen()); // aquí se arma
+        dto.setDireccionImagen(urlBase + "noticias/" + saved.getDireccionImagen());
 
         return dto;
     }
