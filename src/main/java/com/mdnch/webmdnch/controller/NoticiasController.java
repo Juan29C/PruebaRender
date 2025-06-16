@@ -2,6 +2,7 @@ package com.mdnch.webmdnch.controller;
 
 
 import com.mdnch.webmdnch.dto.NoticiasDto;
+import com.mdnch.webmdnch.dto.request.NoticiasFormRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.NoticiasService;
 import jakarta.validation.Valid;
@@ -23,13 +24,8 @@ public class NoticiasController {
     NoticiasService noticiasService;
 
     @PostMapping("noticias/crear")
-    public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(
-            @RequestParam("titulo") String titulo,
-            @RequestParam("categoria") String categoria,
-            @RequestParam("descripcion") String descripcion,
-            @RequestParam("imagen") MultipartFile imagen
-    ) {
-        NoticiasDto creado = noticiasService.createNoticias(titulo, categoria, descripcion, imagen);
+    public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(@ModelAttribute NoticiasFormRequest noticiasFormRequest) {
+        NoticiasDto creado = noticiasService.createNoticias(noticiasFormRequest);
         return ResponseEntity.status(201).body(
                 new ResponseBase<>(true, "Noticia creada correctamente", creado)
         );

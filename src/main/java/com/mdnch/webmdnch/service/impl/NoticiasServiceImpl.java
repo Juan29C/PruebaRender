@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.NoticiasDto;
+import com.mdnch.webmdnch.dto.request.NoticiasFormRequest;
 import com.mdnch.webmdnch.entity.NoticiasEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.repository.NoticiasRepository;
@@ -30,10 +31,10 @@ public class NoticiasServiceImpl implements NoticiasService {
     }
 
     @Override
-    public NoticiasDto  createNoticias(String titulo, String categoria, String descripcion, MultipartFile imagen) {
+    public NoticiasDto  createNoticias(NoticiasFormRequest noticia) {
         try {
             // Crear nombre único para el archivo
-            String nombreArchivo = System.currentTimeMillis() + "_" + imagen.getOriginalFilename();
+            String nombreArchivo = System.currentTimeMillis() + "_" + noticia.getImagen().getOriginalFilename();
             String rutaCarpeta = "imagenes/noticias/"; // asegúrate de que esta carpeta exista
             File carpeta = new File(rutaCarpeta);
             if (!carpeta.exists()) {
@@ -42,13 +43,13 @@ public class NoticiasServiceImpl implements NoticiasService {
 
             // Ruta absoluta donde guardar
             Path rutaArchivo = Paths.get(rutaCarpeta + nombreArchivo);
-            Files.write(rutaArchivo, imagen.getBytes());
+            Files.write(rutaArchivo, noticia.getImagen().getBytes());
 
             // Guardar entidad
             NoticiasEntity noticiasEntity = new NoticiasEntity();
-            noticiasEntity.setTitulo(titulo);
-            noticiasEntity.setCategoria(categoria);
-            noticiasEntity.setDescripcion(descripcion);
+            noticiasEntity.setTitulo(noticia.getTitulo());
+            noticiasEntity.setCategoria(noticia.getCategoria());
+            noticiasEntity.setDescripcion(noticia.getDescripcion());
             noticiasEntity.setDireccionImagen("/imagenes/noticias/" + nombreArchivo); // solo la ruta
 
             NoticiasEntity saved = noticiasRepository.save(noticiasEntity);
