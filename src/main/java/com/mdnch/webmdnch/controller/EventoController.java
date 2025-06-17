@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.controller;
 
 import com.mdnch.webmdnch.dto.EventoDto;
+import com.mdnch.webmdnch.dto.request.EventoRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.impl.EventoServiceImpl;
 import jakarta.validation.Valid;
@@ -19,11 +20,11 @@ public class EventoController {
     EventoServiceImpl eventoService;
 
     @PostMapping("/evento/registrar")
-    public ResponseEntity<ResponseBase<EventoDto>> resgistrarEventos(@Valid @RequestBody EventoDto eventoDto) {
-        eventoService.registrarEventos(eventoDto);
+    public ResponseEntity<ResponseBase<EventoDto>> registrarEventos(@ModelAttribute EventoRequest request) {
+        EventoDto dto = eventoService.registrarEventos(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Evento registrado con éxito", eventoDto));
+                .body(new ResponseBase<>(true, "Evento registrado con éxito", dto));
     }
 
     @GetMapping("/eventos")

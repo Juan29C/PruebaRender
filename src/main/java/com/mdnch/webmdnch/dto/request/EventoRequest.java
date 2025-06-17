@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -10,7 +12,7 @@ public class EventoRequest {
     private String descripcion;
     private LocalTime hora;
     private String ubicacion;
-    private String direccionImagen;
+    private MultipartFile direccionImagen;
 
     public String getCategoria() {
         return categoria;
@@ -60,11 +62,11 @@ public class EventoRequest {
         this.ubicacion = ubicacion;
     }
 
-    public String getDireccionImagen() {
+    public MultipartFile getDireccionImagen() {
         return direccionImagen;
     }
 
-    public void setDireccionImagen(String direccionImagen) {
+    public void setDireccionImagen(MultipartFile direccionImagen) {
         this.direccionImagen = direccionImagen;
     }
 }

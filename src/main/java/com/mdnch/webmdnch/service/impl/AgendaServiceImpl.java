@@ -45,7 +45,6 @@ public class AgendaServiceImpl implements AgendaService {
         MultipartFile archivo = request.getDireccionImagen();
         String carpetaDestino = directorioImagenes + "Agenda/";
 
-        // Crear carpeta si no existe
         File carpeta = new File(carpetaDestino);
         if (!carpeta.exists()) carpeta.mkdirs();
 

@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class AlcaldeRequest {
     private String nombre;
     private String apellido;
@@ -11,7 +13,7 @@ public class AlcaldeRequest {
     private String experiencia;
     private String reconocimientos;
     private String compromiso;
-    private String direccionImagen;
+    private MultipartFile direccionImagen;
 
     public String getNombre() {
         return nombre;
@@ -93,11 +95,11 @@ public class AlcaldeRequest {
         this.compromiso = compromiso;
     }
 
-    public String getDireccionImagen() {
+    public MultipartFile getDireccionImagen() {
         return direccionImagen;
     }
 
-    public void setDireccionImagen(String direccionImagen) {
+    public void setDireccionImagen(MultipartFile direccionImagen) {
         this.direccionImagen = direccionImagen;
     }
 }

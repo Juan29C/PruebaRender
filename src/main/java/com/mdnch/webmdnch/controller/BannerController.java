@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.controller;
 
 import com.mdnch.webmdnch.dto.BannerDto;
+import com.mdnch.webmdnch.dto.request.BannerRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.impl.BannerServiceImpl;
 import jakarta.validation.Valid;
@@ -19,12 +20,11 @@ public class BannerController {
     @Autowired
     BannerServiceImpl bannerService;
 
-    @PostMapping ("/banner/registrar")
-    public ResponseEntity<ResponseBase<BannerDto>>registrarBanner(@Valid @RequestBody BannerDto bannerDto) {
-        bannerService.registrarBanner(bannerDto);
-
+    @PostMapping("/banner/registrar")
+    public ResponseEntity<ResponseBase<BannerDto>> registrarBanner(@ModelAttribute BannerRequest request) {
+        BannerDto dto = bannerService.registrarBanner(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Banner registrado con éxito", bannerDto));
+                .body(new ResponseBase<>(true, "Banner registrado con éxito", dto));
     }
 
     @GetMapping("/banners")

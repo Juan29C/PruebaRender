@@ -1,31 +1,69 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.BannerDto;
+import com.mdnch.webmdnch.dto.request.BannerRequest;
 import com.mdnch.webmdnch.entity.BannerEntity;
+import com.mdnch.webmdnch.mapper.BannerMapper;
 import com.mdnch.webmdnch.repository.BannerRepository;
 import com.mdnch.webmdnch.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BannerServiceImpl implements BannerService {
 
-    private final BannerRepository bannerRepository;
+    @Value("${imagenes.directorio}")
+    private String directorioImagenes;
+
+    @Value("${imagenes.urlBase}")
+    private String urlBase;
 
     @Autowired
-    public BannerServiceImpl(BannerRepository bannerRepository) {
-        this.bannerRepository = bannerRepository;
-    }
+    private BannerRepository bannerRepository;
+
+    @Autowired
+    private BannerMapper bannerMapper;
 
     @Override
-    public void registrarBanner(BannerDto bannerDTO) {
-        BannerEntity bannerEntity = new BannerEntity();
-        bannerEntity.setTitulo(bannerDTO.getTitulo());
-        bannerEntity.setDireccionImagen(bannerDTO.getDireccionImagen());
-        bannerEntity.setActivo(bannerDTO.getActivo());
-        bannerRepository.save(bannerEntity);
+    public BannerDto registrarBanner(BannerRequest request) {
+        MultipartFile archivo = request.getDireccionImagen();
+        String carpetaDestino = directorioImagenes + "Banners/";
+
+        File carpeta = new File(carpetaDestino);
+        if (!carpeta.exists()) carpeta.mkdirs();
+
+        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
+        Path rutaDestino = Paths.get(carpetaDestino, nombreArchivo);
+
+        try {
+            Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la imagen del banner", e);
+        }
+
+        BannerDto dto = new BannerDto();
+        dto.setTitulo(request.getTitulo());
+        dto.setActivo(request.getActivo());
+        dto.setDireccionImagen(nombreArchivo); // solo nombre interno
+
+        BannerEntity entity = bannerMapper.toEntity(dto);
+        BannerEntity saved = bannerRepository.save(entity);
+
+        BannerDto respuesta = bannerMapper.toDto(saved);
+        respuesta.setDireccionImagen(urlBase + "banners/" + saved.getDireccionImagen());
+
+        return respuesta;
     }
 
     @Override

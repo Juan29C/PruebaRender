@@ -1,8 +1,10 @@
 package com.mdnch.webmdnch.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BannerRequest {
     private String titulo;
-    private String direccionImagen;
+    private MultipartFile  direccionImagen;
     private Boolean activo;
 
     public String getTitulo() {
@@ -13,11 +15,11 @@ public class BannerRequest {
         this.titulo = titulo;
     }
 
-    public String getDireccionImagen() {
+    public MultipartFile getDireccionImagen() {
         return direccionImagen;
     }
 
-    public void setDireccionImagen(String direccionImagen) {
+    public void setDireccionImagen(MultipartFile direccionImagen) {
         this.direccionImagen = direccionImagen;
     }
 

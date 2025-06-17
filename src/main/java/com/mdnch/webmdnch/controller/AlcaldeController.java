@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.controller;
 
 import com.mdnch.webmdnch.dto.AlcaldeDto;
+import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
 import com.mdnch.webmdnch.service.AlcaldeService;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class AlcaldeController {
     private AlcaldeService alcaldeService;
 
     @PostMapping("/alcaldes/crear")
-    public ResponseEntity<ResponseBase<AlcaldeDto>> createAlcalde(@RequestBody AlcaldeDto dto) {
-        AlcaldeDto nuevo = alcaldeService.createAlcalde(dto);
+    public ResponseEntity<ResponseBase<AlcaldeDto>> createAlcalde(@ModelAttribute AlcaldeRequest alcaldeRequest) {
+        AlcaldeDto nuevo = alcaldeService.createAlcalde(alcaldeRequest);
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde creado correctamente", nuevo));
     }
 
