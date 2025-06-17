@@ -1,13 +1,15 @@
 package com.mdnch.webmdnch.dto.request;
 
-public class OrganigramaRequest {
-    private String direccionImagen;
+import org.springframework.web.multipart.MultipartFile;
 
-    public String getDireccionImagen() {
+public class OrganigramaRequest {
+    private MultipartFile direccionImagen;
+
+    public MultipartFile getDireccionImagen() {
         return direccionImagen;
     }
 
-    public void setDireccionImagen(String direccionImagen) {
+    public void setDireccionImagen(MultipartFile direccionImagen) {
         this.direccionImagen = direccionImagen;
     }
 }

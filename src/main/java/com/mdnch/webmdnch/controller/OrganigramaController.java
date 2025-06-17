@@ -1,7 +1,9 @@
 package com.mdnch.webmdnch.controller;
 
 import com.mdnch.webmdnch.dto.OrganigramaDto;
+import com.mdnch.webmdnch.dto.request.OrganigramaRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
+import com.mdnch.webmdnch.service.OrganigramaService;
 import com.mdnch.webmdnch.service.impl.OrganigramaServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +18,14 @@ import java.util.List;
 public class OrganigramaController {
 
     @Autowired
-    OrganigramaServiceImpl organigramaService;
+    OrganigramaService organigramaService;
 
     @PostMapping("/organigrama/registrar")
-    public ResponseEntity<ResponseBase<OrganigramaDto>> registrarOrganigrama(@Valid @RequestBody OrganigramaDto organigramaDto) {
-        organigramaService.registrarOrganigrama(organigramaDto);
+    public ResponseEntity<ResponseBase<OrganigramaDto>> registrarOrganigrama(@ModelAttribute OrganigramaRequest request) {
+        OrganigramaDto dto = organigramaService.registrarOrganigrama(request);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Organigrama registrado con éxito", organigramaDto));
+                .body(new ResponseBase<>(true, "Organigrama registrado con éxito", dto));
     }
 
     @GetMapping("/organigrama")

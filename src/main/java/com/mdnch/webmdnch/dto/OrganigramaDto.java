@@ -1,8 +1,8 @@
 package com.mdnch.webmdnch.dto;
 
-public class OrganigramaDto {
-    private Integer organigramaId;
-    private String direccionImagen;
+    public class OrganigramaDto {
+        private Integer organigramaId;
+        private String direccionImagen;
 
     public Integer getOrganigramaId() {
         return organigramaId;

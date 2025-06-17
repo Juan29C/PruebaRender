@@ -1,7 +1,9 @@
 package com.mdnch.webmdnch.controller;
 
 import com.mdnch.webmdnch.dto.FuncionariosDto;
+import com.mdnch.webmdnch.dto.request.FuncionariosRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
+import com.mdnch.webmdnch.service.FuncionariosService;
 import com.mdnch.webmdnch.service.impl.FuncionariosServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +18,14 @@ import java.util.List;
 public class FuncionariosController {
 
     @Autowired
-    FuncionariosServiceImpl funcionariosService;
+    FuncionariosService funcionariosService;
 
     @PostMapping("/funcionarios/crear")
-    public ResponseEntity<ResponseBase<FuncionariosDto>> registrarFuncionarios(@Valid @RequestBody FuncionariosDto funcionariosDto) {
-        funcionariosService.registrarFuncionarios(funcionariosDto);
+    public ResponseEntity<ResponseBase<FuncionariosDto>> registrarFuncionarios(@ModelAttribute FuncionariosRequest request) {
+        FuncionariosDto dto = funcionariosService.registrarFuncionarios(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Funcionario registrado con exito", funcionariosDto));
+                .body(new ResponseBase<>(true, "Funcionario registrado con éxito", dto));
     }
 
     @GetMapping("/funcionarios")
