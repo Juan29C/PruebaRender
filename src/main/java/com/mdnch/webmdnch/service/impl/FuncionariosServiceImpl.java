@@ -1,36 +1,78 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.FuncionariosDto;
+import com.mdnch.webmdnch.dto.request.FuncionariosRequest;
 import com.mdnch.webmdnch.entity.FuncionariosEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
+import com.mdnch.webmdnch.mapper.FuncionariosMapper;
 import com.mdnch.webmdnch.repository.FuncionariosRepository;
 import com.mdnch.webmdnch.service.FuncionariosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class FuncionariosServiceImpl implements FuncionariosService {
 
+    @Value("${imagenes.directorio}")
+    private String directorioImagenes;
+
+    @Value("${imagenes.urlBase}")
+    private String urlBase;
+
     private final FuncionariosRepository funcionariosRepository;
+    private final FuncionariosMapper funcionariosMapper;
 
     @Autowired
-    public FuncionariosServiceImpl(FuncionariosRepository funcionariosRepository) {
+    public FuncionariosServiceImpl(FuncionariosRepository funcionariosRepository, FuncionariosMapper funcionariosMapper) {
         this.funcionariosRepository = funcionariosRepository;
+        this.funcionariosMapper = funcionariosMapper;
     }
 
     @Override
-    public void registrarFuncionarios(FuncionariosDto funcionariosDto) {
-        FuncionariosEntity funcionariosEntity = new FuncionariosEntity();
-        funcionariosEntity.setNombre(funcionariosDto.getNombre());
-        funcionariosEntity.setApellido(funcionariosDto.getApellido());
-        funcionariosEntity.setCargo(funcionariosDto.getCargo());
-        funcionariosEntity.setContacto(funcionariosDto.getContacto());
-        funcionariosEntity.setDireccionImagen(funcionariosDto.getDireccionImagen());
-        funcionariosRepository.save(funcionariosEntity);
+    public FuncionariosDto registrarFuncionarios(FuncionariosRequest request) {
+        MultipartFile archivo = request.getDireccionImagen();
+        String carpetaDestino = directorioImagenes + "Funcionarios/";
+
+        File carpeta = new File(carpetaDestino);
+        if (!carpeta.exists()) carpeta.mkdirs();
+
+        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
+        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
+
+        try {
+            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar imagen del funcionario", e);
+        }
+
+        FuncionariosDto dto = new FuncionariosDto();
+        dto.setNombre(request.getNombre());
+        dto.setApellido(request.getApellido());
+        dto.setCargo(request.getCargo());
+        dto.setContacto(request.getContacto());
+        dto.setDireccionImagen(nombreArchivo); // nombre archivo simple
+
+        FuncionariosEntity entity = funcionariosMapper.toEntity(dto);
+        FuncionariosEntity saved = funcionariosRepository.save(entity);
+
+        FuncionariosDto respuesta = funcionariosMapper.toDto(saved);
+        respuesta.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());
+
+        return respuesta;
     }
+
 
     @Override
     public List<FuncionariosDto> obtenerFuncionarios() {

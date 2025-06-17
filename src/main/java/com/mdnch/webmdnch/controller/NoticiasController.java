@@ -2,6 +2,7 @@ package com.mdnch.webmdnch.controller;
 
 
 import com.mdnch.webmdnch.dto.NoticiasDto;
+import com.mdnch.webmdnch.dto.request.NoticiasFormRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.NoticiasService;
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,12 +24,13 @@ public class NoticiasController {
     NoticiasService noticiasService;
 
     @PostMapping("noticias/crear")
-    public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(@Valid @RequestBody NoticiasDto noticiasDto) {
-        NoticiasDto creada = noticiasService.createNoticias(noticiasDto);
+    public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(@ModelAttribute NoticiasFormRequest noticiasFormRequest) {
+        NoticiasDto creado = noticiasService.createNoticias(noticiasFormRequest);
         return ResponseEntity.status(201).body(
-                new ResponseBase<>(true, "Noticia creada correctamente", creada)
+                new ResponseBase<>(true, "Noticia creada correctamente", creado)
         );
     }
+
 
 
     @GetMapping("/noticias")

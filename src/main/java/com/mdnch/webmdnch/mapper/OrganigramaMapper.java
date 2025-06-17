@@ -3,9 +3,10 @@ package com.mdnch.webmdnch.mapper;
 import com.mdnch.webmdnch.dto.OrganigramaDto;
 import com.mdnch.webmdnch.entity.OrganigramaEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
-@Component
+@Mapper(componentModel = "spring")
 public interface OrganigramaMapper extends GenericMapper<OrganigramaDto, OrganigramaEntity> {
     @Override
     OrganigramaDto toDto(OrganigramaEntity entity);

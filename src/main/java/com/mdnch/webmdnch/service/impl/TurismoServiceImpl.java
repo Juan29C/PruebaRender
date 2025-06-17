@@ -1,28 +1,73 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.TurismoDto;
+import com.mdnch.webmdnch.dto.request.TurismoRequest;
 import com.mdnch.webmdnch.entity.TurismoEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
+import com.mdnch.webmdnch.mapper.TurismoMapper;
 import com.mdnch.webmdnch.repository.TurismoRepository;
 import com.mdnch.webmdnch.service.TurismoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class TurismoServiceImpl implements TurismoService {
 
+    @Value("${imagenes.directorio}")
+    private String directorioImagenes;
+
+    @Value("${imagenes.urlBase}")
+    private String urlBase;
+
     @Autowired
     private TurismoRepository turismoRepository;
 
+    @Autowired
+    private TurismoMapper turismoMapper;
+
     @Override
-    public TurismoDto createTurismo(TurismoDto dto) {
-        TurismoEntity entity = toEntity(dto);
-        TurismoEntity saved = turismoRepository.save(entity);
-        return toDto(saved);
+    public TurismoDto createTurismo(TurismoRequest request) {
+        MultipartFile archivo = request.getDireccionImagen();
+        String carpetaDestino = directorioImagenes + "Turismo/";
+
+        File carpeta = new File(carpetaDestino);
+        if (!carpeta.exists()) carpeta.mkdirs();
+
+        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
+        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
+
+        try {
+            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar imagen de turismo", e);
+        }
+
+        // Armar DTO
+        TurismoDto dto = new TurismoDto();
+        dto.setTitulo(request.getTitulo());
+        dto.setDescripcion(request.getDescripcion());
+        dto.setDireccionImagen(nombreArchivo); // nombre simple
+
+        // Guardar
+        TurismoEntity saved = turismoRepository.save(turismoMapper.toEntity(dto));
+
+        TurismoDto respuesta = turismoMapper.toDto(saved);
+        respuesta.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen()); // URL pública
+
+        return respuesta;
     }
 
     @Override

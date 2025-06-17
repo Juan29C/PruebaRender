@@ -1,36 +1,77 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.EventoDto;
+import com.mdnch.webmdnch.dto.request.EventoRequest;
 import com.mdnch.webmdnch.entity.EventosEntity;
+import com.mdnch.webmdnch.mapper.EventosMapper;
 import com.mdnch.webmdnch.repository.EventosRepository;
 import com.mdnch.webmdnch.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class EventoServiceImpl implements EventoService {
 
+    @Value("${imagenes.directorio}")
+    private String directorioImagenes;
+
+    @Value("${imagenes.urlBase}")
+    private String urlBase;
+
     private final EventosRepository eventosRepository;
+    private final EventosMapper eventosMapper;
 
     @Autowired
-    public EventoServiceImpl(EventosRepository eventosRepository) {
+    public EventoServiceImpl(EventosRepository eventosRepository, EventosMapper eventosMapper) {
         this.eventosRepository = eventosRepository;
+        this.eventosMapper = eventosMapper;
     }
 
     @Override
-    public void registrarEventos(EventoDto eventoDto) {
-        EventosEntity eventosEntity = new EventosEntity();
-        eventosEntity.setCategoria(eventoDto.getCategoria());
-        eventosEntity.setFecha(eventoDto.getFecha());
-        eventosEntity.setTitulo(eventoDto.getTitulo());
-        eventosEntity.setDescripcion(eventoDto.getDescripcion());
-        eventosEntity.setHora(eventoDto.getHora());
-        eventosEntity.setUbicacion(eventoDto.getUbicacion());
-        eventosEntity.setDireccionImagen(eventoDto.getDireccionImagen());
-        eventosRepository.save(eventosEntity);
+    public EventoDto registrarEventos(EventoRequest request) {
+        MultipartFile archivo = request.getDireccionImagen();
+        String carpetaDestino = directorioImagenes + "Eventos/";
+
+        File carpeta = new File(carpetaDestino);
+        if (!carpeta.exists()) carpeta.mkdirs();
+
+        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
+        Path rutaDestino = Paths.get(carpetaDestino, nombreArchivo);
+
+        try {
+            Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar imagen del evento", e);
+        }
+
+        EventoDto dto = new EventoDto();
+        dto.setCategoria(request.getCategoria());
+        dto.setFecha(request.getFecha());
+        dto.setTitulo(request.getTitulo());
+        dto.setDescripcion(request.getDescripcion());
+        dto.setHora(request.getHora());
+        dto.setUbicacion(request.getUbicacion());
+        dto.setDireccionImagen(nombreArchivo);
+
+        EventosEntity entity = eventosMapper.toEntity(dto);
+        EventosEntity saved = eventosRepository.save(entity);
+
+        EventoDto respuesta = eventosMapper.toDto(saved);
+        respuesta.setDireccionImagen(urlBase + "eventos/" + saved.getDireccionImagen());
+
+        return respuesta;
     }
 
     @Override

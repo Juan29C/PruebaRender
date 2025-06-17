@@ -1,7 +1,9 @@
 package com.mdnch.webmdnch.controller;
 
 import com.mdnch.webmdnch.dto.AgendaDto;
+import com.mdnch.webmdnch.dto.request.AgendaRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
+import com.mdnch.webmdnch.service.AgendaService;
 import com.mdnch.webmdnch.service.impl.AgendaServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +18,13 @@ import java.util.List;
 public class AgendaController {
 
     @Autowired
-    AgendaServiceImpl agendaService;
+    AgendaService agendaService;
 
     @PostMapping("/agenda/registrar")
-    public ResponseEntity<ResponseBase<AgendaDto>> registrarAgenda(@Valid @RequestBody AgendaDto agendaDto) {
-        agendaService.registrarAgenda(agendaDto);
-
+    public ResponseEntity<ResponseBase<AgendaDto>> registrarAgenda(@ModelAttribute AgendaRequest agendaRequest) {
+        AgendaDto creado = agendaService.registrarAgenda(agendaRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Agenda registrada con éxito", agendaDto));
+                .body(new ResponseBase<>(true, "Agenda registrada con éxito", creado));
     }
 
     @GetMapping("/agenda")
