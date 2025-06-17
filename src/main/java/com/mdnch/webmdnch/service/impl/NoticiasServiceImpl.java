@@ -35,24 +35,27 @@ public class NoticiasServiceImpl implements NoticiasService {
     private final NoticiasRepository noticiasRepository;
 
     @Autowired
-    public NoticiasServiceImpl(NoticiasRepository noticiasRepository){
+    public NoticiasServiceImpl(NoticiasRepository noticiasRepository) {
         this.noticiasRepository = noticiasRepository;
     }
 
     @Override
     public NoticiasDto createNoticias(NoticiasFormRequest noticiaForm) {
         MultipartFile archivo = noticiaForm.getImagen();
+        String carpetaDestino = "imagenes/noticias/";
 
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path rutaDestino = Paths.get(directorioImagenes + "Noticias", nombreArchivo);
+        File carpeta = new File(carpetaDestino);
+        if (!carpeta.exists()) carpeta.mkdirs();
+
+        String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
+        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
 
         try {
-            Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar la imagen", e);
         }
 
-        // Guardar entidad
         NoticiasEntity entity = new NoticiasEntity();
         entity.setTitulo(noticiaForm.getTitulo());
         entity.setDescripcion(noticiaForm.getDescripcion());
@@ -79,7 +82,7 @@ public class NoticiasServiceImpl implements NoticiasService {
             dto.setTitulo(n.getTitulo());
             dto.setCategoria(n.getCategoria());
             dto.setDescripcion(n.getDescripcion());
-            dto.setDireccionImagen(n.getDireccionImagen());
+            dto.setDireccionImagen(urlBase + "noticias/" + n.getDireccionImagen());
             return dto;
         }).collect(Collectors.toList());
     }
@@ -94,7 +97,7 @@ public class NoticiasServiceImpl implements NoticiasService {
         noticiasDto.setTitulo(noticiasEntity.getTitulo());
         noticiasDto.setCategoria(noticiasEntity.getCategoria());
         noticiasDto.setDescripcion(noticiasEntity.getDescripcion());
-        noticiasDto.setDireccionImagen(noticiasEntity.getDireccionImagen());
+        noticiasDto.setDireccionImagen(urlBase + "noticias/" + noticiasEntity.getDireccionImagen());
         return noticiasDto;
     }
 

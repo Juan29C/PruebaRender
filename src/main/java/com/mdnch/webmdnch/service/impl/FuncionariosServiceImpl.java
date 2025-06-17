@@ -43,12 +43,13 @@ public class FuncionariosServiceImpl implements FuncionariosService {
     @Override
     public FuncionariosDto registrarFuncionarios(FuncionariosRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino = directorioImagenes + "Funcionarios/";
+//        String carpetaDestino = directorioImagenes + "funcionarios/";
+        String carpetaDestino = "imagenes/funcionarios/";
 
         File carpeta = new File(carpetaDestino);
         if (!carpeta.exists()) carpeta.mkdirs();
 
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
+        String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
         Path ruta = Paths.get(carpetaDestino, nombreArchivo);
 
         try {
@@ -62,7 +63,7 @@ public class FuncionariosServiceImpl implements FuncionariosService {
         dto.setApellido(request.getApellido());
         dto.setCargo(request.getCargo());
         dto.setContacto(request.getContacto());
-        dto.setDireccionImagen(nombreArchivo); // nombre archivo simple
+        dto.setDireccionImagen(nombreArchivo);
 
         FuncionariosEntity entity = funcionariosMapper.toEntity(dto);
         FuncionariosEntity saved = funcionariosRepository.save(entity);
@@ -83,7 +84,7 @@ public class FuncionariosServiceImpl implements FuncionariosService {
             dto.setApellido(f.getApellido());
             dto.setCargo(f.getCargo());
             dto.setContacto(f.getContacto());
-            dto.setDireccionImagen(f.getDireccionImagen());
+            dto.setDireccionImagen(urlBase + "funcionarios/" + f.getDireccionImagen());
             return dto;
         }).collect(Collectors.toList());
     }
@@ -98,7 +99,7 @@ public class FuncionariosServiceImpl implements FuncionariosService {
         dto.setApellido(f.getApellido());
         dto.setCargo(f.getCargo());
         dto.setContacto(f.getContacto());
-        dto.setDireccionImagen(f.getDireccionImagen());
+        dto.setDireccionImagen(urlBase + "funcionarios/" + f.getDireccionImagen());
         return dto;
     }
 
