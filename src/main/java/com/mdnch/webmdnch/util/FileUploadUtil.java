@@ -8,9 +8,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class FileUploadUtil {
     public static String guardarArchivo(MultipartFile archivo, String carpetaDestino){
+        if (archivo == null || archivo.isEmpty()) {
+            throw new IllegalArgumentException("El archivo es nulo o está vacío");
+        }
+
         File carpeta = new File(carpetaDestino);
         if (!carpeta.exists()) carpeta.mkdirs();
 
@@ -24,5 +30,48 @@ public class FileUploadUtil {
         }
 
         return nombreArchivo;
+    }
+
+    // Para EDITAR: evita guardar si ya existe el mismo nombre
+    public static String guardarArchivo(MultipartFile archivo, String carpetaDestino, String nombreActual) {
+        if (archivo == null || archivo.isEmpty()) {
+            return nombreActual;
+        }
+
+        File archivoExistente = new File(carpetaDestino + nombreActual);
+
+        try {
+            if (archivoExistente.exists()) {
+                byte[] nuevoHash = getHash(archivo.getBytes());
+                byte[] existenteHash = getHash(Files.readAllBytes(archivoExistente.toPath()));
+
+                if (MessageDigest.isEqual(nuevoHash, existenteHash)) {
+                    return nombreActual; // El contenido es el mismo, no se vuelve a guardar
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error al comparar archivos", e);
+        }
+
+        // Si no son iguales, guardar nuevo
+        String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
+        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
+
+        try {
+            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar el archivo", e);
+        }
+
+        return nombreArchivo;
+    }
+
+    private static byte[] getHash(byte[] data) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return digest.digest(data);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error al generar hash del archivo", e);
+        }
     }
 }

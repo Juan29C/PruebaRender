@@ -90,16 +90,34 @@ public class FuncionariosServiceImpl implements FuncionariosService {
     }
 
     @Override
-    public void actualizarFuncionario(Integer id, FuncionariosDto dto) {
-        FuncionariosEntity f = funcionariosRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado"));
-        f.setNombre(dto.getNombre());
-        f.setApellido(dto.getApellido());
-        f.setCargo(dto.getCargo());
-        f.setContacto(dto.getContacto());
-        f.setDireccionImagen(dto.getDireccionImagen());
-        funcionariosRepository.save(f);
+    public FuncionariosDto actualizarFuncionario(Integer id, FuncionariosRequest request) {
+        FuncionariosEntity entity = funcionariosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado con ID: " + id));
+
+        entity.setNombre(request.getNombre());
+        entity.setApellido(request.getApellido());
+        entity.setCargo(request.getCargo());
+        entity.setContacto(request.getContacto());
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/funcionarios/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        FuncionariosEntity saved = funcionariosRepository.save(entity);
+
+        FuncionariosDto respuesta = funcionariosMapper.toDto(saved);
+        respuesta.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());
+
+        return respuesta;
     }
+
 
     @Override
     public void eliminarFuncionario(Integer id) {

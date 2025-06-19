@@ -43,8 +43,8 @@ public class FuncionariosController {
     @PutMapping("/funcionarios/{id}")
     public ResponseEntity<ResponseBase<FuncionariosDto>> actualizarFuncionario(
             @PathVariable Integer id,
-            @Valid @RequestBody FuncionariosDto funcionariosDto) {
-        funcionariosService.actualizarFuncionario(id, funcionariosDto);
+            @Valid @ModelAttribute FuncionariosRequest request) {
+        FuncionariosDto funcionariosDto = funcionariosService.actualizarFuncionario(id, request);
         return ResponseEntity.ok(new ResponseBase<>(true, "Funcionario actualizado con éxito", funcionariosDto));
     }
 

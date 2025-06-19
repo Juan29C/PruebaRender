@@ -9,7 +9,7 @@ public interface FuncionariosService {
     FuncionariosDto registrarFuncionarios(FuncionariosRequest request) ;
     List<FuncionariosDto> obtenerFuncionarios();
     FuncionariosDto obtenerFuncionarioPorId(Integer id);
-    void actualizarFuncionario(Integer id, FuncionariosDto funcionariosDto);
+    FuncionariosDto actualizarFuncionario(Integer id, FuncionariosRequest funcionariosRequest);
     void eliminarFuncionario(Integer id);
 
 }
