@@ -6,6 +6,7 @@ import com.mdnch.webmdnch.entity.BannerEntity;
 import com.mdnch.webmdnch.mapper.BannerMapper;
 import com.mdnch.webmdnch.repository.BannerRepository;
 import com.mdnch.webmdnch.service.BannerService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,6 @@ import java.util.UUID;
 @Service
 public class BannerServiceImpl implements BannerService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase;
 
@@ -38,24 +36,13 @@ public class BannerServiceImpl implements BannerService {
     @Override
     public BannerDto registrarBanner(BannerRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino = directorioImagenes + "Banners/";
-
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path rutaDestino = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la imagen del banner", e);
-        }
+        String carpetaDestino = "imagenes/banners/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
         BannerDto dto = new BannerDto();
         dto.setTitulo(request.getTitulo());
         dto.setActivo(request.getActivo());
-        dto.setDireccionImagen(nombreArchivo); // solo nombre interno
+        dto.setDireccionImagen(nombreArchivo);
 
         BannerEntity entity = bannerMapper.toEntity(dto);
         BannerEntity saved = bannerRepository.save(entity);

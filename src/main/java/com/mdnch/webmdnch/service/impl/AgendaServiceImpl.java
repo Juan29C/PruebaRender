@@ -6,6 +6,7 @@ import com.mdnch.webmdnch.entity.AgendaEntity;
 import com.mdnch.webmdnch.mapper.AgendaMapper;
 import com.mdnch.webmdnch.repository.AgendaRepository;
 import com.mdnch.webmdnch.service.AgendaService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class AgendaServiceImpl implements AgendaService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase; // Por ejemplo: http://localhost:8080/imagenes
 
@@ -43,22 +41,9 @@ public class AgendaServiceImpl implements AgendaService {
     @Override
     public AgendaDto registrarAgenda(AgendaRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino = directorioImagenes + "Agenda/";
+        String carpetaDestino = "imagenes/agenda/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        // Guardar imagen
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path rutaDestino = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la imagen de agenda", e);
-        }
-
-        // Crear entidad manualmente solo para setear la imagen
         AgendaDto dto = new AgendaDto();
         dto.setTitulo(request.getTitulo());
         dto.setOrganizador(request.getOrganizador());
@@ -67,13 +52,11 @@ public class AgendaServiceImpl implements AgendaService {
         dto.setDescripcion(request.getDescripcion());
         dto.setDireccion(request.getDireccion());
         dto.setCategoria(request.getCategoria());
-        dto.setDireccionImagen(nombreArchivo); // importante: solo el nombre, no la URL
+        dto.setDireccionImagen(nombreArchivo);
 
-        // Convertir a entidad con mapper
         AgendaEntity entity = agendaMapper.toEntity(dto);
         AgendaEntity saved = agendaRepository.save(entity);
 
-        // Convertir a DTO para respuesta
         AgendaDto respuesta = agendaMapper.toDto(saved);
         respuesta.setDireccionImagen(urlBase + "agenda/" + saved.getDireccionImagen()); // armamos la URL aquí
 

@@ -6,6 +6,7 @@ import com.mdnch.webmdnch.entity.EventosEntity;
 import com.mdnch.webmdnch.mapper.EventosMapper;
 import com.mdnch.webmdnch.repository.EventosRepository;
 import com.mdnch.webmdnch.service.EventoService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class EventoServiceImpl implements EventoService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase;
 
@@ -42,19 +40,8 @@ public class EventoServiceImpl implements EventoService {
     @Override
     public EventoDto registrarEventos(EventoRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino = directorioImagenes + "Eventos/";
-
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path rutaDestino = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar imagen del evento", e);
-        }
+        String carpetaDestino = "imagenes/eventos/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
         EventoDto dto = new EventoDto();
         dto.setCategoria(request.getCategoria());

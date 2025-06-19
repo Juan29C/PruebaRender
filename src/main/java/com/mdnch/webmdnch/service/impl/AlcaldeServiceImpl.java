@@ -7,6 +7,7 @@ import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.AlcaldeMapper;
 import com.mdnch.webmdnch.repository.AlcaldeRepository;
 import com.mdnch.webmdnch.service.AlcaldeService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class AlcaldeServiceImpl implements AlcaldeService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase;
 
@@ -40,23 +38,9 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     @Override
     public AlcaldeDto createAlcalde(AlcaldeRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino = directorioImagenes + "Alcaldes/";
+        String carpetaDestino =  "imagenes/alcaldes/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        // Crear carpeta si no existe
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        // Guardar imagen
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar imagen del alcalde", e);
-        }
-
-        // Armar el DTO solo con el nombre de la imagen (no la URL completa)
         AlcaldeDto dto = new AlcaldeDto();
         dto.setNombre(request.getNombre());
         dto.setApellido(request.getApellido());
@@ -68,13 +52,11 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         dto.setExperiencia(request.getExperiencia());
         dto.setReconocimientos(request.getReconocimientos());
         dto.setCompromiso(request.getCompromiso());
-        dto.setDireccionImagen(nombreArchivo); // Guardamos solo el nombre
+        dto.setDireccionImagen(nombreArchivo);
 
-        // Guardar en la base de datos
         AlcaldeEntity entity = alcaldeMapper.toEntity(dto);
         AlcaldeEntity saved = repository.save(entity);
 
-        // Armar respuesta con la URL completa
         AlcaldeDto respuesta = alcaldeMapper.toDto(saved);
         respuesta.setDireccionImagen(urlBase + "alcaldes/" + saved.getDireccionImagen()); // URL lista para el frontend
 

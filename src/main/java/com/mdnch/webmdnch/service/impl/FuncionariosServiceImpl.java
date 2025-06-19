@@ -7,6 +7,7 @@ import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.FuncionariosMapper;
 import com.mdnch.webmdnch.repository.FuncionariosRepository;
 import com.mdnch.webmdnch.service.FuncionariosService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class FuncionariosServiceImpl implements FuncionariosService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase;
 
@@ -43,20 +41,8 @@ public class FuncionariosServiceImpl implements FuncionariosService {
     @Override
     public FuncionariosDto registrarFuncionarios(FuncionariosRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-//        String carpetaDestino = directorioImagenes + "funcionarios/";
         String carpetaDestino = "imagenes/funcionarios/";
-
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
-        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar imagen del funcionario", e);
-        }
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
         FuncionariosDto dto = new FuncionariosDto();
         dto.setNombre(request.getNombre());

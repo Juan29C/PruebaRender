@@ -4,8 +4,10 @@ import com.mdnch.webmdnch.dto.NoticiasDto;
 import com.mdnch.webmdnch.dto.request.NoticiasFormRequest;
 import com.mdnch.webmdnch.entity.NoticiasEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
+import com.mdnch.webmdnch.mapper.NoticiasMapper;
 import com.mdnch.webmdnch.repository.NoticiasRepository;
 import com.mdnch.webmdnch.service.NoticiasService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,35 +28,21 @@ import java.util.stream.Collectors;
 @Service
 public class NoticiasServiceImpl implements NoticiasService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase; // Por ejemplo: http://localhost:8080/imagenes
 
-    private final NoticiasRepository noticiasRepository;
+    @Autowired
+    private NoticiasMapper noticiasMapper;
 
     @Autowired
-    public NoticiasServiceImpl(NoticiasRepository noticiasRepository) {
-        this.noticiasRepository = noticiasRepository;
-    }
+    private NoticiasRepository noticiasRepository;
+
 
     @Override
     public NoticiasDto createNoticias(NoticiasFormRequest noticiaForm) {
         MultipartFile archivo = noticiaForm.getImagen();
         String carpetaDestino = "imagenes/noticias/";
-
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
-        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la imagen", e);
-        }
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
         NoticiasEntity entity = new NoticiasEntity();
         entity.setTitulo(noticiaForm.getTitulo());
@@ -64,10 +52,7 @@ public class NoticiasServiceImpl implements NoticiasService {
 
         NoticiasEntity saved = noticiasRepository.save(entity);
 
-        NoticiasDto dto = new NoticiasDto();
-        dto.setTitulo(saved.getTitulo());
-        dto.setDescripcion(saved.getDescripcion());
-        dto.setCategoria(saved.getCategoria());
+        NoticiasDto dto = noticiasMapper.toDto(saved);
         dto.setDireccionImagen(urlBase + "noticias/" + saved.getDireccionImagen());
 
         return dto;

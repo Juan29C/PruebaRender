@@ -7,6 +7,7 @@ import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.TurismoMapper;
 import com.mdnch.webmdnch.repository.TurismoRepository;
 import com.mdnch.webmdnch.service.TurismoService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,9 +27,6 @@ import java.util.stream.Collectors;
 @Service
 public class TurismoServiceImpl implements TurismoService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase;
 
@@ -41,31 +39,18 @@ public class TurismoServiceImpl implements TurismoService {
     @Override
     public TurismoDto createTurismo(TurismoRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino = directorioImagenes + "Turismo/";
+        String carpetaDestino = "imagenes/turismo/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar imagen de turismo", e);
-        }
-
-        // Armar DTO
         TurismoDto dto = new TurismoDto();
         dto.setTitulo(request.getTitulo());
         dto.setDescripcion(request.getDescripcion());
-        dto.setDireccionImagen(nombreArchivo); // nombre simple
+        dto.setDireccionImagen(nombreArchivo);
 
-        // Guardar
         TurismoEntity saved = turismoRepository.save(turismoMapper.toEntity(dto));
 
         TurismoDto respuesta = turismoMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen()); // URL pública
+        respuesta.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen());
 
         return respuesta;
     }

@@ -6,6 +6,7 @@ import com.mdnch.webmdnch.entity.OrganigramaEntity;
 import com.mdnch.webmdnch.mapper.OrganigramaMapper;
 import com.mdnch.webmdnch.repository.OrganigramaRepository;
 import com.mdnch.webmdnch.service.OrganigramaService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class OrganigramaServiceImpl implements OrganigramaService {
 
-    @Value("${imagenes.directorio}")
-    private String directorioImagenes;
-
     @Value("${imagenes.urlBase}")
     private String urlBase;
 
@@ -41,21 +39,9 @@ public class OrganigramaServiceImpl implements OrganigramaService {
     @Override
     public OrganigramaDto registrarOrganigrama(OrganigramaRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino = directorioImagenes + "Organigrama/";
+        String carpetaDestino = "imagenes/organigrama/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
-        String nombreArchivo = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
-        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
-
-        try {
-            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la imagen del organigrama", e);
-        }
-
-        // Crear DTO
         OrganigramaDto dto = new OrganigramaDto();
         dto.setDireccionImagen(nombreArchivo);
 
