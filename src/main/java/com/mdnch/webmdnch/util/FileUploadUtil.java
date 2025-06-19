@@ -32,7 +32,6 @@ public class FileUploadUtil {
         return nombreArchivo;
     }
 
-    // Para EDITAR: evita guardar si ya existe el mismo nombre
     public static String guardarArchivo(MultipartFile archivo, String carpetaDestino, String nombreActual) {
         if (archivo == null || archivo.isEmpty()) {
             return nombreActual;
@@ -46,7 +45,7 @@ public class FileUploadUtil {
                 byte[] existenteHash = getHash(Files.readAllBytes(archivoExistente.toPath()));
 
                 if (MessageDigest.isEqual(nuevoHash, existenteHash)) {
-                    return nombreActual; // El contenido es el mismo, no se vuelve a guardar
+                    return nombreActual;
                 }
             }
         } catch (IOException e) {

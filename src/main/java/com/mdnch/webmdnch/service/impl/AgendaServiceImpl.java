@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class AgendaServiceImpl implements AgendaService {
 
     @Value("${imagenes.urlBase}")
-    private String urlBase; // Por ejemplo: http://localhost:8080/imagenes
+    private String urlBase;
 
     private final AgendaRepository agendaRepository;
 
@@ -58,7 +58,7 @@ public class AgendaServiceImpl implements AgendaService {
         AgendaEntity saved = agendaRepository.save(entity);
 
         AgendaDto respuesta = agendaMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "agenda/" + saved.getDireccionImagen()); // armamos la URL aquí
+        respuesta.setDireccionImagen(urlBase + "agenda/" + saved.getDireccionImagen());
 
         return respuesta;
     }
