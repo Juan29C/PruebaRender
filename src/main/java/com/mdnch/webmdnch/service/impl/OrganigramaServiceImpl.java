@@ -74,12 +74,28 @@ public class OrganigramaServiceImpl implements OrganigramaService {
     }
 
     @Override
-    public void actualizarOrganigrama(Integer id, OrganigramaDto organigramaDTO) {
-        OrganigramaEntity organigramaEntity = organigramaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Organigrama no encontrado"));
-        organigramaEntity.setDireccionImagen(organigramaDTO.getDireccionImagen());
-        organigramaRepository.save(organigramaEntity);
+    public OrganigramaDto actualizarOrganigrama(Integer id, OrganigramaRequest request) {
+        OrganigramaEntity entity = organigramaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Organigrama no encontrado con ID: " + id));
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/organigrama/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        OrganigramaEntity saved = organigramaRepository.save(entity);
+        OrganigramaDto dto = organigramaMapper.toDto(saved);
+        dto.setDireccionImagen(urlBase + "organigrama/" + saved.getDireccionImagen());
+
+        return dto;
     }
+
 
     @Override
     public void eliminarOrganigrama(Integer id) {

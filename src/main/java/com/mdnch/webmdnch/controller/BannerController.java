@@ -42,9 +42,10 @@ public class BannerController {
     @PutMapping("/banners/{id}")
     public ResponseEntity<ResponseBase<BannerDto>> actualizarBanner(
             @PathVariable Integer id,
-            @Valid @RequestBody BannerDto bannerDto) {
-        bannerService.actualizarBanner(id, bannerDto);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", bannerDto));
+            @ModelAttribute BannerRequest bannerRequest) {
+
+        BannerDto actualizado = bannerService.actualizarBanner(id, bannerRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", actualizado));
     }
 
     @DeleteMapping("/banners/{id}")

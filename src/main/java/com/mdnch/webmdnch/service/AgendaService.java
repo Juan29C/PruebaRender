@@ -9,6 +9,6 @@ public interface AgendaService {
     AgendaDto  registrarAgenda(AgendaRequest agendaDTO);
     List<AgendaDto> obtenerAgendas();
     AgendaDto obtenerAgendaPorId(Integer id);
-    void actualizarAgenda(Integer id, AgendaDto agendaDTO);
+    AgendaDto actualizarAgenda(Integer id, AgendaRequest request);
     void eliminarAgenda(Integer id);
 }

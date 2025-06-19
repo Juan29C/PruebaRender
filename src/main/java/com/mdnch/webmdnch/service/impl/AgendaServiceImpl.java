@@ -99,19 +99,37 @@ public class AgendaServiceImpl implements AgendaService {
     }
 
     @Override
-    public void actualizarAgenda(Integer id, AgendaDto agendaDTO) {
-        AgendaEntity a = agendaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agenda no encontrada"));
-        a.setTitulo(agendaDTO.getTitulo());
-        a.setOrganizador(agendaDTO.getOrganizador());
-        a.setFecha(agendaDTO.getFecha());
-        a.setHora(agendaDTO.getHora());
-        a.setDescripcion(agendaDTO.getDescripcion());
-        a.setDireccion(agendaDTO.getDireccion());
-        a.setCategoria(agendaDTO.getCategoria());
-        a.setDireccionImagen(agendaDTO.getDireccionImagen());
-        agendaRepository.save(a);
+    public AgendaDto actualizarAgenda(Integer id, AgendaRequest request) {
+        AgendaEntity entity = agendaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Agenda no encontrada con ID: " + id));
+
+        entity.setTitulo(request.getTitulo());
+        entity.setOrganizador(request.getOrganizador());
+        entity.setFecha(request.getFecha());
+        entity.setHora(request.getHora());
+        entity.setDescripcion(request.getDescripcion());
+        entity.setDireccion(request.getDireccion());
+        entity.setCategoria(request.getCategoria());
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/agenda/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        AgendaEntity saved = agendaRepository.save(entity);
+
+        AgendaDto dto = agendaMapper.toDto(entity);
+        dto.setDireccionImagen(urlBase + "agenda/" + saved.getDireccionImagen());
+
+        return dto;
     }
+
 
     @Override
     public void eliminarAgenda(Integer id) {

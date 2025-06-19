@@ -11,6 +11,6 @@ public interface NoticiasService {
     NoticiasDto createNoticias(NoticiasFormRequest noticiasFormRequest);
     List<NoticiasDto> getAllNoticias();
     NoticiasDto findByIdNoticias(Integer noticiasId);
-    void UpdateNoticias(Integer noticiaId, NoticiasDto noticiasDto);
+    NoticiasDto updateNoticias(Integer noticiaId, NoticiasFormRequest request);
     void deleteNoticias(Integer noticiasId);
 }

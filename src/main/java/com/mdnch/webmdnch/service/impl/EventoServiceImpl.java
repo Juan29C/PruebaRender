@@ -94,17 +94,33 @@ public class EventoServiceImpl implements EventoService {
     }
 
     @Override
-    public void actualizarEventos(Integer id, EventoDto eventoDto) {
-        EventosEntity eventosEntity = eventosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
-        eventosEntity.setCategoria(eventoDto.getCategoria());
-        eventosEntity.setFecha(eventoDto.getFecha());
-        eventosEntity.setTitulo(eventoDto.getTitulo());
-        eventosEntity.setDescripcion(eventoDto.getDescripcion());
-        eventosEntity.setHora(eventoDto.getHora());
-        eventosEntity.setUbicacion(eventoDto.getUbicacion());
-        eventosEntity.setDireccionImagen(eventoDto.getDireccionImagen());
-        eventosRepository.save(eventosEntity);
+    public EventoDto actualizarEventos(Integer id, EventoRequest request) {
+        EventosEntity entity = eventosRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado con ID: " + id));
+
+        entity.setCategoria(request.getCategoria());
+        entity.setFecha(request.getFecha());
+        entity.setTitulo(request.getTitulo());
+        entity.setDescripcion(request.getDescripcion());
+        entity.setHora(request.getHora());
+        entity.setUbicacion(request.getUbicacion());
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/eventos/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        EventosEntity saved = eventosRepository.save(entity);
+        EventoDto dto = eventosMapper.toDto(saved);
+        dto.setDireccionImagen(urlBase + "eventos/" + saved.getDireccionImagen());
+
+        return dto;
     }
 
     @Override

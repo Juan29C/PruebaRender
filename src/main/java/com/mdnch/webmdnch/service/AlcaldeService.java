@@ -10,6 +10,6 @@ public interface AlcaldeService {
     AlcaldeDto createAlcalde(AlcaldeRequest alcaldeRequest);
     List<AlcaldeDto> getAllAlcaldes();
     AlcaldeDto findByIdAlcalde(Integer alcaldeId);
-    void updateAlcalde(Integer alcaldeId, AlcaldeDto alcaldeDto);
+    AlcaldeDto updateAlcalde(Integer alcaldeId, AlcaldeRequest request);
     void deleteAlcalde(Integer alcaldeId);
 }

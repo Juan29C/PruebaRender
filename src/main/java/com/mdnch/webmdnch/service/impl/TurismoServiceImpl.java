@@ -71,15 +71,29 @@ public class TurismoServiceImpl implements TurismoService {
     }
 
     @Override
-    public void updateTurismo(Integer turismoId, TurismoDto dto) {
+    public TurismoDto updateTurismo(Integer turismoId, TurismoRequest request) {
         TurismoEntity entity = turismoRepository.findById(turismoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Turismo no encontrado con ID: " + turismoId));
 
-        entity.setTitulo(dto.getTitulo());
-        entity.setDescripcion(dto.getDescripcion());
-        entity.setDireccionImagen(dto.getDireccionImagen());
+        entity.setTitulo(request.getTitulo());
+        entity.setDescripcion(request.getDescripcion());
 
-        turismoRepository.save(entity);
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/turismo/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        TurismoEntity saved = turismoRepository.save(entity);
+        TurismoDto dto = turismoMapper.toDto(saved);
+        dto.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen());
+
+        return dto;
     }
 
     @Override

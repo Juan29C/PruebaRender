@@ -42,9 +42,10 @@ public class EventoController {
     @PutMapping("/eventos/{id}")
     public ResponseEntity<ResponseBase<EventoDto>> actualizarEventos(
             @PathVariable Integer id,
-            @Valid @RequestBody EventoDto eventoDto) {
-        eventoService.actualizarEventos(id, eventoDto);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Evento actualizado con éxito", eventoDto));
+            @ModelAttribute EventoRequest eventoRequest) {
+
+        EventoDto actualizado = eventoService.actualizarEventos(id, eventoRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Evento actualizado con éxito", actualizado));
     }
 
     @DeleteMapping("/eventos/{id}")

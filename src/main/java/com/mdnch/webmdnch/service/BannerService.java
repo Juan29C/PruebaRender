@@ -9,6 +9,6 @@ public interface BannerService {
     BannerDto registrarBanner(BannerRequest request);
     List<BannerDto> obtenerBanners();
     BannerDto obtenerBannerPorId(Integer id);
-    void actualizarBanner(Integer id, BannerDto bannerDTO);
+    BannerDto actualizarBanner(Integer id, BannerRequest request);
     void eliminarBanner(Integer id);
 }

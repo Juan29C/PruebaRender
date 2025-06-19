@@ -40,10 +40,14 @@ public class TurismoController {
     }
 
     @PutMapping("/turismo/{id}")
-    public ResponseEntity<ResponseBase<Void>> update(@PathVariable Integer id, @RequestBody TurismoDto dto) {
-        turismoService.updateTurismo(id, dto);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Turismo actualizado correctamente", null));
+    public ResponseEntity<ResponseBase<TurismoDto>> update(
+            @PathVariable Integer id,
+            @ModelAttribute TurismoRequest request) {
+
+        TurismoDto actualizado = turismoService.updateTurismo(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Turismo actualizado correctamente", actualizado));
     }
+
 
     @DeleteMapping("/turismo/{id}")
     public ResponseEntity<ResponseBase<Void>> delete(@PathVariable Integer id) {

@@ -78,13 +78,28 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public void actualizarBanner(Integer id, BannerDto bannerDTO) {
-        BannerEntity bannerEntity = bannerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Banner no encontrado"));
-        bannerEntity.setTitulo(bannerDTO.getTitulo());
-        bannerEntity.setDireccionImagen(bannerDTO.getDireccionImagen());
-        bannerEntity.setActivo(bannerDTO.getActivo());
-        bannerRepository.save(bannerEntity);
+    public BannerDto actualizarBanner(Integer id, BannerRequest request) {
+        BannerEntity entity = bannerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Banner no encontrado con ID: " + id));
+
+        entity.setTitulo(request.getTitulo());
+        entity.setActivo(request.getActivo());
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/banners/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        BannerEntity saved = bannerRepository.save(entity);
+        BannerDto dto = bannerMapper.toDto(saved);
+        dto.setDireccionImagen(urlBase + "banner/" + saved.getDireccionImagen());
+        return dto;
     }
 
     @Override

@@ -43,10 +43,12 @@ public class OrganigramaController {
     @PutMapping("/organigrama/{id}")
     public ResponseEntity<ResponseBase<OrganigramaDto>> actualizarOrganigrama(
             @PathVariable Integer id,
-            @Valid @RequestBody OrganigramaDto organigramaDto) {
-        organigramaService.actualizarOrganigrama(id, organigramaDto);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Organigrama actualizado con éxito", organigramaDto));
+            @ModelAttribute OrganigramaRequest request) {
+
+        OrganigramaDto actualizado = organigramaService.actualizarOrganigrama(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Organigrama actualizado con éxito", actualizado));
     }
+
 
     @DeleteMapping("/organigrama/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarOrganigrama(@PathVariable Integer id) {

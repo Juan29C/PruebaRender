@@ -79,24 +79,38 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     }
 
     @Override
-    public void updateAlcalde(Integer id, AlcaldeDto dto) {
+    public AlcaldeDto updateAlcalde(Integer id, AlcaldeRequest request) {
         AlcaldeEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
 
-        entity.setNombre(dto.getNombre());
-        entity.setApellido(dto.getApellido());
-        entity.setDescripcion(dto.getDescripcion());
-        entity.setNumeroObras(dto.getNumeroObras());
-        entity.setPresupuesto(dto.getPresupuesto());
-        entity.setAprobacionCiudadana(dto.getAprobacionCiudadana());
-        entity.setAtencionCiudadana(dto.getAtencionCiudadana());
-        entity.setExperiencia(dto.getExperiencia());
-        entity.setReconocimientos(dto.getReconocimientos());
-        entity.setCompromiso(dto.getCompromiso());
-        entity.setDireccionImagen(dto.getDireccionImagen());
+        entity.setNombre(request.getNombre());
+        entity.setApellido(request.getApellido());
+        entity.setDescripcion(request.getDescripcion());
+        entity.setNumeroObras(request.getNumeroObras());
+        entity.setPresupuesto(request.getPresupuesto());
+        entity.setAprobacionCiudadana(request.getAprobacionCiudadana());
+        entity.setAtencionCiudadana(request.getAtencionCiudadana());
+        entity.setExperiencia(request.getExperiencia());
+        entity.setReconocimientos(request.getReconocimientos());
+        entity.setCompromiso(request.getCompromiso());
 
-        repository.save(entity);
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/alcaldes/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        AlcaldeEntity saved = repository.save(entity);
+        AlcaldeDto dto = alcaldeMapper.toDto(saved);
+        dto.setDireccionImagen(urlBase + "alcaldes/" + saved.getDireccionImagen());
+        return dto;
     }
+
 
     @Override
     public void deleteAlcalde(Integer id) {

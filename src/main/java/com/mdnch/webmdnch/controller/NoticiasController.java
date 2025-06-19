@@ -52,14 +52,13 @@ public class NoticiasController {
 
 
     @PutMapping("noticias/{id}")
-    public ResponseEntity<ResponseBase<Void>> actualizarNoticia(
+    public ResponseEntity<ResponseBase<NoticiasDto>> actualizarNoticia(
             @PathVariable Integer id,
-            @Valid @RequestBody NoticiasDto noticiasDto) {
-        noticiasService.UpdateNoticias(id, noticiasDto);
-        return ResponseEntity.ok(
-                new ResponseBase<>(true, "Noticia actualizada correctamente", null)
-        );
+            @ModelAttribute NoticiasFormRequest request) {
+        NoticiasDto actualizado = noticiasService.updateNoticias(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Noticia actualizada correctamente", actualizado));
     }
+
 
 
     @DeleteMapping("noticias/{id}")

@@ -42,9 +42,10 @@ public class AgendaController {
     @PutMapping("/agenda/{id}")
     public ResponseEntity<ResponseBase<AgendaDto>> actualizarAgenda(
             @PathVariable Integer id,
-            @Valid @RequestBody AgendaDto agendaDto) {
-        agendaService.actualizarAgenda(id, agendaDto);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Fecha actualizada con éxito", agendaDto));
+            @ModelAttribute AgendaRequest agendaRequest) {
+
+        AgendaDto actualizado = agendaService.actualizarAgenda(id, agendaRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Agenda actualizada con éxito", actualizado));
     }
 
     @DeleteMapping("/agenda/{id}")

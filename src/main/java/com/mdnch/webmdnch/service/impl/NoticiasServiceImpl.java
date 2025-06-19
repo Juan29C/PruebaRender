@@ -87,15 +87,32 @@ public class NoticiasServiceImpl implements NoticiasService {
     }
 
     @Override
-    public void UpdateNoticias(Integer noticiaId, NoticiasDto noticiasDto) {
-        NoticiasEntity noticiasEntity = noticiasRepository.findById(noticiaId)
-                .orElseThrow((() -> new ResourceNotFoundException("Noticia no encontrada")));
-        noticiasEntity.setTitulo(noticiasDto.getTitulo());
-        noticiasEntity.setCategoria(noticiasDto.getCategoria());
-        noticiasEntity.setDescripcion(noticiasDto.getDescripcion());
-        noticiasEntity.setDireccionImagen(noticiasDto.getDireccionImagen());
-        noticiasRepository.save(noticiasEntity);
+    public NoticiasDto updateNoticias(Integer noticiaId, NoticiasFormRequest request) {
+        NoticiasEntity entity = noticiasRepository.findById(noticiaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrada con ID: " + noticiaId));
+
+        entity.setTitulo(request.getTitulo());
+        entity.setCategoria(request.getCategoria());
+        entity.setDescripcion(request.getDescripcion());
+
+        MultipartFile archivo = request.getImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/noticias/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        NoticiasEntity saved = noticiasRepository.save(entity);
+        NoticiasDto dto = noticiasMapper.toDto(saved);
+        dto.setDireccionImagen(urlBase + "noticias/" + saved.getDireccionImagen());
+
+        return dto;
     }
+
 
     @Override
     public void deleteNoticias(Integer noticiasId) {

@@ -37,10 +37,13 @@ public class AlcaldeController {
     }
 
     @PutMapping("alcaldes/{id}")
-    public ResponseEntity<ResponseBase<Void>> updateAlcalde(@PathVariable Integer id, @RequestBody AlcaldeDto dto) {
-        alcaldeService.updateAlcalde(id, dto);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde actualizado correctamente", null));
+    public ResponseEntity<ResponseBase<AlcaldeDto>> updateAlcalde(
+            @PathVariable Integer id,
+            @ModelAttribute AlcaldeRequest request) {
+        AlcaldeDto dto = alcaldeService.updateAlcalde(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde actualizado correctamente", dto));
     }
+
 
     @DeleteMapping("alcaldes/{id}")
     public ResponseEntity<ResponseBase<Void>> deleteAlcalde(@PathVariable Integer id) {

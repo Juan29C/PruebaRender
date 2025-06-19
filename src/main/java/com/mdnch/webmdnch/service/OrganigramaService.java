@@ -9,6 +9,6 @@ public interface OrganigramaService {
     OrganigramaDto registrarOrganigrama(OrganigramaRequest request);
     List <OrganigramaDto> obtenerOrganigrama();
     OrganigramaDto obtenerOrganigramaPorId(Integer id);
-    void actualizarOrganigrama(Integer id, OrganigramaDto organigramaDTO);
+    OrganigramaDto actualizarOrganigrama(Integer id, OrganigramaRequest request);
     void eliminarOrganigrama(Integer id);
 }
