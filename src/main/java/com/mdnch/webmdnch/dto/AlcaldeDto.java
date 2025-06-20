@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
+import java.time.LocalDate;
+
 public class AlcaldeDto {
     private Integer alcaldeId;
     private String nombre;
@@ -13,6 +15,9 @@ public class AlcaldeDto {
     private String reconocimientos;
     private String compromiso;
     private String direccionImagen;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaModificacion;
+    private String responsable;
 
     public Integer getAlcaldeId() {
         return alcaldeId;
@@ -109,4 +114,26 @@ public class AlcaldeDto {
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
     }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+    public String getResponsable() {
+        return responsable;
+    }
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+
+
+
 }

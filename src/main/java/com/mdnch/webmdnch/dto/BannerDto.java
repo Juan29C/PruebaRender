@@ -1,10 +1,15 @@
 package com.mdnch.webmdnch.dto;
 
+import java.time.LocalDate;
+
 public class BannerDto {
     private Integer bannerId;
     private String titulo;
     private String direccionImagen;
     private Boolean activo;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaModificacion;
+    private String responsable;
 
     public Integer getBannerId() {
         return bannerId;
@@ -33,7 +38,28 @@ public class BannerDto {
     public Boolean getActivo() {
         return activo;
     }
+
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+    public String getResponsable() {
+        return responsable;
+    }
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+
 }

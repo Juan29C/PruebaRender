@@ -1,5 +1,8 @@
 package com.mdnch.webmdnch.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class FuncionariosDto {
     private Integer funcionarioId;
     private String nombre;
@@ -7,6 +10,9 @@ public class FuncionariosDto {
     private String cargo;
     private String contacto;
     private String direccionImagen;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaModificacion;
+    private String responsable;
 
     public Integer getFuncionarioId() {
         return funcionarioId;
@@ -48,6 +54,24 @@ public class FuncionariosDto {
         this.contacto = contacto;
     }
 
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+    public String getResponsable() {
+        return responsable;
+    }
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
     public String getDireccionImagen() {
         return direccionImagen;
     }

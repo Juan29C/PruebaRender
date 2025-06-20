@@ -1,12 +1,14 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.ContactanosDto;
+import com.mdnch.webmdnch.dto.request.ContactanosRequest;
+import com.mdnch.webmdnch.dto.response.ContactanosResponse;
 import com.mdnch.webmdnch.entity.ContactanosEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
+import com.mdnch.webmdnch.mapper.ContactanosMapper;
 import com.mdnch.webmdnch.repository.ContactanosRepository;
 import com.mdnch.webmdnch.service.ContactanosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,73 +18,47 @@ public class ContactanosServiceImpl implements ContactanosService {
     private final ContactanosRepository contactanosRepository;
 
     @Autowired
-    public ContactanosServiceImpl(ContactanosRepository contactoRepository) {
-        this.contactanosRepository = contactoRepository;
+    private ContactanosMapper contactanosMapper;
+
+    @Autowired
+    public ContactanosServiceImpl(ContactanosRepository contactanosRepository) {
+        this.contactanosRepository = contactanosRepository;
     }
 
     @Override
-    public void registrarContactanos(ContactanosDto contactanosDto){
-         ContactanosEntity contactanosEntity = new ContactanosEntity();
-         contactanosEntity.setApellidoPaterno(contactanosDto.getApellidoPaterno());
-         contactanosEntity.setApellidoMaterno(contactanosDto.getApellidoMaterno());
-         contactanosEntity.setNombres(contactanosDto.getNombres());
-         contactanosEntity.setEmail(contactanosDto.getEmail());
-         contactanosEntity.setTelefono(contactanosDto.getTelefono());
-         contactanosEntity.setAsunto(contactanosDto.getAsunto());
-         contactanosEntity.setMensaje(contactanosDto.getMensaje());
-         contactanosRepository.save(contactanosEntity);
+    public ContactanosResponse registrarContactanos(ContactanosRequest contactanosRequest) {
+        ContactanosEntity entity = contactanosMapper.toEntity(contactanosRequest);
+        ContactanosEntity saved = contactanosRepository.saveAndFlush(entity);
+        return contactanosMapper.toResponse(saved);
     }
 
     @Override
-    public List<ContactanosDto> obtenerContactanos() {
-        return contactanosRepository.findAll().stream().map(c -> {
-            ContactanosDto dto = new ContactanosDto();
-            dto.setContactanosId(c.getContactanosId());
-            dto.setApellidoPaterno(c.getApellidoPaterno());
-            dto.setApellidoMaterno(c.getApellidoMaterno());
-            dto.setNombres(c.getNombres());
-            dto.setEmail(c.getEmail());
-            dto.setTelefono(c.getTelefono());
-            dto.setAsunto(c.getAsunto());
-            dto.setMensaje(c.getMensaje());
-            return dto;
-        }).collect(Collectors.toList());
+    public List<ContactanosResponse> obtenerContactanos() {
+        return contactanosRepository.findAll().stream()
+                .map(contactanosMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public ContactanosDto obtenerContactanosPorId(Integer id) {
-        ContactanosEntity c = contactanosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contacto no encontrado"));
-        ContactanosDto dto = new ContactanosDto();
-        dto.setContactanosId(c.getContactanosId());
-        dto.setApellidoPaterno(c.getApellidoPaterno());
-        dto.setApellidoMaterno(c.getApellidoMaterno());
-        dto.setNombres(c.getNombres());
-        dto.setEmail(c.getEmail());
-        dto.setTelefono(c.getTelefono());
-        dto.setAsunto(c.getAsunto());
-        dto.setMensaje(c.getMensaje());
-        return dto;
+    public ContactanosResponse obtenerContactanosPorId(Integer id) {
+        ContactanosEntity entity = contactanosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contacto no encontrado"));
+        return contactanosMapper.toResponse(entity);
     }
 
     @Override
-    public void actualizarContactanos(Integer id, ContactanosDto contactanosDto) {
-        ContactanosEntity c = contactanosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contacto no encontrado"));
-        c.setApellidoPaterno(contactanosDto.getApellidoPaterno());
-        c.setApellidoMaterno(contactanosDto.getApellidoMaterno());
-        c.setNombres(contactanosDto.getNombres());
-        c.setEmail(contactanosDto.getEmail());
-        c.setTelefono(contactanosDto.getTelefono());
-        c.setAsunto(contactanosDto.getAsunto());
-        c.setMensaje(contactanosDto.getMensaje());
-        contactanosRepository.save(c);
+    public ContactanosResponse actualizarContactanos(Integer id, ContactanosRequest contactanosRequest) {
+        ContactanosEntity entity = contactanosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contacto no encontrado"));
+        contactanosMapper.updateEntityFromRequest(contactanosRequest, entity);
+        ContactanosEntity updated = contactanosRepository.save(entity);
+        return contactanosMapper.toResponse(updated);
     }
 
     @Override
     public void eliminarContactanos(Integer id) {
         if (!contactanosRepository.existsById(id)) {
-            throw new RuntimeException("Contacto no encontrado");
+            throw new ResourceNotFoundException("Contacto no encontrado");
         }
         contactanosRepository.deleteById(id);
     }

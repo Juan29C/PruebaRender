@@ -1,8 +1,9 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.EventoDto;
 import com.mdnch.webmdnch.dto.request.EventoRequest;
+import com.mdnch.webmdnch.dto.response.EventoResponse;
 import com.mdnch.webmdnch.entity.EventosEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.EventosMapper;
 import com.mdnch.webmdnch.repository.EventosRepository;
 import com.mdnch.webmdnch.service.EventoService;
@@ -11,13 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,72 +33,49 @@ public class EventoServiceImpl implements EventoService {
     }
 
     @Override
-    public EventoDto registrarEventos(EventoRequest request) {
+    public EventoResponse registrarEventos(EventoRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
         String carpetaDestino = "imagenes/eventos/";
         String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        EventoDto dto = new EventoDto();
-        dto.setCategoria(request.getCategoria());
-        dto.setFecha(request.getFecha());
-        dto.setTitulo(request.getTitulo());
-        dto.setDescripcion(request.getDescripcion());
-        dto.setHora(request.getHora());
-        dto.setUbicacion(request.getUbicacion());
-        dto.setDireccionImagen(nombreArchivo);
+        EventosEntity entity = eventosMapper.toEntity(request);
+        entity.setDireccionImagen(nombreArchivo);
+        entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
 
-        EventosEntity entity = eventosMapper.toEntity(dto);
-        EventosEntity saved = eventosRepository.save(entity);
+        EventosEntity saved = eventosRepository.saveAndFlush(entity);
 
-        EventoDto respuesta = eventosMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "eventos/" + saved.getDireccionImagen());
+        EventoResponse response = eventosMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "eventos/" + saved.getDireccionImagen());
 
-        return respuesta;
+        return response;
     }
 
     @Override
-    public List<EventoDto> obtenerEventos() {
-        return eventosRepository.findAll().stream().map(e -> {
-            EventoDto dto = new EventoDto();
-            dto.setEventoId(e.getEventoId());
-            dto.setCategoria(e.getCategoria());
-            dto.setFecha(e.getFecha());
-            dto.setTitulo(e.getTitulo());
-            dto.setDescripcion(e.getDescripcion());
-            dto.setHora(e.getHora());
-            dto.setUbicacion(e.getUbicacion());
-            dto.setDireccionImagen(e.getDireccionImagen());
-            return dto;
-        }).collect(Collectors.toList());
+    public List<EventoResponse> obtenerEventos() {
+        return eventosRepository.findAll().stream()
+                .map(eventosMapper::toResponse)
+                .peek(response -> response.setDireccionImagen(urlBase + "eventos/" + response.getDireccionImagen()))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public EventoDto obtenerEventosPorId(Integer id) {
-        EventosEntity e = eventosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
-        EventoDto dto = new EventoDto();
-        dto.setEventoId(e.getEventoId());
-        dto.setCategoria(e.getCategoria());
-        dto.setFecha(e.getFecha());
-        dto.setTitulo(e.getTitulo());
-        dto.setDescripcion(e.getDescripcion());
-        dto.setHora(e.getHora());
-        dto.setUbicacion(e.getUbicacion());
-        dto.setDireccionImagen(e.getDireccionImagen());
-        return dto;
-    }
-
-    @Override
-    public EventoDto actualizarEventos(Integer id, EventoRequest request) {
+    public EventoResponse obtenerEventosPorId(Integer id) {
         EventosEntity entity = eventosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado"));
 
-        entity.setCategoria(request.getCategoria());
-        entity.setFecha(request.getFecha());
-        entity.setTitulo(request.getTitulo());
-        entity.setDescripcion(request.getDescripcion());
-        entity.setHora(request.getHora());
-        entity.setUbicacion(request.getUbicacion());
+        EventoResponse response = eventosMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + "eventos/" + entity.getDireccionImagen());
+
+        return response;
+    }
+
+    @Override
+    public EventoResponse actualizarEventos(Integer id, EventoRequest request) {
+        EventosEntity entity = eventosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado con ID: " + id));
+
+        eventosMapper.updateEntityFromRequest(request, entity);
 
         MultipartFile archivo = request.getDireccionImagen();
         if (archivo != null && !archivo.isEmpty()) {
@@ -116,18 +88,20 @@ public class EventoServiceImpl implements EventoService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
-        EventosEntity saved = eventosRepository.save(entity);
-        EventoDto dto = eventosMapper.toDto(saved);
-        dto.setDireccionImagen(urlBase + "eventos/" + saved.getDireccionImagen());
+        entity.setFechaModificacion(LocalDate.now());
+        EventosEntity saved = eventosRepository.saveAndFlush(entity);
 
-        return dto;
+        EventoResponse response = eventosMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "eventos/" + saved.getDireccionImagen());
+
+        return response;
     }
 
     @Override
     public void eliminarEventos(Integer id) {
-        EventosEntity eventosEntity = eventosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
-        eventosRepository.delete(eventosEntity);
+        if (!eventosRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Evento no encontrado");
+        }
+        eventosRepository.deleteById(id);
     }
-
 }

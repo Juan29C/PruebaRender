@@ -1,16 +1,22 @@
 package com.mdnch.webmdnch.mapper;
 
 import com.mdnch.webmdnch.dto.ContactanosDto;
+import com.mdnch.webmdnch.dto.request.ContactanosRequest;
+import com.mdnch.webmdnch.dto.response.ContactanosResponse;
 import com.mdnch.webmdnch.entity.ContactanosEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
 import org.mapstruct.Mapper;
-import org.springframework.stereotype.Component;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ContactanosMapper extends GenericMapper<ContactanosDto, ContactanosEntity> {
     @Override
     ContactanosDto toDto(ContactanosEntity entity);
 
-    @Override
-    ContactanosEntity toEntity(ContactanosDto dto);
+    ContactanosEntity toEntity(ContactanosRequest contactanosRequest);
+
+    ContactanosResponse toResponse(ContactanosEntity entity);
+
+    void updateEntityFromRequest(ContactanosRequest request, @MappingTarget ContactanosEntity entity);
+
 }

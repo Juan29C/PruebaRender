@@ -1,13 +1,14 @@
 package com.mdnch.webmdnch.service;
 
-import com.mdnch.webmdnch.dto.EquipoTrabajoDTO;
+import com.mdnch.webmdnch.dto.request.EquipoTrabajoRequest;
+import com.mdnch.webmdnch.dto.response.EquipoTrabajoResponse;
 
 import java.util.List;
 
 public interface EquipoTrabajoService {
-    void registrarEquipoTrabajo(EquipoTrabajoDTO equipoTrabajoDto);
-    List<EquipoTrabajoDTO> obtenerEquipoTrabajo();
-    EquipoTrabajoDTO obtenerEquipoTrabajoPorId(Integer id);
-    void actualizarEquipoTrabajo(Integer id, EquipoTrabajoDTO equipoTrabajoDto);
+    EquipoTrabajoResponse registrarEquipoTrabajo(EquipoTrabajoRequest equipoTrabajoRequest);
+    List<EquipoTrabajoResponse> obtenerEquipoTrabajo();
+    EquipoTrabajoResponse obtenerEquipoTrabajoPorId(Integer id);
+    EquipoTrabajoResponse actualizarEquipoTrabajo(Integer id, EquipoTrabajoRequest equipoTrabajoRequest);
     void eliminarEquipoTrabajo(Integer id);
 }

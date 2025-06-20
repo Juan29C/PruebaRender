@@ -1,13 +1,11 @@
 package com.mdnch.webmdnch.controller;
 
-import com.mdnch.webmdnch.dto.BannerDto;
 import com.mdnch.webmdnch.dto.request.BannerRequest;
+import com.mdnch.webmdnch.dto.response.BannerResponse;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
-import com.mdnch.webmdnch.service.impl.BannerServiceImpl;
-import jakarta.validation.Valid;
+import com.mdnch.webmdnch.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,34 +16,34 @@ import java.util.List;
 public class BannerController {
 
     @Autowired
-    BannerServiceImpl bannerService;
+    BannerService bannerService;
 
     @PostMapping("/banner/registrar")
-    public ResponseEntity<ResponseBase<BannerDto>> registrarBanner(@ModelAttribute BannerRequest request) {
-        BannerDto dto = bannerService.registrarBanner(request);
+    public ResponseEntity<ResponseBase<BannerResponse>> registrarBanner(@ModelAttribute BannerRequest request) {
+        BannerResponse response = bannerService.registrarBanner(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Banner registrado con éxito", dto));
+                .body(new ResponseBase<>(true, "Banner registrado con éxito", response));
     }
 
     @GetMapping("/banners")
-    public ResponseEntity<ResponseBase<List<BannerDto>>>obtenerBanners() {
-        List<BannerDto> banners = bannerService.obtenerBanners();
-        return ResponseEntity.ok(new ResponseBase<>(true, "Banners obtenidos con éxito", banners));
+    public ResponseEntity<ResponseBase<List<BannerResponse>>>obtenerBanners() {
+        List<BannerResponse> response = bannerService.obtenerBanners();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Banners obtenidos con éxito", response));
     }
 
     @GetMapping("/banners/{id}")
-    public ResponseEntity<ResponseBase<BannerDto>> obtenerBannerPorId(@PathVariable Integer id) {
-        BannerDto banner = bannerService.obtenerBannerPorId(id);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Banner encontrado", banner));
+    public ResponseEntity<ResponseBase<BannerResponse>> obtenerBannerPorId(@PathVariable Integer id) {
+        BannerResponse response = bannerService.obtenerBannerPorId(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Banner encontrado", response));
     }
 
     @PutMapping("/banners/{id}")
-    public ResponseEntity<ResponseBase<BannerDto>> actualizarBanner(
+    public ResponseEntity<ResponseBase<BannerResponse>> actualizarBanner(
             @PathVariable Integer id,
             @ModelAttribute BannerRequest bannerRequest) {
 
-        BannerDto actualizado = bannerService.actualizarBanner(id, bannerRequest);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", actualizado));
+        BannerResponse response = bannerService.actualizarBanner(id, bannerRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", response));
     }
 
     @DeleteMapping("/banners/{id}")

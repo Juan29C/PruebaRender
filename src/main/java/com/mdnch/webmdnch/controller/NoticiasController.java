@@ -1,18 +1,15 @@
 package com.mdnch.webmdnch.controller;
 
 
-import com.mdnch.webmdnch.dto.NoticiasDto;
-import com.mdnch.webmdnch.dto.request.NoticiasFormRequest;
+import com.mdnch.webmdnch.dto.request.NoticiasRequest;
+import com.mdnch.webmdnch.dto.response.NoticiasResponse;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.NoticiasService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,41 +21,36 @@ public class NoticiasController {
     NoticiasService noticiasService;
 
     @PostMapping("noticias/crear")
-    public ResponseEntity<ResponseBase<NoticiasDto>> crearNoticia(@ModelAttribute NoticiasFormRequest noticiasFormRequest) {
-        NoticiasDto creado = noticiasService.createNoticias(noticiasFormRequest);
+    public ResponseEntity<ResponseBase<NoticiasResponse>> crearNoticia(@ModelAttribute NoticiasRequest noticiasRequest) {
+        NoticiasResponse response = noticiasService.createNoticias(noticiasRequest);
         return ResponseEntity.status(201).body(
-                new ResponseBase<>(true, "Noticia creada correctamente", creado)
+                new ResponseBase<>(true, "Noticia creada correctamente", response)
         );
     }
-
-
 
     @GetMapping("/noticias")
-    public ResponseEntity<ResponseBase<List<NoticiasDto>>> listarNoticias() {
-        List<NoticiasDto> noticias = noticiasService.getAllNoticias();
+    public ResponseEntity<ResponseBase<List<NoticiasResponse>>> listarNoticias() {
+        List<NoticiasResponse> response = noticiasService.getAllNoticias();
         return ResponseEntity.ok(
-                new ResponseBase<>(true, "Noticias obtenidas con éxito", noticias)
+                new ResponseBase<>(true, "Noticias obtenidas con éxito", response)
         );
     }
-
 
     @GetMapping("/noticias/{id}")
-    public ResponseEntity<ResponseBase<NoticiasDto>> obtenerNoticiaPorId(@PathVariable Integer id) {
-        NoticiasDto noticia = noticiasService.findByIdNoticias(id);
+    public ResponseEntity<ResponseBase<NoticiasResponse>> obtenerNoticiaPorId(@PathVariable Integer id) {
+        NoticiasResponse response = noticiasService.findByIdNoticias(id);
         return ResponseEntity.ok(
-                new ResponseBase<>(true, "Noticia encontrada", noticia)
+                new ResponseBase<>(true, "Noticia encontrada", response)
         );
     }
 
-
     @PutMapping("noticias/{id}")
-    public ResponseEntity<ResponseBase<NoticiasDto>> actualizarNoticia(
+    public ResponseEntity<ResponseBase<NoticiasResponse>> actualizarNoticia(
             @PathVariable Integer id,
-            @ModelAttribute NoticiasFormRequest request) {
-        NoticiasDto actualizado = noticiasService.updateNoticias(id, request);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Noticia actualizada correctamente", actualizado));
+            @ModelAttribute NoticiasRequest request) {
+        NoticiasResponse response = noticiasService.updateNoticias(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Noticia actualizada correctamente", response));
     }
-
 
 
     @DeleteMapping("noticias/{id}")

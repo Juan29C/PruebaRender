@@ -1,14 +1,14 @@
 package com.mdnch.webmdnch.service;
 
-import com.mdnch.webmdnch.dto.EventoDto;
 import com.mdnch.webmdnch.dto.request.EventoRequest;
+import com.mdnch.webmdnch.dto.response.EventoResponse;
 
 import java.util.List;
 
 public interface EventoService {
-    EventoDto registrarEventos(EventoRequest request);
-    List<EventoDto> obtenerEventos();
-    EventoDto obtenerEventosPorId(Integer id);
-    EventoDto actualizarEventos(Integer id, EventoRequest request);
+    EventoResponse registrarEventos(EventoRequest request);
+    List<EventoResponse> obtenerEventos();
+    EventoResponse obtenerEventosPorId(Integer id);
+    EventoResponse actualizarEventos(Integer id, EventoRequest request);
     void eliminarEventos(Integer id);
 }

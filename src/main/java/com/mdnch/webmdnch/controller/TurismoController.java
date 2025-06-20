@@ -1,8 +1,8 @@
 package com.mdnch.webmdnch.controller;
 
-import com.mdnch.webmdnch.dto.TurismoDto;
 import com.mdnch.webmdnch.dto.request.TurismoRequest;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
+import com.mdnch.webmdnch.dto.response.TurismoResponse;
 import com.mdnch.webmdnch.service.TurismoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,32 +20,32 @@ public class TurismoController {
     @Autowired
     private TurismoService turismoService;
 
-    @PostMapping("/turismo/crear")
-    public ResponseEntity<ResponseBase<TurismoDto>> create(@ModelAttribute TurismoRequest request) {
-        TurismoDto creado = turismoService.createTurismo(request);
+   @PostMapping("/turismo/crear")
+    public ResponseEntity<ResponseBase<TurismoResponse>> create(@ModelAttribute TurismoRequest request) {
+        TurismoResponse response = turismoService.createTurismo(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Turismo creado correctamente", creado));
+                .body(new ResponseBase<>(true, "Turismo creado correctamente", response));
     }
 
     @GetMapping("/turismo/listar")
-    public ResponseEntity<ResponseBase<List<TurismoDto>>> getAll() {
-        List<TurismoDto> lista = turismoService.getAllTurismos();
-        return ResponseEntity.ok(new ResponseBase<>(true, "Listado de turismo obtenido correctamente", lista));
+    public ResponseEntity<ResponseBase<List<TurismoResponse>>> getAll() {
+        List<TurismoResponse> response = turismoService.getAllTurismos();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Listado de turismo obtenido correctamente", response));
     }
 
     @GetMapping("/turismo/{id}")
-    public ResponseEntity<ResponseBase<TurismoDto>> getById(@PathVariable Integer id) {
-        TurismoDto dto = turismoService.findById(id);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Turismo encontrado", dto));
+    public ResponseEntity<ResponseBase<TurismoResponse>> getById(@PathVariable Integer id) {
+        TurismoResponse response = turismoService.findById(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Turismo encontrado", response));
     }
 
     @PutMapping("/turismo/{id}")
-    public ResponseEntity<ResponseBase<TurismoDto>> update(
+    public ResponseEntity<ResponseBase<TurismoResponse>> update(
             @PathVariable Integer id,
             @ModelAttribute TurismoRequest request) {
 
-        TurismoDto actualizado = turismoService.updateTurismo(id, request);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Turismo actualizado correctamente", actualizado));
+        TurismoResponse response = turismoService.updateTurismo(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Turismo actualizado correctamente", response));
     }
 
 

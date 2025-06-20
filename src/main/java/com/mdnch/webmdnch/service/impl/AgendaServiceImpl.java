@@ -1,8 +1,9 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.AgendaDto;
 import com.mdnch.webmdnch.dto.request.AgendaRequest;
+import com.mdnch.webmdnch.dto.response.AgendaResponse;
 import com.mdnch.webmdnch.entity.AgendaEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.AgendaMapper;
 import com.mdnch.webmdnch.repository.AgendaRepository;
 import com.mdnch.webmdnch.service.AgendaService;
@@ -11,15 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +25,7 @@ public class AgendaServiceImpl implements AgendaService {
     private final AgendaRepository agendaRepository;
 
     @Autowired
-    AgendaMapper agendaMapper;
+    private AgendaMapper agendaMapper;
 
     @Autowired
     public AgendaServiceImpl(AgendaRepository agendaRepository) {
@@ -39,77 +33,41 @@ public class AgendaServiceImpl implements AgendaService {
     }
 
     @Override
-    public AgendaDto registrarAgenda(AgendaRequest request) {
+    public AgendaResponse registrarAgenda(AgendaRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
         String carpetaDestino = "imagenes/agenda/";
         String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        AgendaDto dto = new AgendaDto();
-        dto.setTitulo(request.getTitulo());
-        dto.setOrganizador(request.getOrganizador());
-        dto.setFecha(request.getFecha());
-        dto.setHora(request.getHora());
-        dto.setDescripcion(request.getDescripcion());
-        dto.setDireccion(request.getDireccion());
-        dto.setCategoria(request.getCategoria());
-        dto.setDireccionImagen(nombreArchivo);
+        AgendaEntity entity = agendaMapper.toEntity(request);
+        entity.setDireccionImagen(nombreArchivo);
+        entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
 
-        AgendaEntity entity = agendaMapper.toEntity(dto);
-        AgendaEntity saved = agendaRepository.save(entity);
-
-        AgendaDto respuesta = agendaMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "agenda/" + saved.getDireccionImagen());
-
-        return respuesta;
-    }
-
-
-    @Override
-    public List<AgendaDto> obtenerAgendas() {
-        return agendaRepository.findAll().stream().map(a -> {
-            AgendaDto dto = new AgendaDto();
-            dto.setAgendaId(a.getAgendaId());
-            dto.setTitulo(a.getTitulo());
-            dto.setOrganizador(a.getOrganizador());
-            dto.setFecha(a.getFecha());
-            dto.setHora(a.getHora());
-            dto.setDescripcion(a.getDescripcion());
-            dto.setDireccion(a.getDireccion());
-            dto.setCategoria(a.getCategoria());
-            dto.setDireccionImagen(a.getDireccionImagen());
-            return dto;
-        }).collect(Collectors.toList());
+        AgendaEntity saved = agendaRepository.saveAndFlush(entity);
+        return construirResponseConImagen(saved);
     }
 
     @Override
-    public AgendaDto obtenerAgendaPorId(Integer id) {
-        AgendaEntity a = agendaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agenda no encontrada"));
-        AgendaDto dto = new AgendaDto();
-        dto.setAgendaId(a.getAgendaId());
-        dto.setTitulo(a.getTitulo());
-        dto.setOrganizador(a.getOrganizador());
-        dto.setFecha(a.getFecha());
-        dto.setHora(a.getHora());
-        dto.setDescripcion(a.getDescripcion());
-        dto.setDireccion(a.getDireccion());
-        dto.setCategoria(a.getCategoria());
-        dto.setDireccionImagen(a.getDireccionImagen());
-        return dto;
+    public List<AgendaResponse> obtenerAgendas() {
+        return agendaRepository.findAll()
+                .stream()
+                .map(this::construirResponseConImagen)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public AgendaDto actualizarAgenda(Integer id, AgendaRequest request) {
+    public AgendaResponse obtenerAgendaPorId(Integer id) {
         AgendaEntity entity = agendaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agenda no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Agenda no encontrada"));
+        return construirResponseConImagen(entity);
+    }
 
-        entity.setTitulo(request.getTitulo());
-        entity.setOrganizador(request.getOrganizador());
-        entity.setFecha(request.getFecha());
-        entity.setHora(request.getHora());
-        entity.setDescripcion(request.getDescripcion());
-        entity.setDireccion(request.getDireccion());
-        entity.setCategoria(request.getCategoria());
+    @Override
+    public AgendaResponse actualizarAgenda(Integer id, AgendaRequest request) {
+        AgendaEntity entity = agendaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Agenda no encontrada con ID: " + id));
+
+        agendaMapper.updateEntityFromRequest(request, entity);
 
         MultipartFile archivo = request.getDireccionImagen();
         if (archivo != null && !archivo.isEmpty()) {
@@ -122,20 +80,22 @@ public class AgendaServiceImpl implements AgendaService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
+        entity.setFechaModificacion(LocalDate.now());
         AgendaEntity saved = agendaRepository.save(entity);
-
-        AgendaDto dto = agendaMapper.toDto(entity);
-        dto.setDireccionImagen(urlBase + "agenda/" + saved.getDireccionImagen());
-
-        return dto;
+        return construirResponseConImagen(saved);
     }
-
 
     @Override
     public void eliminarAgenda(Integer id) {
-        AgendaEntity a = agendaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agenda no encontrada"));
-        agendaRepository.delete(a);
+        if (!agendaRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Agenda no encontrada");
+        }
+        agendaRepository.deleteById(id);
     }
 
+    private AgendaResponse construirResponseConImagen(AgendaEntity entity) {
+        AgendaResponse response = agendaMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + "agenda/" + entity.getDireccionImagen());
+        return response;
+    }
 }

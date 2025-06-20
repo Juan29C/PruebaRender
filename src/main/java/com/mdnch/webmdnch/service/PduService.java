@@ -1,15 +1,15 @@
 package com.mdnch.webmdnch.service;
 
-import com.mdnch.webmdnch.dto.PduDto;
+import com.mdnch.webmdnch.dto.request.PduRequest;
+import com.mdnch.webmdnch.dto.response.PduResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PduService {
-    PduDto createPdu(PduDto pduDto);
-    List<PduDto> getAllPdu();
-    PduDto findByIdPdu(Integer pduId);
-    void updatePdu(Integer pduId, PduDto pduDto);
+    PduResponse createPdu(PduRequest request);
+    List<PduResponse> getAllPdu();
+    PduResponse findByIdPdu(Integer pduId);
+    PduResponse updatePdu(Integer pduId, PduRequest pduRequest);
     void deletePdu(Integer pduId);
 
 }

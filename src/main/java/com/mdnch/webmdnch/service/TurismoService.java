@@ -1,16 +1,15 @@
 package com.mdnch.webmdnch.service;
 
-import com.mdnch.webmdnch.dto.TurismoDto;
 import com.mdnch.webmdnch.dto.request.TurismoRequest;
+import com.mdnch.webmdnch.dto.response.TurismoResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TurismoService {
-    TurismoDto createTurismo(TurismoRequest request);
-    List<TurismoDto> getAllTurismos();
-    TurismoDto findById(int turismoId);
-    TurismoDto updateTurismo(Integer turismoId, TurismoRequest request);
+    TurismoResponse createTurismo(TurismoRequest request);
+    List<TurismoResponse> getAllTurismos();
+    TurismoResponse findById(int turismoId);
+    TurismoResponse updateTurismo(Integer turismoId, TurismoRequest request);
     void deleteTurismo(Integer turismoId);
 
 }

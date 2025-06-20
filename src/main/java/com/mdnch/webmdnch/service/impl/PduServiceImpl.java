@@ -1,14 +1,16 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.PduDto;
+import com.mdnch.webmdnch.dto.request.PduRequest;
+import com.mdnch.webmdnch.dto.response.PduResponse;
 import com.mdnch.webmdnch.entity.PduEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
+import com.mdnch.webmdnch.mapper.PduMapper;
 import com.mdnch.webmdnch.repository.PduRepository;
 import com.mdnch.webmdnch.service.PduService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,38 +20,42 @@ public class PduServiceImpl implements PduService {
     @Autowired
     private PduRepository pduRepository;
 
+    @Autowired
+    private PduMapper pduMapper;
+
     @Override
-    public PduDto createPdu(PduDto dto) {
-        PduEntity entity = toEntity(dto);
+    public PduResponse createPdu(PduRequest request) {
+        PduEntity entity = pduMapper.toEntity(request);
+        entity.setResponsable("ssj");
         PduEntity saved = pduRepository.save(entity);
-        return toDto(saved);
+        return pduMapper.toResponse(saved);
     }
 
     @Override
-    public List<PduDto> getAllPdu() {
+    public List<PduResponse> getAllPdu() {
         return pduRepository.findAll()
                 .stream()
-                .map(this::toDto)
+                .map(pduMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public PduDto findByIdPdu(Integer pduId) {
+    public PduResponse findByIdPdu(Integer pduId) {
         PduEntity entity = pduRepository.findById(pduId)
                 .orElseThrow(() -> new ResourceNotFoundException("PDU no encontrado con ID: " + pduId));
-        return toDto(entity);
+        return pduMapper.toResponse(entity);
     }
 
     @Override
-    public void updatePdu(Integer pduId, PduDto dto) {
+    public PduResponse updatePdu(Integer pduId, PduRequest request) {
         PduEntity entity = pduRepository.findById(pduId)
                 .orElseThrow(() -> new ResourceNotFoundException("PDU no encontrado con ID: " + pduId));
 
-        entity.setTitulo(dto.getTitulo());
-        entity.setDescripcion(dto.getDescripcion());
-        entity.setLinkDocumento(dto.getLinkDocumento());
+        pduMapper.updateEntityFromRequest(request, entity);
+        entity.setFechaModificacion(LocalDate.now());
+        PduEntity saved = pduRepository.save(entity);
 
-        pduRepository.save(entity);
+        return pduMapper.toResponse(saved);
     }
 
     @Override
@@ -58,23 +64,5 @@ public class PduServiceImpl implements PduService {
             throw new ResourceNotFoundException("PDU no encontrado con ID: " + pduId);
         }
         pduRepository.deleteById(pduId);
-    }
-
-    private PduDto toDto(PduEntity entity) {
-        PduDto dto = new PduDto();
-        dto.setPduId(entity.getPduId());
-        dto.setTitulo(entity.getTitulo());
-        dto.setDescripcion(entity.getDescripcion());
-        dto.setLinkDocumento(entity.getLinkDocumento());
-        return dto;
-    }
-
-    private PduEntity toEntity(PduDto dto) {
-        PduEntity entity = new PduEntity();
-        entity.setPduId(dto.getPduId());
-        entity.setTitulo(dto.getTitulo());
-        entity.setDescripcion(dto.getDescripcion());
-        entity.setLinkDocumento(dto.getLinkDocumento());
-        return entity;
     }
 }

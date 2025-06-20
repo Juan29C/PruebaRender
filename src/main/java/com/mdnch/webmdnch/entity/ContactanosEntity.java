@@ -2,6 +2,9 @@ package com.mdnch.webmdnch.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @Entity
 @Table (name = "Contactanos")
 public class ContactanosEntity {
@@ -30,6 +33,14 @@ public class ContactanosEntity {
 
     @Column(name = "mensaje", nullable = false,length = 1000)
     private String mensaje;
+
+    @Column(name = "fechaCreacion", nullable = false, updatable = false)
+    private LocalDate fechaCreacion;
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaCreacion = LocalDate.now(ZoneId.of("America/Lima"));
+    }
 
     public Integer getContactanosId() {
         return contactanosId;
@@ -79,4 +90,13 @@ public class ContactanosEntity {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
 }

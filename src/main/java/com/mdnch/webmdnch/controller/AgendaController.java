@@ -1,11 +1,9 @@
 package com.mdnch.webmdnch.controller;
 
-import com.mdnch.webmdnch.dto.AgendaDto;
 import com.mdnch.webmdnch.dto.request.AgendaRequest;
+import com.mdnch.webmdnch.dto.response.AgendaResponse;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.AgendaService;
-import com.mdnch.webmdnch.service.impl.AgendaServiceImpl;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,31 +19,31 @@ public class AgendaController {
     AgendaService agendaService;
 
     @PostMapping("/agenda/registrar")
-    public ResponseEntity<ResponseBase<AgendaDto>> registrarAgenda(@ModelAttribute AgendaRequest agendaRequest) {
-        AgendaDto creado = agendaService.registrarAgenda(agendaRequest);
+    public ResponseEntity<ResponseBase<AgendaResponse>> registrarAgenda(@ModelAttribute AgendaRequest agendaRequest) {
+        AgendaResponse response = agendaService.registrarAgenda(agendaRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Agenda registrada con éxito", creado));
+                .body(new ResponseBase<>(true, "Agenda registrada con éxito", response));
     }
 
     @GetMapping("/agenda")
-    public ResponseEntity<ResponseBase<List<AgendaDto>>> listarAgenda() {
-        List<AgendaDto> agendas = agendaService.obtenerAgendas();
-        return ResponseEntity.ok(new ResponseBase<>(true, "Fechas obtenidas con éxito", agendas));
+    public ResponseEntity<ResponseBase<List<AgendaResponse>>> listarAgenda() {
+        List<AgendaResponse> response = agendaService.obtenerAgendas();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Fechas obtenidas con éxito", response));
     }
 
     @GetMapping("/agenda/{id}")
-    public ResponseEntity<ResponseBase<AgendaDto>> obtenerAgendaPorId(@PathVariable Integer id) {
-        AgendaDto agenda = agendaService.obtenerAgendaPorId(id);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Fecha encontrada", agenda));
+    public ResponseEntity<ResponseBase<AgendaResponse>> obtenerAgendaPorId(@PathVariable Integer id) {
+        AgendaResponse response = agendaService.obtenerAgendaPorId(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Fecha encontrada", response));
     }
 
     @PutMapping("/agenda/{id}")
-    public ResponseEntity<ResponseBase<AgendaDto>> actualizarAgenda(
+    public ResponseEntity<ResponseBase<AgendaResponse>> actualizarAgenda(
             @PathVariable Integer id,
             @ModelAttribute AgendaRequest agendaRequest) {
 
-        AgendaDto actualizado = agendaService.actualizarAgenda(id, agendaRequest);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Agenda actualizada con éxito", actualizado));
+        AgendaResponse response = agendaService.actualizarAgenda(id, agendaRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Agenda actualizada con éxito", response));
     }
 
     @DeleteMapping("/agenda/{id}")

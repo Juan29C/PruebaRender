@@ -1,14 +1,14 @@
 package com.mdnch.webmdnch.service;
 
-import com.mdnch.webmdnch.dto.AgendaDto;
 import com.mdnch.webmdnch.dto.request.AgendaRequest;
+import com.mdnch.webmdnch.dto.response.AgendaResponse;
 
 import java.util.List;
 
 public interface AgendaService {
-    AgendaDto  registrarAgenda(AgendaRequest agendaDTO);
-    List<AgendaDto> obtenerAgendas();
-    AgendaDto obtenerAgendaPorId(Integer id);
-    AgendaDto actualizarAgenda(Integer id, AgendaRequest request);
+    AgendaResponse  registrarAgenda(AgendaRequest agendaDTO);
+    List<AgendaResponse> obtenerAgendas();
+    AgendaResponse obtenerAgendaPorId(Integer id);
+    AgendaResponse actualizarAgenda(Integer id, AgendaRequest request);
     void eliminarAgenda(Integer id);
 }

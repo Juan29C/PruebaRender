@@ -1,10 +1,9 @@
 package com.mdnch.webmdnch.controller;
 
-import com.mdnch.webmdnch.dto.FuncionariosDto;
 import com.mdnch.webmdnch.dto.request.FuncionariosRequest;
+import com.mdnch.webmdnch.dto.response.FuncionariosResponse;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.FuncionariosService;
-import com.mdnch.webmdnch.service.impl.FuncionariosServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,32 +19,32 @@ public class FuncionariosController {
     @Autowired
     FuncionariosService funcionariosService;
 
-    @PostMapping("/funcionarios/crear")
-    public ResponseEntity<ResponseBase<FuncionariosDto>> registrarFuncionarios(@ModelAttribute FuncionariosRequest request) {
-        FuncionariosDto dto = funcionariosService.registrarFuncionarios(request);
+   @PostMapping("/funcionarios/crear")
+    public ResponseEntity<ResponseBase<FuncionariosResponse>> registrarFuncionarios(@ModelAttribute FuncionariosRequest request) {
+        FuncionariosResponse response = funcionariosService.registrarFuncionarios(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Funcionario registrado con éxito", dto));
+                .body(new ResponseBase<>(true, "Funcionario registrado con éxito", response));
     }
 
     @GetMapping("/funcionarios")
-    public ResponseEntity<ResponseBase<List<FuncionariosDto>>> listarFuncionarios() {
-        List<FuncionariosDto> funcionarios = funcionariosService.obtenerFuncionarios();
-        return ResponseEntity.ok(new ResponseBase<>(true, "Funcionarios obtenidos con éxito", funcionarios));
+    public ResponseEntity<ResponseBase<List<FuncionariosResponse>>> listarFuncionarios() {
+        List<FuncionariosResponse> response = funcionariosService.obtenerFuncionarios();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Funcionarios obtenidos con éxito", response));
     }
- 
+
     @GetMapping("/funcionarios/{id}")
-    public ResponseEntity<ResponseBase<FuncionariosDto>> obtenerFuncionario(@PathVariable Integer id) {
-        FuncionariosDto funcionario = funcionariosService.obtenerFuncionarioPorId(id);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Funcionario encontrado", funcionario));
+    public ResponseEntity<ResponseBase<FuncionariosResponse>> obtenerFuncionario(@PathVariable Integer id) {
+        FuncionariosResponse response = funcionariosService.obtenerFuncionarioPorId(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Funcionario encontrado", response));
     }
 
     @PutMapping("/funcionarios/{id}")
-    public ResponseEntity<ResponseBase<FuncionariosDto>> actualizarFuncionario(
+    public ResponseEntity<ResponseBase<FuncionariosResponse>> actualizarFuncionario(
             @PathVariable Integer id,
             @Valid @ModelAttribute FuncionariosRequest request) {
-        FuncionariosDto funcionariosDto = funcionariosService.actualizarFuncionario(id, request);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Funcionario actualizado con éxito", funcionariosDto));
+        FuncionariosResponse response = funcionariosService.actualizarFuncionario(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Funcionario actualizado con éxito", response));
     }
 
     @DeleteMapping("/funcionarios/{id}")

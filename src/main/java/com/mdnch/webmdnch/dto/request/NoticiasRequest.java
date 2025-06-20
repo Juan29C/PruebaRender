@@ -1,10 +1,13 @@
 package com.mdnch.webmdnch.dto.request;
 
+
+import org.springframework.web.multipart.MultipartFile;
+
 public class NoticiasRequest {
     private String titulo;
     private String categoria;
     private String descripcion;
-    private String direccionImagen;
+    private MultipartFile imagen;
 
     public String getTitulo() {
         return titulo;
@@ -30,11 +33,11 @@ public class NoticiasRequest {
         this.descripcion = descripcion;
     }
 
-    public String getDireccionImagen() {
-        return direccionImagen;
+    public MultipartFile getImagen() {
+        return imagen;
     }
 
-    public void setDireccionImagen(String direccionImagen) {
-        this.direccionImagen = direccionImagen;
+    public void setImagen(MultipartFile imagen) {
+        this.imagen = imagen;
     }
 }

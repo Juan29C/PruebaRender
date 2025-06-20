@@ -1,8 +1,9 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.BannerDto;
 import com.mdnch.webmdnch.dto.request.BannerRequest;
+import com.mdnch.webmdnch.dto.response.BannerResponse;
 import com.mdnch.webmdnch.entity.BannerEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.BannerMapper;
 import com.mdnch.webmdnch.repository.BannerRepository;
 import com.mdnch.webmdnch.service.BannerService;
@@ -12,14 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class BannerServiceImpl implements BannerService {
@@ -34,56 +29,40 @@ public class BannerServiceImpl implements BannerService {
     private BannerMapper bannerMapper;
 
     @Override
-    public BannerDto registrarBanner(BannerRequest request) {
+    public BannerResponse registrarBanner(BannerRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
         String carpetaDestino = "imagenes/banners/";
         String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        BannerDto dto = new BannerDto();
-        dto.setTitulo(request.getTitulo());
-        dto.setActivo(request.getActivo());
-        dto.setDireccionImagen(nombreArchivo);
+        BannerEntity entity = bannerMapper.toEntity(request);
+        entity.setDireccionImagen(nombreArchivo);
+        entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
 
-        BannerEntity entity = bannerMapper.toEntity(dto);
-        BannerEntity saved = bannerRepository.save(entity);
-
-        BannerDto respuesta = bannerMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "banners/" + saved.getDireccionImagen());
-
-        return respuesta;
+        BannerEntity saved = bannerRepository.saveAndFlush(entity);
+        return construirResponseConImagen(saved);
     }
 
     @Override
-    public List<BannerDto> obtenerBanners() {
-        return bannerRepository.findAll().stream().map(b -> {
-            BannerDto dto = new BannerDto();
-            dto.setBannerId(b.getBannerId());
-            dto.setTitulo(b.getTitulo());
-            dto.setDireccionImagen(b.getDireccionImagen());
-            dto.setActivo(b.getActivo());
-            return dto;
-        }).toList();
+    public List<BannerResponse> obtenerBanners() {
+        return bannerRepository.findAll().stream()
+                .map(this::construirResponseConImagen)
+                .toList();
     }
 
     @Override
-    public BannerDto obtenerBannerPorId(Integer id) {
+    public BannerResponse obtenerBannerPorId(Integer id) {
         BannerEntity banner = bannerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Banner no encontrado"));
-        BannerDto dto = new BannerDto();
-        dto.setBannerId(banner.getBannerId());
-        dto.setTitulo(banner.getTitulo());
-        dto.setDireccionImagen(banner.getDireccionImagen());
-        dto.setActivo(banner.getActivo());
-        return dto;
+                .orElseThrow(() -> new ResourceNotFoundException("Banner no encontrado"));
+        return construirResponseConImagen(banner);
     }
 
     @Override
-    public BannerDto actualizarBanner(Integer id, BannerRequest request) {
+    public BannerResponse actualizarBanner(Integer id, BannerRequest request) {
         BannerEntity entity = bannerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Banner no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Banner no encontrado con ID: " + id));
 
-        entity.setTitulo(request.getTitulo());
-        entity.setActivo(request.getActivo());
+        bannerMapper.updateEntityFromRequest(request, entity);
 
         MultipartFile archivo = request.getDireccionImagen();
         if (archivo != null && !archivo.isEmpty()) {
@@ -96,17 +75,22 @@ public class BannerServiceImpl implements BannerService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
+        entity.setFechaModificacion(LocalDate.now());
         BannerEntity saved = bannerRepository.save(entity);
-        BannerDto dto = bannerMapper.toDto(saved);
-        dto.setDireccionImagen(urlBase + "banner/" + saved.getDireccionImagen());
-        return dto;
+        return construirResponseConImagen(saved);
     }
 
     @Override
     public void eliminarBanner(Integer id) {
-        BannerEntity bannerEntity = bannerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Banner no encontrado"));
-        bannerRepository.delete(bannerEntity);
+        if (!bannerRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Banner no encontrado con ID: " + id);
+        }
+        bannerRepository.deleteById(id);
     }
 
+    private BannerResponse construirResponseConImagen(BannerEntity entity) {
+        BannerResponse response = bannerMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + "banners/" + entity.getDireccionImagen());
+        return response;
+    }
 }

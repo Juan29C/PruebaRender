@@ -2,6 +2,8 @@ package com.mdnch.webmdnch.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +27,22 @@ public class ConsejoMuniEntity {
     @Column(name = "cargo", nullable = false, length = 100)
     private String cargo;
 
+    @Column(name = "fechaCreacion", nullable = false, updatable = false)
+    private LocalDate fechaCreacion;
+
+    @Column(name = "fechaModificacion", nullable = true)
+    private LocalDate fechaModificacion;
+
+    @Column(name = "responsable", nullable = false, length = 100)
+    private String responsable;
 
     @OneToMany(mappedBy = "consejoMuni", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EquipoTrabajoEntity> equipos = new ArrayList<>();
 
+    @PrePersist
+    public void prePersist() {
+        this.fechaCreacion = LocalDate.now(ZoneId.of("America/Lima"));
+    }
 
     public Integer getConsejoMuniId() {
         return consejoMuniId;
@@ -68,5 +82,29 @@ public class ConsejoMuniEntity {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
     }
 }

@@ -1,11 +1,16 @@
 package com.mdnch.webmdnch.dto;
 
+import java.time.LocalDate;
+
 public class ConsejoMuniDto {
     private Integer consejoMuniId;
     private String nombre;
     private String apellido;
     private String area;
     private String cargo;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaModificacion;
+    private String responsable;
 
     public Integer getConsejoMuniId() {
         return consejoMuniId;
@@ -45,5 +50,24 @@ public class ConsejoMuniDto {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+    public String getResponsable() {
+        return responsable;
+    }
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
     }
 }

@@ -1,8 +1,13 @@
 package com.mdnch.webmdnch.dto;
 
-    public class OrganigramaDto {
+import java.time.LocalDate;
+
+public class OrganigramaDto {
         private Integer organigramaId;
         private String direccionImagen;
+        private LocalDate fechaCreacion;
+        private LocalDate fechaModificacion;
+        private String responsable;
 
     public Integer getOrganigramaId() {
         return organigramaId;
@@ -15,5 +20,29 @@ package com.mdnch.webmdnch.dto;
     }
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
     }
 }

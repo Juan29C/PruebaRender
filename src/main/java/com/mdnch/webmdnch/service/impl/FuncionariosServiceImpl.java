@@ -1,7 +1,7 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.FuncionariosDto;
 import com.mdnch.webmdnch.dto.request.FuncionariosRequest;
+import com.mdnch.webmdnch.dto.response.FuncionariosResponse;
 import com.mdnch.webmdnch.entity.FuncionariosEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.FuncionariosMapper;
@@ -12,15 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,66 +32,48 @@ public class FuncionariosServiceImpl implements FuncionariosService {
     }
 
     @Override
-    public FuncionariosDto registrarFuncionarios(FuncionariosRequest request) {
+    public FuncionariosResponse registrarFuncionarios(FuncionariosRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
         String carpetaDestino = "imagenes/funcionarios/";
         String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        FuncionariosDto dto = new FuncionariosDto();
-        dto.setNombre(request.getNombre());
-        dto.setApellido(request.getApellido());
-        dto.setCargo(request.getCargo());
-        dto.setContacto(request.getContacto());
-        dto.setDireccionImagen(nombreArchivo);
+        FuncionariosEntity entity = funcionariosMapper.toEntity(request);
+        entity.setDireccionImagen(nombreArchivo);
+        entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
 
-        FuncionariosEntity entity = funcionariosMapper.toEntity(dto);
-        FuncionariosEntity saved = funcionariosRepository.save(entity);
+        FuncionariosEntity saved = funcionariosRepository.saveAndFlush(entity);
 
-        FuncionariosDto respuesta = funcionariosMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());
+        FuncionariosResponse response = funcionariosMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());
 
-        return respuesta;
-    }
-
-
-    @Override
-    public List<FuncionariosDto> obtenerFuncionarios() {
-        return funcionariosRepository.findAll().stream().map(f -> {
-            FuncionariosDto dto = new FuncionariosDto();
-            dto.setFuncionarioId(f.getFuncionarioId());
-            dto.setNombre(f.getNombre());
-            dto.setApellido(f.getApellido());
-            dto.setCargo(f.getCargo());
-            dto.setContacto(f.getContacto());
-            dto.setDireccionImagen(urlBase + "funcionarios/" + f.getDireccionImagen());
-            return dto;
-        }).collect(Collectors.toList());
+        return response;
     }
 
     @Override
-    public FuncionariosDto obtenerFuncionarioPorId(Integer id) {
-        FuncionariosEntity f = funcionariosRepository.findById(id)
+    public List<FuncionariosResponse> obtenerFuncionarios() {
+        return funcionariosRepository.findAll().stream()
+                .map(funcionariosMapper::toResponse)
+                .peek(response -> response.setDireccionImagen(urlBase + "funcionarios/" + response.getDireccionImagen()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public FuncionariosResponse obtenerFuncionarioPorId(Integer id) {
+        FuncionariosEntity entity = funcionariosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado"));
-        FuncionariosDto dto = new FuncionariosDto();
-        dto.setFuncionarioId(f.getFuncionarioId());
-        dto.setNombre(f.getNombre());
-        dto.setApellido(f.getApellido());
-        dto.setCargo(f.getCargo());
-        dto.setContacto(f.getContacto());
-        dto.setDireccionImagen(urlBase + "funcionarios/" + f.getDireccionImagen());
-        return dto;
+
+        FuncionariosResponse response = funcionariosMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + "funcionarios/" + entity.getDireccionImagen());
+
+        return response;
     }
 
     @Override
-    public FuncionariosDto actualizarFuncionario(Integer id, FuncionariosRequest request) {
+    public FuncionariosResponse actualizarFuncionario(Integer id, FuncionariosRequest request) {
         FuncionariosEntity entity = funcionariosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado con ID: " + id));
-
-        entity.setNombre(request.getNombre());
-        entity.setApellido(request.getApellido());
-        entity.setCargo(request.getCargo());
-        entity.setContacto(request.getContacto());
-
+        funcionariosMapper.updateEntityFromRequest(request, entity);
         MultipartFile archivo = request.getDireccionImagen();
         if (archivo != null && !archivo.isEmpty()) {
             String carpetaDestino = "imagenes/funcionarios/";
@@ -109,15 +84,13 @@ public class FuncionariosServiceImpl implements FuncionariosService {
             );
             entity.setDireccionImagen(nombreArchivo);
         }
-
+        entity.setFechaModificacion(LocalDate.now());
         FuncionariosEntity saved = funcionariosRepository.save(entity);
+        FuncionariosResponse response = funcionariosMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());
 
-        FuncionariosDto respuesta = funcionariosMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());
-
-        return respuesta;
+        return response;
     }
-
 
     @Override
     public void eliminarFuncionario(Integer id) {
@@ -126,7 +99,4 @@ public class FuncionariosServiceImpl implements FuncionariosService {
         }
         funcionariosRepository.deleteById(id);
     }
-
-
-
 }

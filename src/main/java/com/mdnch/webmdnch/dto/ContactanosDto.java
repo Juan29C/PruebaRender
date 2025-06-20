@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
+import java.time.LocalDate;
+
 public class ContactanosDto {
     private Integer contactanosId;
     private String apellidoPaterno;
@@ -9,6 +11,8 @@ public class ContactanosDto {
     private String telefono;
     private String asunto;
     private String mensaje;
+    private LocalDate fechaCreacion;
+
 
     public Integer getContactanosId() {
         return contactanosId;
@@ -73,4 +77,13 @@ public class ContactanosDto {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
 }

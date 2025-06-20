@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
+import org.springframework.cglib.core.Local;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,6 +14,9 @@ public class EventoDto {
     private LocalTime hora;
     private String ubicacion;
     private String direccionImagen;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaModificacion;
+    private String responsable;
 
     public Integer getEventoId() {
         return eventoId;
@@ -76,4 +81,25 @@ public class EventoDto {
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
     }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+    public String getResponsable() {
+        return responsable;
+    }
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+
+
 }

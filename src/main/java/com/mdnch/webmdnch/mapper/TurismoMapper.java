@@ -1,16 +1,20 @@
 package com.mdnch.webmdnch.mapper;
 
-import com.mdnch.webmdnch.dto.TurismoDto;
+import com.mdnch.webmdnch.dto.request.TurismoRequest;
+import com.mdnch.webmdnch.dto.response.TurismoResponse;
 import com.mdnch.webmdnch.entity.TurismoEntity;
-import com.mdnch.webmdnch.mapper.util.GenericMapper;
 import org.mapstruct.Mapper;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
-public interface TurismoMapper extends GenericMapper<TurismoDto, TurismoEntity> {
-    @Override
-    TurismoDto toDto(TurismoEntity entity);
+public interface TurismoMapper {
 
-    @Override
-    TurismoEntity toEntity(TurismoDto dto);
+    @Mapping(target = "direccionImagen", ignore = true)
+    TurismoEntity toEntity(TurismoRequest request);
+
+    TurismoResponse toResponse(TurismoEntity entity);
+
+    @Mapping(target = "direccionImagen", ignore = true)
+    void updateEntityFromRequest(TurismoRequest request, @MappingTarget TurismoEntity entity);
 }

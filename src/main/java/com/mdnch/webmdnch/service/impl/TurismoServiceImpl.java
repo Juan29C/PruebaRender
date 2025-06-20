@@ -1,27 +1,19 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.TurismoDto;
 import com.mdnch.webmdnch.dto.request.TurismoRequest;
+import com.mdnch.webmdnch.dto.response.TurismoResponse;
 import com.mdnch.webmdnch.entity.TurismoEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.TurismoMapper;
 import com.mdnch.webmdnch.repository.TurismoRepository;
 import com.mdnch.webmdnch.service.TurismoService;
 import com.mdnch.webmdnch.util.FileUploadUtil;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,46 +29,49 @@ public class TurismoServiceImpl implements TurismoService {
     private TurismoMapper turismoMapper;
 
     @Override
-    public TurismoDto createTurismo(TurismoRequest request) {
+    public TurismoResponse createTurismo(TurismoRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
         String carpetaDestino = "imagenes/turismo/";
         String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        TurismoDto dto = new TurismoDto();
-        dto.setTitulo(request.getTitulo());
-        dto.setDescripcion(request.getDescripcion());
-        dto.setDireccionImagen(nombreArchivo);
+        TurismoEntity entity = turismoMapper.toEntity(request);
+        entity.setDireccionImagen(nombreArchivo);
+        entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
 
-        TurismoEntity saved = turismoRepository.save(turismoMapper.toEntity(dto));
+        TurismoEntity saved = turismoRepository.saveAndFlush(entity);
 
-        TurismoDto respuesta = turismoMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen());
+        TurismoResponse response = turismoMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen());
 
-        return respuesta;
+        return response;
     }
 
     @Override
-    public List<TurismoDto> getAllTurismos() {
-        return turismoRepository.findAll()
-                .stream()
-                .map(this::toDto)
+    public List<TurismoResponse> getAllTurismos() {
+        return turismoRepository.findAll().stream()
+                .map(turismoMapper::toResponse)
+                .peek(response -> response.setDireccionImagen(urlBase + "turismo/" + response.getDireccionImagen()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TurismoDto findById(int turismoId) {
+    public TurismoResponse findById(int turismoId) {
         TurismoEntity entity = turismoRepository.findById(turismoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Turismo no encontrado con ID: " + turismoId));
-        return toDto(entity);
+
+        TurismoResponse response = turismoMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + "turismo/" + entity.getDireccionImagen());
+
+        return response;
     }
 
     @Override
-    public TurismoDto updateTurismo(Integer turismoId, TurismoRequest request) {
+    public TurismoResponse updateTurismo(Integer turismoId, TurismoRequest request) {
         TurismoEntity entity = turismoRepository.findById(turismoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Turismo no encontrado con ID: " + turismoId));
 
-        entity.setTitulo(request.getTitulo());
-        entity.setDescripcion(request.getDescripcion());
+        turismoMapper.updateEntityFromRequest(request, entity);
 
         MultipartFile archivo = request.getDireccionImagen();
         if (archivo != null && !archivo.isEmpty()) {
@@ -88,12 +83,14 @@ public class TurismoServiceImpl implements TurismoService {
             );
             entity.setDireccionImagen(nombreArchivo);
         }
+        entity.setFechaModificacion(LocalDate.now());
 
-        TurismoEntity saved = turismoRepository.save(entity);
-        TurismoDto dto = turismoMapper.toDto(saved);
-        dto.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen());
+        TurismoEntity saved = turismoRepository.saveAndFlush(entity);
 
-        return dto;
+        TurismoResponse response = turismoMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen());
+
+        return response;
     }
 
     @Override
@@ -102,23 +99,5 @@ public class TurismoServiceImpl implements TurismoService {
             throw new ResourceNotFoundException("Turismo no encontrado con ID: " + turismoId);
         }
         turismoRepository.deleteById(turismoId);
-    }
-
-    private TurismoDto toDto(TurismoEntity entity) {
-        TurismoDto dto = new TurismoDto();
-        dto.setTurismoId(entity.getTurismoId());
-        dto.setTitulo(entity.getTitulo());
-        dto.setDescripcion(entity.getDescripcion());
-        dto.setDireccionImagen(entity.getDireccionImagen());
-        return dto;
-    }
-
-    private TurismoEntity toEntity(TurismoDto dto) {
-        TurismoEntity entity = new TurismoEntity();
-        entity.setTurismoId(dto.getTurismoId());
-        entity.setTitulo(dto.getTitulo());
-        entity.setDescripcion(dto.getDescripcion());
-        entity.setDireccionImagen(dto.getDireccionImagen());
-        return entity;
     }
 }

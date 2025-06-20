@@ -1,7 +1,7 @@
 package com.mdnch.webmdnch.service.impl;
 
-import com.mdnch.webmdnch.dto.AlcaldeDto;
 import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
+import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
 import com.mdnch.webmdnch.entity.AlcaldeEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.AlcaldeMapper;
@@ -12,15 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,63 +29,41 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     private AlcaldeMapper alcaldeMapper;
 
     @Override
-    public AlcaldeDto createAlcalde(AlcaldeRequest request) {
+    public AlcaldeResponse createAlcalde(AlcaldeRequest request) {
         MultipartFile archivo = request.getDireccionImagen();
-        String carpetaDestino =  "imagenes/alcaldes/";
+        String carpetaDestino = "imagenes/alcaldes/";
         String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        AlcaldeDto dto = new AlcaldeDto();
-        dto.setNombre(request.getNombre());
-        dto.setApellido(request.getApellido());
-        dto.setDescripcion(request.getDescripcion());
-        dto.setNumeroObras(request.getNumeroObras());
-        dto.setPresupuesto(request.getPresupuesto());
-        dto.setAprobacionCiudadana(request.getAprobacionCiudadana());
-        dto.setAtencionCiudadana(request.getAtencionCiudadana());
-        dto.setExperiencia(request.getExperiencia());
-        dto.setReconocimientos(request.getReconocimientos());
-        dto.setCompromiso(request.getCompromiso());
-        dto.setDireccionImagen(nombreArchivo);
+        AlcaldeEntity entity = alcaldeMapper.toEntity(request);
+        entity.setDireccionImagen(nombreArchivo);
+        entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
 
-        AlcaldeEntity entity = alcaldeMapper.toEntity(dto);
         AlcaldeEntity saved = repository.save(entity);
-
-        AlcaldeDto respuesta = alcaldeMapper.toDto(saved);
-        respuesta.setDireccionImagen(urlBase + "alcaldes/" + saved.getDireccionImagen()); // URL lista para el frontend
-
-        return respuesta;
+        return construirResponseConImagen(saved);
     }
 
     @Override
-    public List<AlcaldeDto> getAllAlcaldes() {
+    public List<AlcaldeResponse> getAllAlcaldes() {
         return repository.findAll()
                 .stream()
-                .map(alcaldeMapper::toDto)
+                .map(this::construirResponseConImagen)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public AlcaldeDto findByIdAlcalde(Integer id) {
+    public AlcaldeResponse findByIdAlcalde(Integer id) {
         AlcaldeEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
-        return alcaldeMapper.toDto(entity);
+        return construirResponseConImagen(entity);
     }
 
     @Override
-    public AlcaldeDto updateAlcalde(Integer id, AlcaldeRequest request) {
+    public AlcaldeResponse updateAlcalde(Integer id, AlcaldeRequest request) {
         AlcaldeEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
 
-        entity.setNombre(request.getNombre());
-        entity.setApellido(request.getApellido());
-        entity.setDescripcion(request.getDescripcion());
-        entity.setNumeroObras(request.getNumeroObras());
-        entity.setPresupuesto(request.getPresupuesto());
-        entity.setAprobacionCiudadana(request.getAprobacionCiudadana());
-        entity.setAtencionCiudadana(request.getAtencionCiudadana());
-        entity.setExperiencia(request.getExperiencia());
-        entity.setReconocimientos(request.getReconocimientos());
-        entity.setCompromiso(request.getCompromiso());
+        alcaldeMapper.updateEntityFromRequest(request, entity);
 
         MultipartFile archivo = request.getDireccionImagen();
         if (archivo != null && !archivo.isEmpty()) {
@@ -105,12 +76,10 @@ public class AlcaldeServiceImpl implements AlcaldeService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
+        entity.setFechaModificacion(LocalDate.now());
         AlcaldeEntity saved = repository.save(entity);
-        AlcaldeDto dto = alcaldeMapper.toDto(saved);
-        dto.setDireccionImagen(urlBase + "alcaldes/" + saved.getDireccionImagen());
-        return dto;
+        return construirResponseConImagen(saved);
     }
-
 
     @Override
     public void deleteAlcalde(Integer id) {
@@ -120,4 +89,9 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         repository.deleteById(id);
     }
 
+    private AlcaldeResponse construirResponseConImagen(AlcaldeEntity entity) {
+        AlcaldeResponse response = alcaldeMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
+        return response;
+    }
 }

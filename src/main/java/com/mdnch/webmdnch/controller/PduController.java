@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.controller;
 
-import com.mdnch.webmdnch.dto.PduDto;
+import com.mdnch.webmdnch.dto.request.PduRequest;
+import com.mdnch.webmdnch.dto.response.PduResponse;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.PduService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +21,26 @@ public class PduController {
     private PduService pduService;
 
     @PostMapping("/pdu/crear")
-    public ResponseEntity<ResponseBase<PduDto>> create(@RequestBody PduDto dto) {
-        PduDto creado = pduService.createPdu(dto);
-        return ResponseEntity.ok(new ResponseBase<>(true, "PDU creado correctamente", creado));
+    public ResponseEntity<ResponseBase<PduResponse>> create(@RequestBody PduRequest request) {
+        PduResponse response = pduService.createPdu(request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "PDU creado correctamente", response));
     }
 
     @GetMapping("/pdu/listar")
-    public ResponseEntity<ResponseBase<List<PduDto>>> getAll() {
-        List<PduDto> lista = pduService.getAllPdu();
-        return ResponseEntity.ok(new ResponseBase<>(true, "Listado de PDU obtenido correctamente", lista));
+    public ResponseEntity<ResponseBase<List<PduResponse>>> getAll() {
+        List<PduResponse> response = pduService.getAllPdu();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Listado de PDU obtenido correctamente", response));
     }
 
     @GetMapping("/pdu/{id}")
-    public ResponseEntity<ResponseBase<PduDto>> getById(@PathVariable Integer id) {
-        PduDto dto = pduService.findByIdPdu(id);
-        return ResponseEntity.ok(new ResponseBase<>(true, "PDU encontrado", dto));
+    public ResponseEntity<ResponseBase<PduResponse>> getById(@PathVariable Integer id) {
+        PduResponse response = pduService.findByIdPdu(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "PDU encontrado", response));
     }
 
     @PutMapping("/pdu/{id}")
-    public ResponseEntity<ResponseBase<Void>> update(@PathVariable Integer id, @RequestBody PduDto dto) {
-        pduService.updatePdu(id, dto);
+    public ResponseEntity<ResponseBase<Void>> update(@PathVariable Integer id, @RequestBody PduRequest request) {
+        PduResponse response = pduService.updatePdu(id, request);
         return ResponseEntity.ok(new ResponseBase<>(true, "PDU actualizado correctamente", null));
     }
 
