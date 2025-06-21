@@ -10,5 +10,6 @@ public interface NoticiasService {
     List<NoticiasResponse> getAllNoticias();
     NoticiasResponse findByIdNoticias(Integer noticiasId);
     NoticiasResponse updateNoticias(Integer noticiaId, NoticiasRequest request);
+    NoticiasResponse editNoticias(Integer noticiaId, NoticiasRequest request);
     void deleteNoticias(Integer noticiasId);
 }

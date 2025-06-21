@@ -44,6 +44,12 @@ public class PduController {
         return ResponseEntity.ok(new ResponseBase<>(true, "PDU actualizado correctamente", null));
     }
 
+    @PatchMapping("/pduedit/{id}")
+    public ResponseEntity<ResponseBase<PduResponse>> edit(@PathVariable Integer id, @RequestBody PduRequest request) {
+        PduResponse response = pduService.editPdu(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "PDU editado correctamente", response));
+    }
+
     @DeleteMapping("/pdu/{id}")
     public ResponseEntity<ResponseBase<Void>> delete(@PathVariable Integer id) {
         pduService.deletePdu(id);

@@ -10,5 +10,6 @@ public interface OrganigramaService {
     List <OrganigramaResponse> obtenerOrganigrama();
     OrganigramaResponse obtenerOrganigramaPorId(Integer id);
     OrganigramaResponse actualizarOrganigrama(Integer id, OrganigramaRequest request);
+    OrganigramaResponse editarOrganigrama(Integer id, OrganigramaRequest request);
     void eliminarOrganigrama(Integer id);
 }

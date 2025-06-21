@@ -43,6 +43,13 @@ public class AlcaldeController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde actualizado correctamente", response));
     }
 
+    @PatchMapping("alcaldeedit/{id}")
+    public ResponseEntity<ResponseBase<AlcaldeResponse>> editAlcalde(
+            @PathVariable Integer id,
+            @ModelAttribute AlcaldeRequest request) {
+        AlcaldeResponse response = alcaldeService.editAlcalde(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde editado correctamente", response));
+    }
 
     @DeleteMapping("alcaldes/{id}")
     public ResponseEntity<ResponseBase<Void>> deleteAlcalde(@PathVariable Integer id) {

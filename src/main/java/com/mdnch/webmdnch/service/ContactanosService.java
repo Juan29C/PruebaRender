@@ -10,5 +10,6 @@ public interface ContactanosService {
     List <ContactanosResponse> obtenerContactanos();
     ContactanosResponse obtenerContactanosPorId(Integer id);
     ContactanosResponse actualizarContactanos(Integer id, ContactanosRequest contactanosRequest);
+    ContactanosResponse editarContactanos(Integer id, ContactanosRequest contactanosRequest);
     void eliminarContactanos(Integer id);
 }

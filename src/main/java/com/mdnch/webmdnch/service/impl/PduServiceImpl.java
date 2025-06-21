@@ -53,8 +53,22 @@ public class PduServiceImpl implements PduService {
 
         pduMapper.updateEntityFromRequest(request, entity);
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
+
         PduEntity saved = pduRepository.save(entity);
 
+        return pduMapper.toResponse(saved);
+    }
+
+    @Override
+    public PduResponse editPdu(Integer pduId, PduRequest request) {
+        PduEntity entity = pduRepository.findById(pduId)
+                .orElseThrow(() -> new ResourceNotFoundException("PDU no encontrado con ID: " + pduId));
+
+        pduMapper.updateEntityFromRequest(request, entity);
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
+        PduEntity saved = pduRepository.save(entity);
         return pduMapper.toResponse(saved);
     }
 

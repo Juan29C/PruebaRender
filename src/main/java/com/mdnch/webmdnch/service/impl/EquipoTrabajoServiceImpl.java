@@ -70,9 +70,29 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
         equipoTrabajoMapper.updateEntityFromRequest(equipoTrabajoRequest, equipo);
         equipo.setConsejoMuni(consejoMuni);
         equipo.setFechaModificacion(LocalDate.now());
+        equipo.setResponsable("young flex");
 
         EquipoTrabajoEntity updatedEntity = equipoTrabajoRepository.save(equipo);
 
+        return equipoTrabajoMapper.toResponse(updatedEntity);
+    }
+
+    @Override
+    public EquipoTrabajoResponse editarEquipoTrabajo(Integer id, EquipoTrabajoRequest equipoTrabajoRequest) {
+        EquipoTrabajoEntity equipo = equipoTrabajoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Equipo de trabajo no encontrado con ID: " + id));
+
+        if (equipoTrabajoRequest.getConsejoMuniId() != null) {
+            ConsejoMuniEntity consejoMuni = consejoMuniRepository.findById(equipoTrabajoRequest.getConsejoMuniId())
+                    .orElseThrow(() -> new ResourceNotFoundException("El consejo municipal con ID proporcionado no existe."));
+            equipo.setConsejoMuni(consejoMuni);
+        }
+
+        equipoTrabajoMapper.updateEntityFromRequest(equipoTrabajoRequest, equipo);
+        equipo.setFechaModificacion(LocalDate.now());
+        equipo.setResponsable("jonz");
+
+        EquipoTrabajoEntity updatedEntity = equipoTrabajoRepository.save(equipo);
         return equipoTrabajoMapper.toResponse(updatedEntity);
     }
 

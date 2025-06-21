@@ -38,13 +38,21 @@ public class ConsejoMuniController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Consejo Municipal encontrado", consejoMuniResponse));
     }
 
-@PutMapping("/consejo-muni/{id}")
-public ResponseEntity<ResponseBase<ConsejoMuniResponse>> actualizarConsejoMuni(
-        @PathVariable Integer id,
-        @Valid @RequestBody ConsejoMuniRequest consejoMuniRequest) {
-    ConsejoMuniResponse response = consejoMuniService.actualizarConsejoMuni(id, consejoMuniRequest);
-    return ResponseEntity.ok(new ResponseBase<>(true, "Consejo Municipal actualizado con éxito", response));
-}
+    @PutMapping("/consejo-muni/{id}")
+    public ResponseEntity<ResponseBase<ConsejoMuniResponse>> actualizarConsejoMuni(
+            @PathVariable Integer id,
+            @Valid @RequestBody ConsejoMuniRequest consejoMuniRequest) {
+        ConsejoMuniResponse response = consejoMuniService.actualizarConsejoMuni(id, consejoMuniRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Consejo Municipal actualizado con éxito", response));
+    }
+
+    @PatchMapping("/consejo-muniedit/{id}")
+    public ResponseEntity<ResponseBase<ConsejoMuniResponse>> actualizarParcialConsejoMuni(
+            @PathVariable Integer id,
+            @Valid @RequestBody ConsejoMuniRequest consejoMuniRequest) {
+        ConsejoMuniResponse response = consejoMuniService.editarConsejoMuni(id, consejoMuniRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Consejo Municipal actualizado parcialmente con éxito", response));
+    }
 
     @DeleteMapping("/consejo-muni/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarConsejoMuni(@PathVariable Integer id) {

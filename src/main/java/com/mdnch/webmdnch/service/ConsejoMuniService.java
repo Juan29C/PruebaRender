@@ -10,6 +10,7 @@ public interface ConsejoMuniService {
     List<ConsejoMuniResponse> obtenerConsejosMuni();
     ConsejoMuniResponse obtenerConsejoMuniPorId(Integer id);
     ConsejoMuniResponse actualizarConsejoMuni(Integer id, ConsejoMuniRequest consejoMuniRequest);
+    ConsejoMuniResponse editarConsejoMuni(Integer id, ConsejoMuniRequest consejoMuniRequest);
     void eliminarConsejoMuni(Integer id);
 
 }

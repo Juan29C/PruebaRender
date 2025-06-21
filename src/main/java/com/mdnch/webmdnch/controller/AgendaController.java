@@ -46,10 +46,22 @@ public class AgendaController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Agenda actualizada con éxito", response));
     }
 
+    @PatchMapping("/agendaedit/{id}")
+    public ResponseEntity<ResponseBase<AgendaResponse>> editarAgenda(
+            @PathVariable Integer id,
+            @ModelAttribute AgendaRequest agendaRequest) {
+
+        AgendaResponse response = agendaService.editarAgenda(id, agendaRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Fecha editada con éxito", response));
+    }
+
     @DeleteMapping("/agenda/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarAgenda(@PathVariable Integer id) {
         agendaService.eliminarAgenda(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Fecha eliminada con éxito", null));
     }
+
+
+
 
 }

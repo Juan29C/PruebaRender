@@ -5,9 +5,7 @@ import com.mdnch.webmdnch.dto.request.FuncionariosRequest;
 import com.mdnch.webmdnch.dto.response.FuncionariosResponse;
 import com.mdnch.webmdnch.entity.FuncionariosEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface FuncionariosMapper extends GenericMapper<FuncionariosDto, FuncionariosEntity> {
@@ -15,11 +13,12 @@ public interface FuncionariosMapper extends GenericMapper<FuncionariosDto, Funci
     @Override
     FuncionariosDto toDto(FuncionariosEntity entity);
 
-    @Mapping(target = "direccionImagen", ignore = true) // Ignoramos el campo en el mapeo
+    @Mapping(target = "direccionImagen", ignore = true)
     FuncionariosEntity toEntity(FuncionariosRequest funcionariosRequest);
 
     FuncionariosResponse toResponse(FuncionariosEntity entity);
 
-    @Mapping(target = "direccionImagen", ignore = true) // Ignoramos también en actualizaciones
+    @Mapping(target = "direccionImagen", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(FuncionariosRequest request, @MappingTarget FuncionariosEntity entity);
 }

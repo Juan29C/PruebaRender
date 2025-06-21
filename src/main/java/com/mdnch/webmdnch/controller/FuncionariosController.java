@@ -47,6 +47,14 @@ public class FuncionariosController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Funcionario actualizado con éxito", response));
     }
 
+    @PatchMapping("/funcionariosedit/{id}")
+    public ResponseEntity<ResponseBase<FuncionariosResponse>> actualizarParcialFuncionario(
+            @PathVariable Integer id,
+            @Valid @ModelAttribute FuncionariosRequest request) {
+        FuncionariosResponse response = funcionariosService.editarFuncionario(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Funcionario actualizado parcialmente con éxito", response));
+    }
+
     @DeleteMapping("/funcionarios/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarFuncionario(@PathVariable Integer id) {
         funcionariosService.eliminarFuncionario(id);

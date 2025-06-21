@@ -85,6 +85,35 @@ public class OrganigramaServiceImpl implements OrganigramaService {
             entity.setDireccionImagen(nombreArchivo);
         }
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
+
+        OrganigramaEntity saved = organigramaRepository.saveAndFlush(entity);
+
+        OrganigramaResponse response = organigramaMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "organigrama/" + saved.getDireccionImagen());
+
+        return response;
+    }
+
+    @Override
+    public OrganigramaResponse editarOrganigrama(Integer id, OrganigramaRequest request) {
+        OrganigramaEntity entity = organigramaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Organigrama no encontrado con ID: " + id));
+
+        organigramaMapper.updateEntityFromRequest(request, entity);
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/organigrama/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
 
         OrganigramaEntity saved = organigramaRepository.saveAndFlush(entity);
 

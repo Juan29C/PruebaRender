@@ -89,6 +89,35 @@ public class EventoServiceImpl implements EventoService {
         }
 
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
+        EventosEntity saved = eventosRepository.saveAndFlush(entity);
+
+        EventoResponse response = eventosMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "eventos/" + saved.getDireccionImagen());
+
+        return response;
+    }
+
+    @Override
+    public EventoResponse editarEventos(Integer id, EventoRequest request) {
+        EventosEntity entity = eventosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado con ID: " + id));
+
+        eventosMapper.updateEntityFromRequest(request, entity);
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/eventos/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
         EventosEntity saved = eventosRepository.saveAndFlush(entity);
 
         EventoResponse response = eventosMapper.toResponse(saved);

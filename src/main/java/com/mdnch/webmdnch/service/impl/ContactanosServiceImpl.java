@@ -56,6 +56,15 @@ public class ContactanosServiceImpl implements ContactanosService {
     }
 
     @Override
+    public ContactanosResponse editarContactanos(Integer id, ContactanosRequest contactanosRequest) {
+        ContactanosEntity entity = contactanosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contacto no encontrado"));
+        contactanosMapper.updateEntityFromRequest(contactanosRequest, entity);
+        ContactanosEntity updated = contactanosRepository.save(entity);
+        return contactanosMapper.toResponse(updated);
+    }
+
+    @Override
     public void eliminarContactanos(Integer id) {
         if (!contactanosRepository.existsById(id)) {
             throw new ResourceNotFoundException("Contacto no encontrado");

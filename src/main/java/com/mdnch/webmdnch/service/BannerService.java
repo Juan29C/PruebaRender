@@ -10,5 +10,6 @@ public interface BannerService {
     List<BannerResponse> obtenerBanners();
     BannerResponse obtenerBannerPorId(Integer id);
     BannerResponse actualizarBanner(Integer id, BannerRequest request);
+    BannerResponse editarBanner(Integer id, BannerRequest request);
     void eliminarBanner(Integer id);
 }

@@ -87,7 +87,36 @@ public class NoticiasServiceImpl implements NoticiasService {
             entity.setDireccionImagen(nombreArchivo);
         }
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
 
+        NoticiasEntity saved = noticiasRepository.saveAndFlush(entity);
+
+        NoticiasResponse response = noticiasMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "noticias/" + saved.getDireccionImagen());
+
+        return response;
+    }
+
+    @Override
+    public NoticiasResponse editNoticias(Integer noticiaId, NoticiasRequest request) {
+        NoticiasEntity entity = noticiasRepository.findById(noticiaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrada con ID: " + noticiaId));
+
+        noticiasMapper.updateEntityFromRequest(request, entity);
+
+        MultipartFile archivo = request.getImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/noticias/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
         NoticiasEntity saved = noticiasRepository.saveAndFlush(entity);
 
         NoticiasResponse response = noticiasMapper.toResponse(saved);

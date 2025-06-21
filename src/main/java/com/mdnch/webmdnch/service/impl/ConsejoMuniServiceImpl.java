@@ -53,6 +53,18 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
                 .orElseThrow(() -> new ResourceNotFoundException("Consejo Municipal no encontrado"));
         consejoMuniMapper.updateEntityFromRequest(consejoMuniRequest, entity);
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
+        ConsejoMuniEntity updated = consejoMuniRepository.save(entity);
+        return consejoMuniMapper.toResponse(updated);
+    }
+
+    @Override
+    public ConsejoMuniResponse editarConsejoMuni(Integer id, ConsejoMuniRequest consejoMuniRequest) {
+        ConsejoMuniEntity entity = consejoMuniRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consejo Municipal no encontrado"));
+        consejoMuniMapper.updateEntityFromRequest(consejoMuniRequest, entity);
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
         ConsejoMuniEntity updated = consejoMuniRepository.save(entity);
         return consejoMuniMapper.toResponse(updated);
     }

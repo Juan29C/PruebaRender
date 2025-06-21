@@ -52,6 +52,13 @@ public class NoticiasController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Noticia actualizada correctamente", response));
     }
 
+    @PatchMapping("noticiasedit/{id}")
+    public ResponseEntity<ResponseBase<NoticiasResponse>> editarNoticia(
+            @PathVariable Integer id,
+            @ModelAttribute NoticiasRequest request) {
+        NoticiasResponse response = noticiasService.editNoticias(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Noticia editada correctamente", response));
+    }
 
     @DeleteMapping("noticias/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarNoticia(@PathVariable Integer id) {

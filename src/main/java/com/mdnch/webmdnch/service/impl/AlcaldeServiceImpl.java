@@ -77,9 +77,35 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         }
 
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
         AlcaldeEntity saved = repository.save(entity);
         return construirResponseConImagen(saved);
     }
+
+    @Override
+    public AlcaldeResponse editAlcalde(Integer id, AlcaldeRequest request) {
+        AlcaldeEntity entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
+
+        alcaldeMapper.updateEntityFromRequest(request, entity);
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/alcaldes/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
+
+        AlcaldeEntity saved = repository.save(entity);
+        return construirResponseConImagen(saved);
+    }
+
 
     @Override
     public void deleteAlcalde(Integer id) {

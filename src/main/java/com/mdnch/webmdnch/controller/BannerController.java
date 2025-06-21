@@ -46,6 +46,15 @@ public class BannerController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", response));
     }
 
+    @PatchMapping("/bannersedit/{id}")
+    public ResponseEntity<ResponseBase<BannerResponse>> editarBanner(
+            @PathVariable Integer id,
+            @ModelAttribute BannerRequest bannerRequest) {
+
+        BannerResponse response = bannerService.editarBanner(id, bannerRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Banner editado con éxito", response));
+    }
+
     @DeleteMapping("/banners/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarBanner(@PathVariable Integer id) {
         bannerService.eliminarBanner(id);

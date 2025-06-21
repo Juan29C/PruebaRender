@@ -76,6 +76,31 @@ public class BannerServiceImpl implements BannerService {
         }
 
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
+
+        BannerEntity saved = bannerRepository.save(entity);
+        return construirResponseConImagen(saved);
+    }
+
+    @Override
+    public BannerResponse editarBanner(Integer id, BannerRequest request) {
+        BannerEntity entity = bannerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Banner no encontrado con ID: " + id));
+
+        bannerMapper.updateEntityFromRequest(request, entity);
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/banners/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
         BannerEntity saved = bannerRepository.save(entity);
         return construirResponseConImagen(saved);
     }

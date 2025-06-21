@@ -11,5 +11,6 @@ public interface AlcaldeService {
     List<AlcaldeResponse> getAllAlcaldes();
     AlcaldeResponse findByIdAlcalde(Integer alcaldeId);
     AlcaldeResponse updateAlcalde(Integer alcaldeId, AlcaldeRequest request);
+    AlcaldeResponse editAlcalde(Integer alcaldeId, AlcaldeRequest request);
     void deleteAlcalde(Integer alcaldeId);
 }

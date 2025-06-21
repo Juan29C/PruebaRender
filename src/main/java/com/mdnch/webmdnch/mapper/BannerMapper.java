@@ -6,9 +6,7 @@ import com.mdnch.webmdnch.dto.response.BannerResponse;
 import com.mdnch.webmdnch.entity.AgendaEntity;
 import com.mdnch.webmdnch.entity.BannerEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface BannerMapper extends GenericMapper<BannerDto, BannerEntity> {
@@ -22,5 +20,6 @@ public interface BannerMapper extends GenericMapper<BannerDto, BannerEntity> {
     BannerResponse toResponse(BannerEntity entity);
 
     @Mapping(target = "direccionImagen", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(BannerRequest request, @MappingTarget BannerEntity entity);
 }

@@ -5,9 +5,7 @@ import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
 import com.mdnch.webmdnch.entity.AlcaldeEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface AlcaldeMapper extends GenericMapper<AlcaldeDto, AlcaldeEntity> {
@@ -15,11 +13,12 @@ public interface AlcaldeMapper extends GenericMapper<AlcaldeDto, AlcaldeEntity> 
     @Override
     AlcaldeDto toDto(AlcaldeEntity entity);
 
-    @Mapping(target = "direccionImagen", ignore = true)  // Ignoramos el campo en el mapeo
+    @Mapping(target = "direccionImagen", ignore = true)
     AlcaldeEntity toEntity(AlcaldeRequest request);
 
     AlcaldeResponse toResponse(AlcaldeEntity entity);
 
-    @Mapping(target = "direccionImagen", ignore = true)  // Ignoramos también en actualizaciones
+    @Mapping(target = "direccionImagen", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(AlcaldeRequest request, @MappingTarget AlcaldeEntity entity);
 }

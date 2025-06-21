@@ -10,6 +10,7 @@ public interface FuncionariosService {
     List<FuncionariosResponse> obtenerFuncionarios();
     FuncionariosResponse obtenerFuncionarioPorId(Integer id);
     FuncionariosResponse actualizarFuncionario(Integer id, FuncionariosRequest funcionariosRequest);
+    FuncionariosResponse editarFuncionario(Integer id, FuncionariosRequest funcionariosRequest);
     void eliminarFuncionario(Integer id);
 
 }

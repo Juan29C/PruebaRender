@@ -48,6 +48,14 @@ public class ContactanosController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Contacto actualizado con éxito", response));
     }
 
+    @PatchMapping("/contactanosedit/{id}")
+    public ResponseEntity<ResponseBase<ContactanosResponse>> editarContactanos(
+            @PathVariable Integer id,
+            @Valid @RequestBody ContactanosRequest contactanosRequest) {
+        ContactanosResponse response = contactanosService.editarContactanos(id, contactanosRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Contacto actualizado parcialmente con éxito", response));
+    }
+
     @DeleteMapping("/contactanos/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarContactanos(@PathVariable Integer id) {
         contactanosService.eliminarContactanos(id);

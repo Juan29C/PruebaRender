@@ -5,8 +5,10 @@ import com.mdnch.webmdnch.dto.request.PduRequest;
 import com.mdnch.webmdnch.dto.response.PduResponse;
 import com.mdnch.webmdnch.entity.PduEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface PduMapper extends GenericMapper<PduDto, PduEntity> {
@@ -17,6 +19,7 @@ public interface PduMapper extends GenericMapper<PduDto, PduEntity> {
 
     PduResponse toResponse(PduEntity entity);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(PduRequest request, @MappingTarget PduEntity entity);
 
 }

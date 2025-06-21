@@ -46,6 +46,15 @@ public class EventoController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Evento actualizado con éxito", response));
     }
 
+    @PatchMapping("/eventosedit/{id}")
+    public ResponseEntity<ResponseBase<EventoResponse>> actualizarParcialEventos(
+            @PathVariable Integer id,
+            @ModelAttribute EventoRequest eventoRequest) {
+
+        EventoResponse response = eventoService.editarEventos(id, eventoRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Evento actualizado parcialmente con éxito", response));
+    }
+
     @DeleteMapping("/eventos/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarEventos(@PathVariable Integer id) {
         eventoService.eliminarEventos(id);

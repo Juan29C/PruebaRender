@@ -10,5 +10,6 @@ public interface EventoService {
     List<EventoResponse> obtenerEventos();
     EventoResponse obtenerEventosPorId(Integer id);
     EventoResponse actualizarEventos(Integer id, EventoRequest request);
+    EventoResponse editarEventos(Integer id, EventoRequest request);
     void eliminarEventos(Integer id);
 }

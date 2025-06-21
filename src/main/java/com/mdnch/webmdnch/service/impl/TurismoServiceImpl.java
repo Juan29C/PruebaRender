@@ -84,6 +84,7 @@ public class TurismoServiceImpl implements TurismoService {
             entity.setDireccionImagen(nombreArchivo);
         }
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
 
         TurismoEntity saved = turismoRepository.saveAndFlush(entity);
 
@@ -94,10 +95,35 @@ public class TurismoServiceImpl implements TurismoService {
     }
 
     @Override
+    public TurismoResponse editTurismo(Integer turismoId, TurismoRequest request) {
+        TurismoEntity entity = turismoRepository.findById(turismoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Turismo no encontrado con ID: " + turismoId));
+
+        turismoMapper.updateEntityFromRequest(request, entity);
+
+        if (request.getDireccionImagen() != null && !request.getDireccionImagen().isEmpty()) {
+            String carpetaDestino = "imagenes/turismo/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    request.getDireccionImagen(),
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
+        TurismoEntity saved = turismoRepository.save(entity);
+        TurismoResponse response = turismoMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "turismo/" + saved.getDireccionImagen());
+        return response;
+    }
+
+    @Override
     public void deleteTurismo(Integer turismoId) {
         if (!turismoRepository.existsById(turismoId)) {
             throw new ResourceNotFoundException("Turismo no encontrado con ID: " + turismoId);
         }
         turismoRepository.deleteById(turismoId);
     }
+
 }

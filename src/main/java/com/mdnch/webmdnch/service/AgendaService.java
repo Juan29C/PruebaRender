@@ -10,5 +10,6 @@ public interface AgendaService {
     List<AgendaResponse> obtenerAgendas();
     AgendaResponse obtenerAgendaPorId(Integer id);
     AgendaResponse actualizarAgenda(Integer id, AgendaRequest request);
+    AgendaResponse editarAgenda(Integer id, AgendaRequest request);
     void eliminarAgenda(Integer id);
 }

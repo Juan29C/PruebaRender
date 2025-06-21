@@ -81,9 +81,36 @@ public class AgendaServiceImpl implements AgendaService {
         }
 
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
         AgendaEntity saved = agendaRepository.save(entity);
         return construirResponseConImagen(saved);
     }
+
+    @Override
+    public AgendaResponse editarAgenda(Integer id, AgendaRequest request) {
+        AgendaEntity entity = agendaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Agenda no encontrada con ID: " + id));
+
+        agendaMapper.updateEntityFromRequest(request, entity);
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/agenda/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
+        AgendaEntity saved = agendaRepository.save(entity);
+        return construirResponseConImagen(saved);
+    }
+
+
 
     @Override
     public void eliminarAgenda(Integer id) {

@@ -47,6 +47,15 @@ public class OrganigramaController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Organigrama actualizado con éxito", response));
     }
 
+    @PatchMapping("/organigramaedit/{id}")
+    public ResponseEntity<ResponseBase<OrganigramaResponse>> editarOrganigrama(
+            @PathVariable Integer id,
+            @ModelAttribute OrganigramaRequest request) {
+
+        OrganigramaResponse response = organigramaService.editarOrganigrama(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Organigrama editado con éxito", response));
+    }
+
     @DeleteMapping("/organigrama/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarOrganigrama(@PathVariable Integer id) {
         organigramaService.eliminarOrganigrama(id);

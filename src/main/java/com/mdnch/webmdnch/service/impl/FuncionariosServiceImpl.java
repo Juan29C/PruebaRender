@@ -85,6 +85,31 @@ public class FuncionariosServiceImpl implements FuncionariosService {
             entity.setDireccionImagen(nombreArchivo);
         }
         entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("young flex");
+        FuncionariosEntity saved = funcionariosRepository.save(entity);
+        FuncionariosResponse response = funcionariosMapper.toResponse(saved);
+        response.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());
+
+        return response;
+    }
+
+    @Override
+    public FuncionariosResponse editarFuncionario(Integer id, FuncionariosRequest request) {
+        FuncionariosEntity entity = funcionariosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionario no encontrado con ID: " + id));
+        funcionariosMapper.updateEntityFromRequest(request, entity);
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/funcionarios/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
         FuncionariosEntity saved = funcionariosRepository.save(entity);
         FuncionariosResponse response = funcionariosMapper.toResponse(saved);
         response.setDireccionImagen(urlBase + "funcionarios/" + saved.getDireccionImagen());

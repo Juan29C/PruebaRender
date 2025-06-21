@@ -46,6 +46,14 @@ public class EquipoTrabajoController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Equipo de trabajo actualizado con éxito", response));
     }
 
+    @PatchMapping("/equipo-trabajo-edit/{id}")
+    public ResponseEntity<ResponseBase<EquipoTrabajoResponse>> editarEquipoTrabajo(
+            @PathVariable Integer id,
+            @Valid @RequestBody EquipoTrabajoRequest equipoTrabajoRequest) {
+        EquipoTrabajoResponse response = equipoTrabajoService.editarEquipoTrabajo(id, equipoTrabajoRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Equipo de trabajo editado con éxito", response));
+    }
+
     @DeleteMapping("/equipo-trabajo/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarEquipoTrabajo(@PathVariable Integer id) {
         equipoTrabajoService.eliminarEquipoTrabajo(id);

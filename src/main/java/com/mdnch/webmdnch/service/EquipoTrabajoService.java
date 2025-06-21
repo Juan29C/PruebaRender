@@ -10,5 +10,6 @@ public interface EquipoTrabajoService {
     List<EquipoTrabajoResponse> obtenerEquipoTrabajo();
     EquipoTrabajoResponse obtenerEquipoTrabajoPorId(Integer id);
     EquipoTrabajoResponse actualizarEquipoTrabajo(Integer id, EquipoTrabajoRequest equipoTrabajoRequest);
+    EquipoTrabajoResponse editarEquipoTrabajo(Integer id, EquipoTrabajoRequest equipoTrabajoRequest);
     void eliminarEquipoTrabajo(Integer id);
 }

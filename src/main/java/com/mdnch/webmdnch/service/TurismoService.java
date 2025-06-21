@@ -10,6 +10,7 @@ public interface TurismoService {
     List<TurismoResponse> getAllTurismos();
     TurismoResponse findById(int turismoId);
     TurismoResponse updateTurismo(Integer turismoId, TurismoRequest request);
+    TurismoResponse editTurismo(Integer turismoId, TurismoRequest request);
     void deleteTurismo(Integer turismoId);
 
 }

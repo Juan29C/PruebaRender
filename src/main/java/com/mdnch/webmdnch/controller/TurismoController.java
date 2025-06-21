@@ -48,6 +48,14 @@ public class TurismoController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Turismo actualizado correctamente", response));
     }
 
+    @PatchMapping("/turismoedit/{id}")
+    public ResponseEntity<ResponseBase<TurismoResponse>> edit(
+            @PathVariable Integer id,
+            @ModelAttribute TurismoRequest request) {
+
+        TurismoResponse response = turismoService.editTurismo(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Turismo editado correctamente", response));
+    }
 
     @DeleteMapping("/turismo/{id}")
     public ResponseEntity<ResponseBase<Void>> delete(@PathVariable Integer id) {
