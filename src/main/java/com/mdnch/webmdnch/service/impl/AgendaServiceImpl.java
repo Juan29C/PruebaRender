@@ -7,6 +7,7 @@ import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.AgendaMapper;
 import com.mdnch.webmdnch.repository.AgendaRepository;
 import com.mdnch.webmdnch.service.AgendaService;
+import com.mdnch.webmdnch.util.AuthUtil;
 import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,9 @@ public class AgendaServiceImpl implements AgendaService {
 
     @Autowired
     private AgendaMapper agendaMapper;
+
+    @Autowired
+    private AuthUtil authUtil;
 
     @Autowired
     public AgendaServiceImpl(AgendaRepository agendaRepository) {
