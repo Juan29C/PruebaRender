@@ -8,6 +8,7 @@ public class ConsejoMuniResponse {
     private String apellido;
     private String area;
     private String cargo;
+    private String direccionImagen;
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
     private String responsable;
@@ -50,6 +51,14 @@ public class ConsejoMuniResponse {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public String getDireccionImagen() {
+        return direccionImagen;
+    }
+
+    public void setDireccionImagen(String direccionImagen) {
+        this.direccionImagen = direccionImagen;
     }
 
     public LocalDate getFechaCreacion() {

@@ -7,8 +7,12 @@ import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.ConsejoMuniMapper;
 import com.mdnch.webmdnch.repository.ConsejoMuniRepository;
 import com.mdnch.webmdnch.service.ConsejoMuniService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,22 +25,32 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
     @Autowired
     private ConsejoMuniMapper consejoMuniMapper;
 
+    @Value("${imagenes.urlBase}")
+    private String urlBase;
+
     public ConsejoMuniServiceImpl(ConsejoMuniRepository consejoMuniRepository) {
         this.consejoMuniRepository = consejoMuniRepository;
     }
 
     @Override
-    public ConsejoMuniResponse registrarConsejoMuni(ConsejoMuniRequest consejoMuniRequest) {
-        ConsejoMuniEntity entity = consejoMuniMapper.toEntity(consejoMuniRequest);
+    public ConsejoMuniResponse registrarConsejoMuni(ConsejoMuniRequest request) {
+        MultipartFile archivo = request.getDireccionImagen();
+        String carpetaDestino = "imagenes/consejos/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
+
+        ConsejoMuniEntity entity = consejoMuniMapper.toEntity(request);
+        entity.setDireccionImagen(nombreArchivo);
         entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
+
         ConsejoMuniEntity saved = consejoMuniRepository.saveAndFlush(entity);
-        return consejoMuniMapper.toResponse(saved);
+        return construirResponseConImagen(saved);
     }
 
     @Override
     public List<ConsejoMuniResponse> obtenerConsejosMuni() {
         return consejoMuniRepository.findAll().stream()
-                .map(consejoMuniMapper::toResponse)
+                .map(this::construirResponseConImagen)
                 .collect(Collectors.toList());
     }
 
@@ -44,7 +58,7 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
     public ConsejoMuniResponse obtenerConsejoMuniPorId(Integer id) {
         ConsejoMuniEntity entity = consejoMuniRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consejo Municipal no encontrado"));
-        return consejoMuniMapper.toResponse(entity);
+        return construirResponseConImagen(entity);
     }
 
     @Override
@@ -52,21 +66,46 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
         ConsejoMuniEntity entity = consejoMuniRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consejo Municipal no encontrado"));
         consejoMuniMapper.updateEntityFromRequest(consejoMuniRequest, entity);
+
+        MultipartFile archivo = consejoMuniRequest.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/consejos/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
         entity.setFechaModificacion(LocalDate.now());
         entity.setResponsable("young flex");
         ConsejoMuniEntity updated = consejoMuniRepository.save(entity);
-        return consejoMuniMapper.toResponse(updated);
+        return construirResponseConImagen(updated);
     }
 
     @Override
     public ConsejoMuniResponse editarConsejoMuni(Integer id, ConsejoMuniRequest consejoMuniRequest) {
         ConsejoMuniEntity entity = consejoMuniRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consejo Municipal no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consejo Municipal no encontrado con ID: " + id));
+
         consejoMuniMapper.updateEntityFromRequest(consejoMuniRequest, entity);
+
+        MultipartFile archivo = consejoMuniRequest.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/consejos/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+
         entity.setFechaModificacion(LocalDate.now());
-        entity.setResponsable("jonz");
+        entity.setResponsable("young flex");
         ConsejoMuniEntity updated = consejoMuniRepository.save(entity);
-        return consejoMuniMapper.toResponse(updated);
+        return construirResponseConImagen(updated);
     }
 
     @Override
@@ -75,4 +114,12 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
                 .orElseThrow(() -> new ResourceNotFoundException("Consejo Municipal no encontrado"));
         consejoMuniRepository.delete(entity);
     }
+
+    private ConsejoMuniResponse construirResponseConImagen(ConsejoMuniEntity entity) {
+        ConsejoMuniResponse response = consejoMuniMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + entity.getDireccionImagen());
+        return response;
+    }
+
+
 }

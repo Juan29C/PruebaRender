@@ -1,10 +1,13 @@
 package com.mdnch.webmdnch.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class ConsejoMuniRequest {
     private String nombre;
     private String apellido;
     private String area;
     private String cargo;
+    private MultipartFile direccionImagen;
 
     public String getNombre() {
         return nombre;
@@ -36,5 +39,13 @@ public class ConsejoMuniRequest {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public MultipartFile getDireccionImagen() {
+        return direccionImagen;
+    }
+
+    public void setDireccionImagen(MultipartFile direccionImagen) {
+        this.direccionImagen = direccionImagen;
     }
 }

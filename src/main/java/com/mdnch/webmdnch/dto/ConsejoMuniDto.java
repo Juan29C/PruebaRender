@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 
 public class ConsejoMuniDto {
@@ -8,6 +10,7 @@ public class ConsejoMuniDto {
     private String apellido;
     private String area;
     private String cargo;
+    private String direccionImagen;
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
     private String responsable;
@@ -50,6 +53,14 @@ public class ConsejoMuniDto {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public String getDireccionImagen() {
+        return direccionImagen;
+    }
+
+    public void setDireccionImagen(String direccionImagen) {
+        this.direccionImagen = direccionImagen;
     }
 
     public LocalDate getFechaCreacion() {

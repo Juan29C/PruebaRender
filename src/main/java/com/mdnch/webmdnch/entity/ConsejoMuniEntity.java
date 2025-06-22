@@ -27,6 +27,9 @@ public class ConsejoMuniEntity {
     @Column(name = "cargo", nullable = false, length = 100)
     private String cargo;
 
+    @Column(name = "direccionImagen", nullable = true)
+    private String direccionImagen;
+
     @Column(name = "fechaCreacion", nullable = false, updatable = false)
     private LocalDate fechaCreacion;
 
@@ -82,6 +85,14 @@ public class ConsejoMuniEntity {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public String getDireccionImagen() {
+        return direccionImagen;
+    }
+
+    public void setDireccionImagen(String direccionImagen) {
+        this.direccionImagen = direccionImagen;
     }
 
     public LocalDate getFechaCreacion() {

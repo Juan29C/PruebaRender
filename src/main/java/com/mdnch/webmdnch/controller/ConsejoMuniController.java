@@ -19,7 +19,7 @@ public class ConsejoMuniController {
     ConsejoMuniService consejoMuniService;
 
     @PostMapping("/consejo-muni/registrar")
-    public ResponseEntity<ResponseBase<ConsejoMuniResponse>> registrarConsejoMuni(@Valid @RequestBody ConsejoMuniRequest consejoMuniRequest) {
+    public ResponseEntity<ResponseBase<ConsejoMuniResponse>> registrarConsejoMuni(@ModelAttribute ConsejoMuniRequest consejoMuniRequest) {
         ConsejoMuniResponse response = consejoMuniService.registrarConsejoMuni(consejoMuniRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -41,7 +41,7 @@ public class ConsejoMuniController {
     @PutMapping("/consejo-muni/{id}")
     public ResponseEntity<ResponseBase<ConsejoMuniResponse>> actualizarConsejoMuni(
             @PathVariable Integer id,
-            @Valid @RequestBody ConsejoMuniRequest consejoMuniRequest) {
+            @ModelAttribute ConsejoMuniRequest consejoMuniRequest) {
         ConsejoMuniResponse response = consejoMuniService.actualizarConsejoMuni(id, consejoMuniRequest);
         return ResponseEntity.ok(new ResponseBase<>(true, "Consejo Municipal actualizado con éxito", response));
     }
@@ -49,7 +49,7 @@ public class ConsejoMuniController {
     @PatchMapping("/consejo-muniedit/{id}")
     public ResponseEntity<ResponseBase<ConsejoMuniResponse>> actualizarParcialConsejoMuni(
             @PathVariable Integer id,
-            @Valid @RequestBody ConsejoMuniRequest consejoMuniRequest) {
+            @ModelAttribute ConsejoMuniRequest consejoMuniRequest) {
         ConsejoMuniResponse response = consejoMuniService.editarConsejoMuni(id, consejoMuniRequest);
         return ResponseEntity.ok(new ResponseBase<>(true, "Consejo Municipal actualizado parcialmente con éxito", response));
     }
