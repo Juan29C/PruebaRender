@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
+import com.mdnch.webmdnch.dto.response.AlcaldePageResponse;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
 import com.mdnch.webmdnch.entity.AlcaldeEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
@@ -56,6 +57,15 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         AlcaldeEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
         return construirResponseConImagen(entity);
+    }
+
+    @Override
+    public AlcaldePageResponse findByInfoPageAlcalde(Integer id) {
+        AlcaldeEntity entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
+        AlcaldePageResponse response = alcaldeMapper.toPageResponse(entity);
+        response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
+        return response;
     }
 
     @Override

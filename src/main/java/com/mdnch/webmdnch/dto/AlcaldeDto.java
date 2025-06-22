@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 
 public class AlcaldeDto {
@@ -18,6 +20,9 @@ public class AlcaldeDto {
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
     private String responsable;
+    private String tituloBannerPage;
+    private String descripcionBannerPage;
+
 
     public Integer getAlcaldeId() {
         return alcaldeId;
@@ -134,6 +139,19 @@ public class AlcaldeDto {
         this.responsable = responsable;
     }
 
+    public String getTituloBannerPage() {
+        return tituloBannerPage;
+    }
 
+    public void setTituloBannerPage(String tituloBannerPage) {
+        this.tituloBannerPage = tituloBannerPage;
+    }
 
+    public String getDescripcionBannerPage() {
+        return descripcionBannerPage;
+    }
+
+    public void setDescripcionBannerPage(String descripcionBannerPage) {
+        this.descripcionBannerPage = descripcionBannerPage;
+    }
 }

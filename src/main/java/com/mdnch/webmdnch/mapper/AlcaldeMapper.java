@@ -2,6 +2,7 @@ package com.mdnch.webmdnch.mapper;
 
 import com.mdnch.webmdnch.dto.AlcaldeDto;
 import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
+import com.mdnch.webmdnch.dto.response.AlcaldePageResponse;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
 import com.mdnch.webmdnch.entity.AlcaldeEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
@@ -17,6 +18,9 @@ public interface AlcaldeMapper extends GenericMapper<AlcaldeDto, AlcaldeEntity> 
     AlcaldeEntity toEntity(AlcaldeRequest request);
 
     AlcaldeResponse toResponse(AlcaldeEntity entity);
+
+    AlcaldePageResponse toPageResponse(AlcaldeEntity entity);
+
 
     @Mapping(target = "direccionImagen", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

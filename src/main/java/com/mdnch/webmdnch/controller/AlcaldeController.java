@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.controller;
 
 import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
+import com.mdnch.webmdnch.dto.response.AlcaldePageResponse;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
 import com.mdnch.webmdnch.service.AlcaldeService;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
@@ -35,6 +36,12 @@ public class AlcaldeController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde encontrado", response));
     }
 
+    @GetMapping("alcaldepage/{id}")
+    public ResponseEntity<ResponseBase<AlcaldePageResponse>> getAlcaldeByPage(@PathVariable Integer id) {
+        AlcaldePageResponse response = alcaldeService.findByInfoPageAlcalde(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Información del Alcalde para page", response));
+    }
+
     @PutMapping("alcaldes/{id}")
     public ResponseEntity<ResponseBase<AlcaldeResponse>> updateAlcalde(
             @PathVariable Integer id,
@@ -56,4 +63,6 @@ public class AlcaldeController {
         alcaldeService.deleteAlcalde(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde eliminado correctamente", null));
     }
+
+
 }

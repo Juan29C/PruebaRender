@@ -55,6 +55,12 @@ public class AlcaldeEntity {
     @Column(name = "responsable", nullable = false, length = 100)
     private String responsable;
 
+    @Column(name = "tituloBannerPage", nullable = false, length = 300)
+    private String tituloBannerPage;
+
+    @Column(name = "descripcionBannerPage", nullable = false, length = 1000)
+    private String descripcionBannerPage;
+
     @PrePersist
     public void prePersist() {
         this.fechaCreacion = LocalDate.now(ZoneId.of("America/Lima"));
@@ -178,6 +184,22 @@ public class AlcaldeEntity {
 
     public void setResponsable(String responsable) {
         this.responsable = responsable;
+    }
+
+    public String getTituloBannerPage() {
+        return tituloBannerPage;
+    }
+
+    public void setTituloBannerPage(String tituloBannerPage) {
+        this.tituloBannerPage = tituloBannerPage;
+    }
+
+    public String getDescripcionBannerPage() {
+        return descripcionBannerPage;
+    }
+
+    public void setDescripcionBannerPage(String descripcionBannerPage) {
+        this.descripcionBannerPage = descripcionBannerPage;
     }
 }
 
