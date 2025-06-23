@@ -122,7 +122,7 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
     private ConsejoMuniResponse construirResponseConImagen(ConsejoMuniEntity entity) {
         ConsejoMuniResponse response = consejoMuniMapper.toResponse(entity);
         if (entity.getDireccionImagen() != null) {
-            response.setDireccionImagen(urlBase + entity.getDireccionImagen());
+            response.setDireccionImagen(urlBase + "consejos/" + entity.getDireccionImagen());
         }
         response.setEquipos(entity.getEquipos().stream()
                 .map(equipoTrabajoMapper::toResponse)
