@@ -118,4 +118,12 @@ public class ConsejoMuniEntity {
     public void setResponsable(String responsable) {
         this.responsable = responsable;
     }
+
+    public List<EquipoTrabajoEntity> getEquipos() {
+        return equipos;
+    }
+
+    public void setEquipos(List<EquipoTrabajoEntity> equipos) {
+        this.equipos = equipos;
+    }
 }

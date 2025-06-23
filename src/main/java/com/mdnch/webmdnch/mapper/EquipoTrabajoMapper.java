@@ -5,10 +5,7 @@ import com.mdnch.webmdnch.dto.request.EquipoTrabajoRequest;
 import com.mdnch.webmdnch.dto.response.EquipoTrabajoResponse;
 import com.mdnch.webmdnch.entity.EquipoTrabajoEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface EquipoTrabajoMapper extends GenericMapper<EquipoTrabajoDTO, EquipoTrabajoEntity> {
@@ -17,6 +14,7 @@ public interface EquipoTrabajoMapper extends GenericMapper<EquipoTrabajoDTO, Equ
 
     EquipoTrabajoEntity toEntity(EquipoTrabajoRequest equipoTrabajoRequest);
 
+    @Mapping(source = "consejoMuni.consejoMuniId", target = "consejoMuniId")
     EquipoTrabajoResponse toResponse(EquipoTrabajoEntity entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

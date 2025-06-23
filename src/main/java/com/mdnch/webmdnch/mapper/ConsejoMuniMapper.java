@@ -9,7 +9,7 @@ import com.mdnch.webmdnch.entity.ConsejoMuniEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",  uses = {EquipoTrabajoMapper.class})
 public interface ConsejoMuniMapper extends GenericMapper<ConsejoMuniDto, ConsejoMuniEntity> {
 
     @Override
@@ -19,7 +19,8 @@ public interface ConsejoMuniMapper extends GenericMapper<ConsejoMuniDto, Consejo
     @Mapping(target = "direccionImagen", ignore = true)
     ConsejoMuniEntity toEntity(ConsejoMuniRequest consejoMuniRequest);
 
-    ConsejoMuniResponse toResponse(ConsejoMuniEntity consejoMuniEntity);
+    @Mapping(target = "direccionImagen", ignore = true)
+    ConsejoMuniResponse toResponse(ConsejoMuniEntity entity);
 
     @Mapping(target = "direccionImagen", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

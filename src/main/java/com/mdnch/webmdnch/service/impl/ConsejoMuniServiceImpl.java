@@ -5,6 +5,7 @@ import com.mdnch.webmdnch.dto.response.ConsejoMuniResponse;
 import com.mdnch.webmdnch.entity.ConsejoMuniEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.ConsejoMuniMapper;
+import com.mdnch.webmdnch.mapper.EquipoTrabajoMapper;
 import com.mdnch.webmdnch.repository.ConsejoMuniRepository;
 import com.mdnch.webmdnch.service.ConsejoMuniService;
 import com.mdnch.webmdnch.util.FileUploadUtil;
@@ -24,6 +25,9 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
 
     @Autowired
     private ConsejoMuniMapper consejoMuniMapper;
+
+    @Autowired
+    private EquipoTrabajoMapper equipoTrabajoMapper;
 
     @Value("${imagenes.urlBase}")
     private String urlBase;
@@ -117,9 +121,12 @@ public class ConsejoMuniServiceImpl implements ConsejoMuniService {
 
     private ConsejoMuniResponse construirResponseConImagen(ConsejoMuniEntity entity) {
         ConsejoMuniResponse response = consejoMuniMapper.toResponse(entity);
-        response.setDireccionImagen(urlBase + entity.getDireccionImagen());
+        if (entity.getDireccionImagen() != null) {
+            response.setDireccionImagen(urlBase + entity.getDireccionImagen());
+        }
+        response.setEquipos(entity.getEquipos().stream()
+                .map(equipoTrabajoMapper::toResponse)
+                .collect(Collectors.toList()));
         return response;
     }
-
-
 }

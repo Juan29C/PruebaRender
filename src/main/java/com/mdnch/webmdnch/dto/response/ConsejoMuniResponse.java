@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ConsejoMuniResponse {
     private Integer consejoMuniId;
@@ -12,6 +13,7 @@ public class ConsejoMuniResponse {
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
     private String responsable;
+    private List<EquipoTrabajoResponse> equipos;
 
     public Integer getConsejoMuniId() {
         return consejoMuniId;
@@ -83,5 +85,13 @@ public class ConsejoMuniResponse {
 
     public void setResponsable(String responsable) {
         this.responsable = responsable;
+    }
+
+    public List<EquipoTrabajoResponse> getEquipos() {
+        return equipos;
+    }
+
+    public void setEquipos(List<EquipoTrabajoResponse> equipos) {
+        this.equipos = equipos;
     }
 }
