@@ -34,6 +34,9 @@ public class AlcaldeEntity {
     @Column(name = "atencionCiudadana", nullable = false,length = 150)
     private String atencionCiudadana;
 
+    @Column(name = "periodo", nullable = false,length = 150)
+    private String periodo;
+
     @Column(name = "experiencia", nullable = false,length = 150)
     private String experiencia;
 
@@ -128,6 +131,14 @@ public class AlcaldeEntity {
 
     public void setAtencionCiudadana(String atencionCiudadana) {
         this.atencionCiudadana = atencionCiudadana;
+    }
+
+    public String getPeriodo() {
+        return periodo;
+    }
+
+    public void setPeriodo(String periodo) {
+        this.periodo = periodo;
     }
 
     public String getExperiencia() {

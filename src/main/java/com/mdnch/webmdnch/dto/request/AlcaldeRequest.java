@@ -10,6 +10,7 @@ public class AlcaldeRequest {
     private Double presupuesto;
     private String aprobacionCiudadana;
     private String atencionCiudadana;
+    private String periodo;
     private String experiencia;
     private String reconocimientos;
     private String compromiso;
@@ -71,6 +72,14 @@ public class AlcaldeRequest {
 
     public void setAtencionCiudadana(String atencionCiudadana) {
         this.atencionCiudadana = atencionCiudadana;
+    }
+
+    public String getPeriodo() {
+        return periodo;
+    }
+
+    public void setPeriodo(String periodo) {
+        this.periodo = periodo;
     }
 
     public String getExperiencia() {

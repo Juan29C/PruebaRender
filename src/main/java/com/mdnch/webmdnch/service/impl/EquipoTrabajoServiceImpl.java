@@ -34,6 +34,17 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
         ConsejoMuniEntity consejoMuni = consejoMuniRepository.findById(equipoTrabajoRequest.getConsejoMuniId())
                 .orElseThrow(() -> new IllegalArgumentException("El consejo municipal con ID proporcionado no existe."));
 
+        if (consejoMuni.getEquipos().size() >= 2) {
+            throw new IllegalStateException("No se pueden registrar más de 2 miembros para este consejo municipal.");
+        }
+
+        boolean miembroDuplicado = consejoMuni.getEquipos().stream()
+                .anyMatch(e -> e.getNombre().equalsIgnoreCase(equipoTrabajoRequest.getNombre())
+                        && e.getApellido().equalsIgnoreCase(equipoTrabajoRequest.getApellido()));
+        if (miembroDuplicado) {
+            throw new IllegalStateException("Ya existe un miembro con el mismo nombre y apellido en este consejo.");
+        }
+
         EquipoTrabajoEntity equipoTrabajoEntity = equipoTrabajoMapper.toEntity(equipoTrabajoRequest);
         equipoTrabajoEntity.setConsejoMuni(consejoMuni);
         equipoTrabajoEntity.setResponsable("ssj");
