@@ -3,6 +3,7 @@ package com.mdnch.webmdnch.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Entity
@@ -26,17 +27,17 @@ public class NoticiasEntity {
     private String direccionImagen;
 
     @Column(name = "fechaCreacion", nullable = false, updatable = false)
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
     @Column(name = "fechaModificacion", nullable = true)
-    private LocalDate fechaModificacion;
+    private LocalDateTime fechaModificacion;
 
     @Column(name = "responsable", nullable = false, length = 100)
     private String responsable;
 
     @PrePersist
     public void prePersist() {
-        this.fechaCreacion = LocalDate.now(ZoneId.of("America/Lima"));
+        this.fechaCreacion = LocalDateTime.now(ZoneId.of("America/Lima"));
     }
 
     public Integer getNoticiaId() {
@@ -79,19 +80,19 @@ public class NoticiasEntity {
         this.direccionImagen = direccionImagen;
     }
 
-    public LocalDate getFechaCreacion() {
+    public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(LocalDate fechaCreacion) {
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public LocalDate getFechaModificacion() {
+    public LocalDateTime getFechaModificacion() {
         return fechaModificacion;
     }
 
-    public void setFechaModificacion(LocalDate fechaModificacion) {
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
     }
 

@@ -44,6 +44,14 @@ public class NoticiasController {
         );
     }
 
+    @GetMapping("/noticias/top5")
+    public ResponseEntity<ResponseBase<List<NoticiasResponse>>> listarNoticiasRecientes() {
+        List<NoticiasResponse> response = noticiasService.getNoticiasRecientes();
+        return ResponseEntity.ok(
+                new ResponseBase<>(true, "Noticias recientes obtenidas con éxito:", response)
+        );
+    }
+
     @PutMapping("noticias/{id}")
     public ResponseEntity<ResponseBase<NoticiasResponse>> actualizarNoticia(
             @PathVariable Integer id,

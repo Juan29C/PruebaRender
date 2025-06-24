@@ -37,6 +37,12 @@ public class EventoController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Evento encontrado", response));
     }
 
+    @GetMapping("/eventos/recientes")
+    public ResponseEntity<ResponseBase<List<EventoResponse>>> listarEventosRecientes() {
+        List<EventoResponse> response = eventoService.obtenerEventosRecientes();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Eventos más recientes obtenidos con éxito", response));
+    }
+
     @PutMapping("/eventos/{id}")
     public ResponseEntity<ResponseBase<EventoResponse>> actualizarEventos(
             @PathVariable Integer id,

@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class NoticiasDto {
     private Integer noticiaId;
@@ -8,8 +9,8 @@ public class NoticiasDto {
     private String categoria;
     private String descripcion;
     private String direccionImagen;
-    private LocalDate fechaCreacion;
-    private LocalDate fechaModificacion;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaModificacion;
     private String responsable;
 
     public Integer getNoticiaId() {
@@ -52,19 +53,19 @@ public class NoticiasDto {
         this.direccionImagen = direccionImagen;
     }
 
-    public LocalDate getFechaCreacion() {
+    public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(LocalDate fechaCreacion) {
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public LocalDate getFechaModificacion() {
+    public LocalDateTime getFechaModificacion() {
         return fechaModificacion;
     }
 
-    public void setFechaModificacion(LocalDate fechaModificacion) {
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
     }
 
