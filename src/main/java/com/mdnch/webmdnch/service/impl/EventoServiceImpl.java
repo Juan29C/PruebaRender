@@ -10,9 +10,12 @@ import com.mdnch.webmdnch.service.EventoService;
 import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -41,7 +44,7 @@ public class EventoServiceImpl implements EventoService {
         EventosEntity entity = eventosMapper.toEntity(request);
         entity.setDireccionImagen(nombreArchivo);
         entity.setResponsable("ssj");
-        entity.setFechaCreacion(LocalDate.now());
+        entity.setFechaCreacion(LocalDateTime.now());
 
         EventosEntity saved = eventosRepository.saveAndFlush(entity);
 
@@ -71,6 +74,15 @@ public class EventoServiceImpl implements EventoService {
     }
 
     @Override
+    public List<EventoResponse> obtenerEventosRecientes() {
+        Pageable topThree = PageRequest.of(0, 3); // Limita a los 3 más recientes
+        return eventosRepository.findAllByOrderByFechaCreacionDesc(topThree).stream()
+                .map(eventosMapper::toResponse) // Mapea las entidades a respuestas
+                .peek(response -> response.setDireccionImagen(urlBase + "eventos/" + response.getDireccionImagen())) // Ajusta la URL de la imagen
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public EventoResponse actualizarEventos(Integer id, EventoRequest request) {
         EventosEntity entity = eventosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado con ID: " + id));
@@ -88,7 +100,7 @@ public class EventoServiceImpl implements EventoService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
-        entity.setFechaModificacion(LocalDate.now());
+        entity.setFechaModificacion(LocalDateTime.now());
         entity.setResponsable("young flex");
         EventosEntity saved = eventosRepository.saveAndFlush(entity);
 
@@ -116,7 +128,7 @@ public class EventoServiceImpl implements EventoService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
-        entity.setFechaModificacion(LocalDate.now());
+        entity.setFechaModificacion(LocalDateTime.now());
         entity.setResponsable("jonz");
         EventosEntity saved = eventosRepository.saveAndFlush(entity);
 

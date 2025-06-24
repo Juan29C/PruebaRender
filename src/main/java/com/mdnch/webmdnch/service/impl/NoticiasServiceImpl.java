@@ -10,9 +10,12 @@ import com.mdnch.webmdnch.service.NoticiasService;
 import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +43,7 @@ public class NoticiasServiceImpl implements NoticiasService {
         NoticiasEntity entity = noticiasMapper.toEntity(noticiaForm);
         entity.setDireccionImagen(nombreArchivo);
         entity.setResponsable("ssj");
-        entity.setFechaCreacion(LocalDate.now());
+        entity.setFechaCreacion(LocalDateTime.now());
 
         NoticiasEntity saved = noticiasRepository.saveAndFlush(entity);
 
@@ -70,6 +73,15 @@ public class NoticiasServiceImpl implements NoticiasService {
     }
 
     @Override
+    public List<NoticiasResponse> getNoticiasRecientes() {
+        Pageable topFive = PageRequest.of(0, 5); // Limita a los 5 más recientes
+        return noticiasRepository.findAllByOrderByFechaCreacionDesc(topFive).stream()
+                .map(noticiasMapper::toResponse) // Mapea las entidades a respuestas
+                .peek(response -> response.setDireccionImagen(urlBase + "noticias/" + response.getDireccionImagen())) // Ajusta la URL de la imagen
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public NoticiasResponse updateNoticias(Integer noticiaId, NoticiasRequest request) {
         NoticiasEntity entity = noticiasRepository.findById(noticiaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrada con ID: " + noticiaId));
@@ -86,7 +98,7 @@ public class NoticiasServiceImpl implements NoticiasService {
             );
             entity.setDireccionImagen(nombreArchivo);
         }
-        entity.setFechaModificacion(LocalDate.now());
+        entity.setFechaModificacion(LocalDateTime.now());
         entity.setResponsable("young flex");
 
         NoticiasEntity saved = noticiasRepository.saveAndFlush(entity);
@@ -115,7 +127,7 @@ public class NoticiasServiceImpl implements NoticiasService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
-        entity.setFechaModificacion(LocalDate.now());
+        entity.setFechaModificacion(LocalDateTime.now());
         entity.setResponsable("jonz");
         NoticiasEntity saved = noticiasRepository.saveAndFlush(entity);
 

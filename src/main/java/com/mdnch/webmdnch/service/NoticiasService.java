@@ -9,6 +9,7 @@ public interface NoticiasService {
     NoticiasResponse createNoticias(NoticiasRequest noticiasRequest);
     List<NoticiasResponse> getAllNoticias();
     NoticiasResponse findByIdNoticias(Integer noticiasId);
+    List<NoticiasResponse> getNoticiasRecientes();
     NoticiasResponse updateNoticias(Integer noticiaId, NoticiasRequest request);
     NoticiasResponse editNoticias(Integer noticiaId, NoticiasRequest request);
     void deleteNoticias(Integer noticiasId);
