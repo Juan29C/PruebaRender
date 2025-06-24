@@ -1,5 +1,6 @@
 package com.mdnch.webmdnch.service.impl;
 
+import com.mdnch.webmdnch.dto.request.AlcaldeIndexRequest;
 import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
 import com.mdnch.webmdnch.dto.response.AlcaldePageResponse;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
@@ -45,10 +46,34 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     }
 
     @Override
+    public AlcaldeResponse createAlcaldeIndex(AlcaldeIndexRequest alcaldeIndexRequest) {
+        MultipartFile archivo = alcaldeIndexRequest.getDireccionImagen();
+        String carpetaDestino = "imagenes/alcaldes/";
+        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
+
+        AlcaldeEntity entity = alcaldeMapper.indexToEntity(alcaldeIndexRequest);
+        entity.setDireccionImagen(nombreArchivo);
+        entity.setResponsable("ssj");
+        entity.setFechaCreacion(LocalDate.now());
+
+        AlcaldeEntity saved = repository.save(entity);
+        return construirResponseConImagen(saved);
+
+    }
+
+    @Override
     public List<AlcaldeResponse> getAllAlcaldes() {
         return repository.findAll()
                 .stream()
                 .map(this::construirResponseConImagen)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AlcaldePageResponse> getAllAlcaldesPages() {
+        return repository.findAll()
+                .stream()
+                .map(this::construirPageResponseConImagen)
                 .collect(Collectors.toList());
     }
 
@@ -127,6 +152,12 @@ public class AlcaldeServiceImpl implements AlcaldeService {
 
     private AlcaldeResponse construirResponseConImagen(AlcaldeEntity entity) {
         AlcaldeResponse response = alcaldeMapper.toResponse(entity);
+        response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
+        return response;
+    }
+
+    private AlcaldePageResponse construirPageResponseConImagen(AlcaldeEntity entity) {
+        AlcaldePageResponse response = alcaldeMapper.toResponsePage(entity);
         response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
         return response;
     }

@@ -13,13 +13,13 @@ public class AlcaldeEntity {
     @Column(name = "alcaldeId")
     private Integer alcaldeId;
 
-    @Column(name = "nombre", nullable = false,length = 50)
+    @Column(name = "nombre", nullable = true,length = 50)
     private String nombre;
 
-    @Column(name = "apellido", nullable = false,length = 50)
+    @Column(name = "apellido", nullable = true,length = 50)
     private String apellido;
 
-    @Column(name = "descripcion", nullable = false,length = 1000)
+    @Column(name = "descripcion", nullable = true,length = 1000)
     private String descripcion;
 
     @Column(name = "numero_obras")
@@ -28,40 +28,40 @@ public class AlcaldeEntity {
     @Column(name = "presupuesto")
     private Double presupuesto;
 
-    @Column(name = "aprobacionCiudadana", nullable = false,length = 50)
+    @Column(name = "aprobacionCiudadana", nullable = true,length = 50)
     private String aprobacionCiudadana;
 
-    @Column(name = "atencionCiudadana", nullable = false,length = 150)
+    @Column(name = "atencionCiudadana", nullable = true,length = 150)
     private String atencionCiudadana;
 
-    @Column(name = "periodo", nullable = false,length = 150)
+    @Column(name = "periodo", nullable = true,length = 150)
     private String periodo;
 
-    @Column(name = "experiencia", nullable = false,length = 150)
+    @Column(name = "experiencia", nullable = true,length = 150)
     private String experiencia;
 
-    @Column(name = "reconocimientos", nullable = false,length = 150)
+    @Column(name = "reconocimientos", nullable = true,length = 150)
     private String reconocimientos;
 
-    @Column(name = "compromiso", nullable = false,length = 150)
+    @Column(name = "compromiso", nullable = true,length = 150)
     private String compromiso;
 
-    @Column(name = "direccionImagen", nullable = false)
+    @Column(name = "direccionImagen", nullable = true)
     private String direccionImagen;
 
-    @Column(name = "fechaCreacion", nullable = false, updatable = false)
+    @Column(name = "fechaCreacion", nullable = true, updatable = false)
     private LocalDate fechaCreacion;
 
     @Column(name = "fechaModificacion", nullable = true)
     private LocalDate fechaModificacion;
 
-    @Column(name = "responsable", nullable = false, length = 100)
+    @Column(name = "responsable", nullable = true, length = 100)
     private String responsable;
 
-    @Column(name = "tituloBannerPage", nullable = false, length = 300)
+    @Column(name = "tituloBannerPage", nullable = true, length = 300)
     private String tituloBannerPage;
 
-    @Column(name = "descripcionBannerPage", nullable = false, length = 1000)
+    @Column(name = "descripcionBannerPage", nullable = true, length = 1000)
     private String descripcionBannerPage;
 
     @PrePersist

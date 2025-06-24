@@ -1,11 +1,24 @@
 package com.mdnch.webmdnch.dto.response;
 
+import java.time.LocalDate;
+
 public class AlcaldePageResponse {
+    private Integer alcaldeId;
     private String nombre;
     private String apellido;
     private String direccionImagen;
     private String tituloBannerPage;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaModificacion;
     private String descripcionBannerPage;
+
+    public Integer getAlcaldeId() {
+        return alcaldeId;
+    }
+
+    public void setAlcaldeId(Integer alcaldeId) {
+        this.alcaldeId = alcaldeId;
+    }
 
     public String getNombre() {
         return nombre;
@@ -45,5 +58,21 @@ public class AlcaldePageResponse {
 
     public void setDescripcionBannerPage(String descripcionBannerPage) {
         this.descripcionBannerPage = descripcionBannerPage;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 }

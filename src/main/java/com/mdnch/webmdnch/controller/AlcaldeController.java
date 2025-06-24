@@ -1,5 +1,6 @@
 package com.mdnch.webmdnch.controller;
 
+import com.mdnch.webmdnch.dto.request.AlcaldeIndexRequest;
 import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
 import com.mdnch.webmdnch.dto.response.AlcaldePageResponse;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
@@ -24,9 +25,21 @@ public class AlcaldeController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde creado correctamente", response));
     }
 
+    @PostMapping("/alcaldesIndex/crear")
+    public ResponseEntity<ResponseBase<AlcaldeResponse>> createAlcalde(@ModelAttribute AlcaldeIndexRequest alcaldeRequest) {
+        AlcaldeResponse response = alcaldeService.createAlcaldeIndex(alcaldeRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde creado correctamente", response));
+    }
+
     @GetMapping("/alcaldes")
     public ResponseEntity<ResponseBase<List<AlcaldeResponse>>> getAllAlcaldes() {
         List<AlcaldeResponse> response = alcaldeService.getAllAlcaldes();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Listado de alcaldes obtenido correctamente", response));
+    }
+
+    @GetMapping("/alcaldesIndex")
+    public ResponseEntity<ResponseBase<List<AlcaldePageResponse>>> getAllAlcaldesPages() {
+        List<AlcaldePageResponse> response = alcaldeService.getAllAlcaldesPages();
         return ResponseEntity.ok(new ResponseBase<>(true, "Listado de alcaldes obtenido correctamente", response));
     }
 
