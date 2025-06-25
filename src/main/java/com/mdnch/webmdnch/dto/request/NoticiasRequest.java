@@ -1,12 +1,16 @@
 package com.mdnch.webmdnch.dto.request;
 
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 
 public class NoticiasRequest {
     private String titulo;
     private String categoria;
     private String descripcion;
+    private LocalDate fechaManual;
     private MultipartFile imagen;
 
     public String getTitulo() {
@@ -31,6 +35,14 @@ public class NoticiasRequest {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public LocalDate getFechaManual() {
+        return fechaManual;
+    }
+
+    public void setFechaManual(LocalDate fechaManual) {
+        this.fechaManual = fechaManual;
     }
 
     public MultipartFile getImagen() {

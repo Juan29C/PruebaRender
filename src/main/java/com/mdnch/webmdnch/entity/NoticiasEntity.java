@@ -26,6 +26,9 @@ public class NoticiasEntity {
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
 
+    @Column(name = "fechaManual", nullable = true)
+    private LocalDate fechaManual;
+
     @Column(name = "fechaCreacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
@@ -78,6 +81,14 @@ public class NoticiasEntity {
 
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
+    }
+
+    public LocalDate getFechaManual() {
+        return fechaManual;
+    }
+
+    public void setFechaManual(LocalDate fechaManual) {
+        this.fechaManual = fechaManual;
     }
 
     public LocalDateTime getFechaCreacion() {

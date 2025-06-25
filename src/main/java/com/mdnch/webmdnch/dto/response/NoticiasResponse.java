@@ -9,6 +9,7 @@ public class NoticiasResponse {
     private String categoria;
     private String descripcion;
     private String direccionImagen;
+    private String fechaManual;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
     private String responsable;
@@ -51,6 +52,14 @@ public class NoticiasResponse {
 
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
+    }
+
+    public String getFechaManual() {
+        return fechaManual;
+    }
+
+    public void setFechaManual(String fechaManual) {
+        this.fechaManual = fechaManual;
     }
 
     public LocalDateTime getFechaCreacion() {

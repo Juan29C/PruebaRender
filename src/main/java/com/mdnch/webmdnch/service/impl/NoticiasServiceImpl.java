@@ -7,6 +7,7 @@ import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.NoticiasMapper;
 import com.mdnch.webmdnch.repository.NoticiasRepository;
 import com.mdnch.webmdnch.service.NoticiasService;
+import com.mdnch.webmdnch.util.DateUtil;
 import com.mdnch.webmdnch.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +68,7 @@ public class NoticiasServiceImpl implements NoticiasService {
                 .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrada con ID: " + noticiasId));
 
         NoticiasResponse response = noticiasMapper.toResponse(entity);
+        response.setFechaManual(DateUtil.formatFechaManual(entity.getFechaManual())); // Formateo de fecha
         response.setDireccionImagen(urlBase + "noticias/" + entity.getDireccionImagen());
 
         return response;
@@ -76,8 +78,8 @@ public class NoticiasServiceImpl implements NoticiasService {
     public List<NoticiasResponse> getNoticiasRecientes() {
         Pageable topFive = PageRequest.of(0, 5); // Limita a los 5 más recientes
         return noticiasRepository.findAllByOrderByFechaCreacionDesc(topFive).stream()
-                .map(noticiasMapper::toResponse) // Mapea las entidades a respuestas
-                .peek(response -> response.setDireccionImagen(urlBase + "noticias/" + response.getDireccionImagen())) // Ajusta la URL de la imagen
+                .map(noticiasMapper::toResponse)
+                .peek(response -> response.setDireccionImagen(urlBase + "noticias/" + response.getDireccionImagen()))
                 .collect(Collectors.toList());
     }
 
