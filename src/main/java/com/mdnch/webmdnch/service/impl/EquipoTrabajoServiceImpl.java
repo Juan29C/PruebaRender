@@ -110,7 +110,7 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
     @Override
     public void eliminarEquipoTrabajo(Integer id) {
         if (!equipoTrabajoRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Equipo de trabajo no encontrado con ID: " + id);
+            throw new ResourceNotFoundException("Equipo de trabajo de consejo municipal no encontrado con ID: " + id);
         }
         equipoTrabajoRepository.deleteById(id);
     }
