@@ -171,6 +171,14 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     }
 
     @Override
+    public void deleteAlcaldeIndex(Integer alcaldeId) {
+        if (!alcaldePageRepository.existsById(alcaldeId)){
+            throw new ResourceNotFoundException("Alcalde en la sección de Index no encontrado con ID: " + alcaldeId);
+        }
+        alcaldePageRepository.deleteById(alcaldeId);
+    }
+
+    @Override
     public void deleteAlcalde(Integer id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Alcalde no encontrado con ID: " + id);

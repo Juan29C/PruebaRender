@@ -87,9 +87,10 @@ public class AlcaldeController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde editado correctamente", response));
     }
 
-
-
-
-
+    @DeleteMapping("alcaldesIndex/{id}")
+    public ResponseEntity<ResponseBase<Void>> deleteAlcaldeIndex(@PathVariable Integer id) {
+        alcaldeService.deleteAlcaldeIndex(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde eliminado correctamente", null));
+    }
 
 }

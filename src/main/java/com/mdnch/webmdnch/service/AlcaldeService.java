@@ -19,4 +19,5 @@ public interface AlcaldeService {
     AlcaldeResponse editAlcalde(Integer alcaldeId, AlcaldeRequest request);
     void deleteAlcalde(Integer alcaldeId);
     AlcaldePageResponse editAlcaldeIndex(Integer id, AlcaldeIndexRequest request);
+    void deleteAlcaldeIndex(Integer alcaldeId);
 }
