@@ -6,6 +6,7 @@ import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
 import com.mdnch.webmdnch.dto.response.AlcaldePageResponse;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
 import com.mdnch.webmdnch.entity.AlcaldeEntity;
+import com.mdnch.webmdnch.entity.AlcaldePageEntity;
 import com.mdnch.webmdnch.mapper.util.GenericMapper;
 import org.mapstruct.*;
 
@@ -19,11 +20,11 @@ public interface AlcaldeMapper extends GenericMapper<AlcaldeDto, AlcaldeEntity> 
     AlcaldeEntity toEntity(AlcaldeRequest request);
 
     @Mapping(target = "direccionImagen", ignore = true)
-    AlcaldeEntity indexToEntity(AlcaldeIndexRequest request);
+    AlcaldePageEntity indexToEntity(AlcaldeIndexRequest request);
 
     AlcaldeResponse toResponse(AlcaldeEntity entity);
 
-    AlcaldePageResponse toResponsePage(AlcaldeEntity entity);
+    AlcaldePageResponse toResponsePage(AlcaldePageEntity entity);
 
     AlcaldePageResponse toPageResponse(AlcaldeEntity entity);
 
@@ -31,4 +32,8 @@ public interface AlcaldeMapper extends GenericMapper<AlcaldeDto, AlcaldeEntity> 
     @Mapping(target = "direccionImagen", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(AlcaldeRequest request, @MappingTarget AlcaldeEntity entity);
+
+    @Mapping(target = "direccionImagen", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateAlcaldeIndexEntityFromRequest(AlcaldeIndexRequest request, @MappingTarget AlcaldePageEntity entity);
 }

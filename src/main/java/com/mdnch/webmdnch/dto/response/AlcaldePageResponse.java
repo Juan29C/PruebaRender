@@ -10,6 +10,7 @@ public class AlcaldePageResponse {
     private String tituloBannerPage;
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
+    private String responsable;
     private String descripcionBannerPage;
 
     public Integer getAlcaldeId() {
@@ -66,6 +67,14 @@ public class AlcaldePageResponse {
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
     }
 
     public LocalDate getFechaModificacion() {

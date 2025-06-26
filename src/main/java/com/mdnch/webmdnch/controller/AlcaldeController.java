@@ -19,15 +19,10 @@ public class AlcaldeController {
     @Autowired
     private AlcaldeService alcaldeService;
 
+    // Sección Alcalde Page
     @PostMapping("/alcaldes/crear")
     public ResponseEntity<ResponseBase<AlcaldeResponse>> createAlcalde(@ModelAttribute AlcaldeRequest alcaldeRequest) {
         AlcaldeResponse response = alcaldeService.createAlcalde(alcaldeRequest);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde creado correctamente", response));
-    }
-
-    @PostMapping("/alcaldesIndex/crear")
-    public ResponseEntity<ResponseBase<AlcaldeResponse>> createAlcalde(@ModelAttribute AlcaldeIndexRequest alcaldeRequest) {
-        AlcaldeResponse response = alcaldeService.createAlcaldeIndex(alcaldeRequest);
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde creado correctamente", response));
     }
 
@@ -37,22 +32,10 @@ public class AlcaldeController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Listado de alcaldes obtenido correctamente", response));
     }
 
-    @GetMapping("/alcaldesIndex")
-    public ResponseEntity<ResponseBase<List<AlcaldePageResponse>>> getAllAlcaldesPages() {
-        List<AlcaldePageResponse> response = alcaldeService.getAllAlcaldesPages();
-        return ResponseEntity.ok(new ResponseBase<>(true, "Listado de alcaldes obtenido correctamente", response));
-    }
-
     @GetMapping("alcaldes/{id}")
     public ResponseEntity<ResponseBase<AlcaldeResponse>> getAlcaldeById(@PathVariable Integer id) {
         AlcaldeResponse response = alcaldeService.findByIdAlcalde(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde encontrado", response));
-    }
-
-    @GetMapping("alcaldepage/{id}")
-    public ResponseEntity<ResponseBase<AlcaldePageResponse>> getAlcaldeByPage(@PathVariable Integer id) {
-        AlcaldePageResponse response = alcaldeService.findByInfoPageAlcalde(id);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Información del Alcalde para page", response));
     }
 
     @PutMapping("alcaldes/{id}")
@@ -76,6 +59,37 @@ public class AlcaldeController {
         alcaldeService.deleteAlcalde(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde eliminado correctamente", null));
     }
+
+    // Sección index para alcalde
+    @PostMapping("/alcaldesIndex/crear")
+    public ResponseEntity<ResponseBase<AlcaldePageResponse>> createAlcalde(@ModelAttribute AlcaldeIndexRequest alcaldeRequest) {
+        AlcaldePageResponse response = alcaldeService.createAlcaldeIndex(alcaldeRequest);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde creado correctamente", response));
+    }
+
+    @GetMapping("/alcaldesIndex")
+    public ResponseEntity<ResponseBase<List<AlcaldePageResponse>>> getAllAlcaldesPages() {
+        List<AlcaldePageResponse> response = alcaldeService.getAllAlcaldesPages();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Listado de alcaldes obtenido correctamente", response));
+    }
+
+    @GetMapping("alcaldepage/{id}")
+    public ResponseEntity<ResponseBase<AlcaldePageResponse>> getAlcaldeByPage(@PathVariable Integer id) {
+        AlcaldePageResponse response = alcaldeService.findByInfoPageAlcalde(id);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Información del Alcalde para page", response));
+    }
+
+    @PatchMapping("alcaldeEditIndex/{id}")
+    public ResponseEntity<ResponseBase<AlcaldePageResponse>> editAlcaldeIndex(
+            @PathVariable Integer id,
+            @ModelAttribute AlcaldeIndexRequest request) {
+        AlcaldePageResponse response = alcaldeService.editAlcaldeIndex(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Alcalde editado correctamente", response));
+    }
+
+
+
+
 
 
 }

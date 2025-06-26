@@ -5,8 +5,10 @@ import com.mdnch.webmdnch.dto.request.AlcaldeRequest;
 import com.mdnch.webmdnch.dto.response.AlcaldePageResponse;
 import com.mdnch.webmdnch.dto.response.AlcaldeResponse;
 import com.mdnch.webmdnch.entity.AlcaldeEntity;
+import com.mdnch.webmdnch.entity.AlcaldePageEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.AlcaldeMapper;
+import com.mdnch.webmdnch.repository.AlcaldePageRepository;
 import com.mdnch.webmdnch.repository.AlcaldeRepository;
 import com.mdnch.webmdnch.service.AlcaldeService;
 import com.mdnch.webmdnch.util.FileUploadUtil;
@@ -28,6 +30,9 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     private AlcaldeRepository repository;
 
     @Autowired
+    private AlcaldePageRepository alcaldePageRepository;
+
+    @Autowired
     private AlcaldeMapper alcaldeMapper;
 
     @Override
@@ -46,18 +51,18 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     }
 
     @Override
-    public AlcaldeResponse createAlcaldeIndex(AlcaldeIndexRequest alcaldeIndexRequest) {
+    public AlcaldePageResponse createAlcaldeIndex(AlcaldeIndexRequest alcaldeIndexRequest) {
         MultipartFile archivo = alcaldeIndexRequest.getDireccionImagen();
-        String carpetaDestino = "imagenes/alcaldes/";
+        String carpetaDestino = "imagenes/alcaldesIndex/";
         String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
-        AlcaldeEntity entity = alcaldeMapper.indexToEntity(alcaldeIndexRequest);
+        AlcaldePageEntity entity = alcaldeMapper.indexToEntity(alcaldeIndexRequest);
         entity.setDireccionImagen(nombreArchivo);
         entity.setResponsable("ssj");
         entity.setFechaCreacion(LocalDate.now());
 
-        AlcaldeEntity saved = repository.save(entity);
-        return construirResponseConImagen(saved);
+        AlcaldePageEntity saved = alcaldePageRepository.save(entity);
+        return construirPageResponseConImagen(saved);
 
     }
 
@@ -71,7 +76,7 @@ public class AlcaldeServiceImpl implements AlcaldeService {
 
     @Override
     public List<AlcaldePageResponse> getAllAlcaldesPages() {
-        return repository.findAll()
+        return alcaldePageRepository.findAll()
                 .stream()
                 .map(this::construirPageResponseConImagen)
                 .collect(Collectors.toList());
@@ -86,9 +91,9 @@ public class AlcaldeServiceImpl implements AlcaldeService {
 
     @Override
     public AlcaldePageResponse findByInfoPageAlcalde(Integer id) {
-        AlcaldeEntity entity = repository.findById(id)
+        AlcaldePageEntity entity = alcaldePageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
-        AlcaldePageResponse response = alcaldeMapper.toPageResponse(entity);
+        AlcaldePageResponse response = alcaldeMapper.toResponsePage(entity);
         response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
         return response;
     }
@@ -141,6 +146,29 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         return construirResponseConImagen(saved);
     }
 
+    @Override
+    public AlcaldePageResponse editAlcaldeIndex(Integer id, AlcaldeIndexRequest request) {
+        AlcaldePageEntity entity = alcaldePageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
+
+        alcaldeMapper.updateAlcaldeIndexEntityFromRequest(request, entity);
+
+        MultipartFile archivo = request.getDireccionImagen();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "imagenes/alcaldes/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getDireccionImagen()
+            );
+            entity.setDireccionImagen(nombreArchivo);
+        }
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("jonz");
+
+        AlcaldePageEntity saved = alcaldePageRepository.save(entity);
+        return construirPageResponseConImagen(saved);
+    }
 
     @Override
     public void deleteAlcalde(Integer id) {
@@ -156,7 +184,7 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         return response;
     }
 
-    private AlcaldePageResponse construirPageResponseConImagen(AlcaldeEntity entity) {
+    private AlcaldePageResponse construirPageResponseConImagen(AlcaldePageEntity entity) {
         AlcaldePageResponse response = alcaldeMapper.toResponsePage(entity);
         response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
         return response;

@@ -15,8 +15,6 @@ public class AlcaldeRequest {
     private String reconocimientos;
     private String compromiso;
     private MultipartFile direccionImagen;
-    private String tituloBannerPage;
-    private String descripcionBannerPage;
 
     public String getNombre() {
         return nombre;
@@ -114,19 +112,4 @@ public class AlcaldeRequest {
         this.direccionImagen = direccionImagen;
     }
 
-    public String getTituloBannerPage() {
-        return tituloBannerPage;
-    }
-
-    public void setTituloBannerPage(String tituloBannerPage) {
-        this.tituloBannerPage = tituloBannerPage;
-    }
-
-    public String getDescripcionBannerPage() {
-        return descripcionBannerPage;
-    }
-
-    public void setDescripcionBannerPage(String descripcionBannerPage) {
-        this.descripcionBannerPage = descripcionBannerPage;
-    }
 }
