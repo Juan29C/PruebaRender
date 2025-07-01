@@ -10,6 +10,7 @@ public class NoticiasResponse {
     private String descripcion;
     private String direccionImagen;
     private String fechaManual;
+    private String fechaManualCruda;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
     private String responsable;
@@ -62,6 +63,13 @@ public class NoticiasResponse {
         this.fechaManual = fechaManual;
     }
 
+    public String getFechaManualCruda() {
+        return fechaManualCruda;
+    }
+
+    public void setFechaManualCruda(String fechaManualCruda) {
+        this.fechaManualCruda = fechaManualCruda;
+    }
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }

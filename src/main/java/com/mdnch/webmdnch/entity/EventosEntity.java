@@ -27,7 +27,7 @@ public class EventosEntity {
     @Column(name = "titulo", nullable = false, length = 250)
     private String titulo;
 
-    @Column(name = "descripcion", nullable = false, length = 1000)
+    @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
     @Column(name = "ubicacion", nullable = false, length = 500)

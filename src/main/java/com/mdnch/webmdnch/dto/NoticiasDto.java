@@ -10,6 +10,7 @@ public class NoticiasDto {
     private String descripcion;
     private String direccionImagen;
     private LocalDate fechaManual;
+    private String fechaManualCruda;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
     private String responsable;
@@ -60,6 +61,14 @@ public class NoticiasDto {
 
     public void setFechaManual(LocalDate fechaManual) {
         this.fechaManual = fechaManual;
+    }
+
+    public String getFechaManualCruda() {
+        return fechaManualCruda;
+    }
+
+    public void setFechaManualCruda(String fechaManualCruda) {
+        this.fechaManualCruda = fechaManualCruda;
     }
 
     public LocalDateTime getFechaCreacion() {

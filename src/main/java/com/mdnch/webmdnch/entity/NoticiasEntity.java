@@ -20,7 +20,7 @@ public class NoticiasEntity {
     @Column(name = "categoria", nullable = false,length = 100)
     private String categoria;
 
-    @Column(name = "descripcion", nullable = false,length = 1000)
+    @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
     @Column(name = "direccionImagen", nullable = false)
@@ -28,6 +28,9 @@ public class NoticiasEntity {
 
     @Column(name = "fechaManual", nullable = true)
     private LocalDate fechaManual;
+
+    @Column(name = "fechaManualCruda", nullable = true)
+    private LocalDate fechaManualCruda;
 
     @Column(name = "fechaCreacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
@@ -89,6 +92,14 @@ public class NoticiasEntity {
 
     public void setFechaManual(LocalDate fechaManual) {
         this.fechaManual = fechaManual;
+    }
+
+    public LocalDate getFechaManualCruda() {
+        return fechaManualCruda;
+    }
+
+    public void setFechaManualCruda(LocalDate fechaManualCruda) {
+        this.fechaManualCruda = fechaManualCruda;
     }
 
     public LocalDateTime getFechaCreacion() {

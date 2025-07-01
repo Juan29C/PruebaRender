@@ -45,7 +45,7 @@ public class NoticiasServiceImpl implements NoticiasService {
         entity.setDireccionImagen(nombreArchivo);
         entity.setResponsable("ssj");
         entity.setFechaCreacion(LocalDateTime.now());
-
+        entity.setFechaManualCruda(noticiaForm.getFechaManual());
         NoticiasEntity saved = noticiasRepository.saveAndFlush(entity);
 
         NoticiasResponse response = noticiasMapper.toResponse(saved);
@@ -68,7 +68,7 @@ public class NoticiasServiceImpl implements NoticiasService {
                 .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrada con ID: " + noticiasId));
 
         NoticiasResponse response = noticiasMapper.toResponse(entity);
-        response.setFechaManual(DateUtil.formatFechaManual(entity.getFechaManual())); // Formateo de fecha
+        response.setFechaManual(DateUtil.formatFechaManual(entity.getFechaManual()));
         response.setDireccionImagen(urlBase + "noticias/" + entity.getDireccionImagen());
 
         return response;
@@ -90,6 +90,10 @@ public class NoticiasServiceImpl implements NoticiasService {
 
         noticiasMapper.updateEntityFromRequest(request, entity);
 
+        if (request.getFechaManual() != null) {
+            entity.setFechaManualCruda(request.getFechaManual());
+        }
+        
         MultipartFile archivo = request.getImagen();
         if (archivo != null && !archivo.isEmpty()) {
             String carpetaDestino = "imagenes/noticias/";
@@ -117,6 +121,10 @@ public class NoticiasServiceImpl implements NoticiasService {
                 .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrada con ID: " + noticiaId));
 
         noticiasMapper.updateEntityFromRequest(request, entity);
+
+        if (request.getFechaManual() != null) {
+            entity.setFechaManualCruda(request.getFechaManual());
+        }
 
         MultipartFile archivo = request.getImagen();
         if (archivo != null && !archivo.isEmpty()) {
