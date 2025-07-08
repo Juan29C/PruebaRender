@@ -6,13 +6,11 @@ import java.time.LocalTime;
 
 public class AgendaRequest {
     private String titulo;
-    private String organizador;
     private LocalDate fecha;
-    private LocalTime hora;
-    private String descripcion;
+    private LocalTime horaInicio;
+    private LocalTime horaFin;
     private String direccion;
     private String categoria;
-    private MultipartFile direccionImagen;
 
     public String getTitulo() {
         return titulo;
@@ -22,36 +20,12 @@ public class AgendaRequest {
         this.titulo = titulo;
     }
 
-    public String getOrganizador() {
-        return organizador;
-    }
-
-    public void setOrganizador(String organizador) {
-        this.organizador = organizador;
-    }
-
     public LocalDate getFecha() {
         return fecha;
     }
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
-    }
-
-    public LocalTime getHora() {
-        return hora;
-    }
-
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public String getDireccion() {
@@ -70,11 +44,19 @@ public class AgendaRequest {
         this.categoria = categoria;
     }
 
-    public MultipartFile getDireccionImagen() {
-        return direccionImagen;
+    public LocalTime getHoraInicio() {
+        return horaInicio;
     }
 
-    public void setDireccionImagen(MultipartFile direccionImagen) {
-        this.direccionImagen = direccionImagen;
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public LocalTime getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(LocalTime horaFin) {
+        this.horaFin = horaFin;
     }
 }

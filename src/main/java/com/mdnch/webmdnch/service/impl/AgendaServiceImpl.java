@@ -34,24 +34,21 @@ public class AgendaServiceImpl implements AgendaService {
 
     @Override
     public AgendaResponse registrarAgenda(AgendaRequest request) {
-        MultipartFile archivo = request.getDireccionImagen();
         String carpetaDestino = "imagenes/agenda/";
-        String nombreArchivo = FileUploadUtil.guardarArchivo(archivo, carpetaDestino);
 
         AgendaEntity entity = agendaMapper.toEntity(request);
-        entity.setDireccionImagen(nombreArchivo);
         entity.setResponsable("ssj");
         entity.setFechaCreacion(LocalDate.now());
 
         AgendaEntity saved = agendaRepository.saveAndFlush(entity);
-        return construirResponseConImagen(saved);
+        return agendaMapper.toResponse(saved);
     }
 
     @Override
     public List<AgendaResponse> obtenerAgendas() {
         return agendaRepository.findAll()
                 .stream()
-                .map(this::construirResponseConImagen)
+                .map(agendaMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +56,7 @@ public class AgendaServiceImpl implements AgendaService {
     public AgendaResponse obtenerAgendaPorId(Integer id) {
         AgendaEntity entity = agendaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Agenda no encontrada"));
-        return construirResponseConImagen(entity);
+        return agendaMapper.toResponse(entity);
     }
 
     @Override
@@ -69,21 +66,10 @@ public class AgendaServiceImpl implements AgendaService {
 
         agendaMapper.updateEntityFromRequest(request, entity);
 
-        MultipartFile archivo = request.getDireccionImagen();
-        if (archivo != null && !archivo.isEmpty()) {
-            String carpetaDestino = "imagenes/agenda/";
-            String nombreArchivo = FileUploadUtil.guardarArchivo(
-                    archivo,
-                    carpetaDestino,
-                    entity.getDireccionImagen()
-            );
-            entity.setDireccionImagen(nombreArchivo);
-        }
-
         entity.setFechaModificacion(LocalDate.now());
         entity.setResponsable("young flex");
         AgendaEntity saved = agendaRepository.save(entity);
-        return construirResponseConImagen(saved);
+        return agendaMapper.toResponse(saved);
     }
 
     @Override
@@ -93,24 +79,11 @@ public class AgendaServiceImpl implements AgendaService {
 
         agendaMapper.updateEntityFromRequest(request, entity);
 
-        MultipartFile archivo = request.getDireccionImagen();
-        if (archivo != null && !archivo.isEmpty()) {
-            String carpetaDestino = "imagenes/agenda/";
-            String nombreArchivo = FileUploadUtil.guardarArchivo(
-                    archivo,
-                    carpetaDestino,
-                    entity.getDireccionImagen()
-            );
-            entity.setDireccionImagen(nombreArchivo);
-        }
-
         entity.setFechaModificacion(LocalDate.now());
         entity.setResponsable("jonz");
         AgendaEntity saved = agendaRepository.save(entity);
-        return construirResponseConImagen(saved);
+        return agendaMapper.toResponse(saved);
     }
-
-
 
     @Override
     public void eliminarAgenda(Integer id) {
@@ -120,9 +93,4 @@ public class AgendaServiceImpl implements AgendaService {
         agendaRepository.deleteById(id);
     }
 
-    private AgendaResponse construirResponseConImagen(AgendaEntity entity) {
-        AgendaResponse response = agendaMapper.toResponse(entity);
-        response.setDireccionImagen(urlBase + "agenda/" + entity.getDireccionImagen());
-        return response;
-    }
 }

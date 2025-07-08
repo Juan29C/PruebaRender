@@ -13,12 +13,10 @@ public interface AgendaMapper extends GenericMapper<AgendaDto, AgendaEntity> {
     @Override
     AgendaDto toDto(AgendaEntity entity);
 
-    @Mapping(target = "direccionImagen", ignore = true)
     AgendaEntity toEntity(AgendaRequest agendaRequest);
 
     AgendaResponse toResponse(AgendaEntity entity);
 
-    @Mapping(target = "direccionImagen", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(AgendaRequest request, @MappingTarget AgendaEntity entity);
 }
