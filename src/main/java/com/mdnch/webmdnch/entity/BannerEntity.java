@@ -13,8 +13,11 @@ public class BannerEntity {
     @Column(name = "bannerId")
     private Integer bannerId;
 
-    @Column(name = "titulo", nullable = false, length = 100)
+    @Column(name = "titulo",  columnDefinition = "TEXT", nullable = false, length = 100)
     private String titulo;
+
+    @Column(name = "descripcion", nullable = true, length = 300)
+    private String descripcion;
 
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
@@ -50,6 +53,14 @@ public class BannerEntity {
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getDireccionImagen() {

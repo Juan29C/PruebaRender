@@ -9,17 +9,20 @@ import com.mdnch.webmdnch.mapper.util.GenericMapper;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
-public interface BannerMapper extends GenericMapper<BannerDto, BannerEntity> {
+public interface BannerMapper {
 
-    @Override
+    @Mapping(target = "titulo", ignore = true)
     BannerDto toDto(BannerEntity entity);
 
     @Mapping(target = "direccionImagen", ignore = true)
+    @Mapping(target = "titulo", ignore = true) //
     BannerEntity toEntity(BannerRequest request);
 
+    @Mapping(target = "titulo", ignore = true) //
     BannerResponse toResponse(BannerEntity entity);
 
     @Mapping(target = "direccionImagen", ignore = true)
+    @Mapping(target = "titulo", ignore = true) //
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(BannerRequest request, @MappingTarget BannerEntity entity);
 }

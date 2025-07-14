@@ -39,6 +39,14 @@ public class BannerServiceImpl implements BannerService {
         entity.setResponsable("ssj");
         entity.setFechaCreacion(LocalDate.now());
 
+        try {
+            String tituloJson = new com.fasterxml.jackson.databind.ObjectMapper()
+                    .writeValueAsString(request.getTitulo());
+            entity.setTitulo(tituloJson);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir el título a JSON", e);
+        }
+
         BannerEntity saved = bannerRepository.saveAndFlush(entity);
         return construirResponseConImagen(saved);
     }
@@ -75,6 +83,14 @@ public class BannerServiceImpl implements BannerService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
+        try {
+            String tituloJson = new com.fasterxml.jackson.databind.ObjectMapper()
+                    .writeValueAsString(request.getTitulo());
+            entity.setTitulo(tituloJson);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir el título a JSON", e);
+        }
+
         entity.setFechaModificacion(LocalDate.now());
         entity.setResponsable("young flex");
 
@@ -99,6 +115,15 @@ public class BannerServiceImpl implements BannerService {
             );
             entity.setDireccionImagen(nombreArchivo);
         }
+
+        try {
+            String tituloJson = new com.fasterxml.jackson.databind.ObjectMapper()
+                    .writeValueAsString(request.getTitulo());
+            entity.setTitulo(tituloJson);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir el título a JSON", e);
+        }
+
         entity.setFechaModificacion(LocalDate.now());
         entity.setResponsable("jonz");
         BannerEntity saved = bannerRepository.save(entity);
@@ -115,6 +140,15 @@ public class BannerServiceImpl implements BannerService {
 
     private BannerResponse construirResponseConImagen(BannerEntity entity) {
         BannerResponse response = bannerMapper.toResponse(entity);
+
+        try {
+            List<String> tituloList = new com.fasterxml.jackson.databind.ObjectMapper()
+                    .readValue(entity.getTitulo(), List.class);
+            response.setTitulo(tituloList);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir JSON a lista de títulos", e);
+        }
+
         response.setDireccionImagen(urlBase + "banners/" + entity.getDireccionImagen());
         return response;
     }

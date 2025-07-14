@@ -1,10 +1,12 @@
 package com.mdnch.webmdnch.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class BannerDto {
     private Integer bannerId;
-    private String titulo;
+    private List<String> titulo;
+    private String descripcion;
     private String direccionImagen;
     private Boolean activo;
     private LocalDate fechaCreacion;
@@ -19,12 +21,20 @@ public class BannerDto {
         this.bannerId = bannerId;
     }
 
-    public String getTitulo() {
+    public List<String> getTitulo() {
         return titulo;
     }
 
-    public void setTitulo(String titulo) {
+    public void setTitulo(List<String> titulo) {
         this.titulo = titulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getDireccionImagen() {
