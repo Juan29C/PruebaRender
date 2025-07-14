@@ -11,37 +11,41 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class FileUploadUtil {
-    public static String guardarArchivo(MultipartFile archivo, String carpetaDestino){
+
+    private static final String STATIC_FOLDER = "src/main/resources/static";
+
+    public static String guardarArchivo(MultipartFile archivo, String carpetaRelativa) {
         if (archivo == null || archivo.isEmpty()) {
             throw new IllegalArgumentException("El archivo es nulo o está vacío");
         }
 
-        File carpeta = new File(carpetaDestino);
-        if (!carpeta.exists()) carpeta.mkdirs();
-
         String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
-        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
+
+        Path rutaBase = Paths.get(STATIC_FOLDER, carpetaRelativa);
+        Path rutaArchivo = rutaBase.resolve(nombreArchivo);
 
         try {
-            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
+            Files.createDirectories(rutaBase);
+            Files.copy(archivo.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la imagen", e);
+            throw new RuntimeException("Error al guardar el archivo", e);
         }
 
         return nombreArchivo;
     }
 
-    public static String guardarArchivo(MultipartFile archivo, String carpetaDestino, String nombreActual) {
+    public static String guardarArchivo(MultipartFile archivo, String carpetaRelativa, String nombreActual) {
         if (archivo == null || archivo.isEmpty()) {
             return nombreActual;
         }
 
-        File archivoExistente = new File(carpetaDestino + nombreActual);
+        Path rutaBase = Paths.get(STATIC_FOLDER, carpetaRelativa);
+        Path rutaExistente = rutaBase.resolve(nombreActual);
 
         try {
-            if (archivoExistente.exists()) {
+            if (Files.exists(rutaExistente)) {
                 byte[] nuevoHash = getHash(archivo.getBytes());
-                byte[] existenteHash = getHash(Files.readAllBytes(archivoExistente.toPath()));
+                byte[] existenteHash = getHash(Files.readAllBytes(rutaExistente));
 
                 if (MessageDigest.isEqual(nuevoHash, existenteHash)) {
                     return nombreActual;
@@ -51,12 +55,12 @@ public class FileUploadUtil {
             throw new RuntimeException("Error al comparar archivos", e);
         }
 
-        // Si no son iguales, guardar nuevo
         String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
-        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
+        Path rutaArchivo = rutaBase.resolve(nombreArchivo);
 
         try {
-            Files.copy(archivo.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
+            Files.createDirectories(rutaBase);
+            Files.copy(archivo.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar el archivo", e);
         }

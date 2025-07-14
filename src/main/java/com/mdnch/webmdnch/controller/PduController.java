@@ -21,7 +21,7 @@ public class PduController {
     private PduService pduService;
 
     @PostMapping("/pdu/crear")
-    public ResponseEntity<ResponseBase<PduResponse>> create(@RequestBody PduRequest request) {
+    public ResponseEntity<ResponseBase<PduResponse>> create(@ModelAttribute PduRequest request) {
         PduResponse response = pduService.createPdu(request);
         return ResponseEntity.ok(new ResponseBase<>(true, "PDU creado correctamente", response));
     }
@@ -39,13 +39,13 @@ public class PduController {
     }
 
     @PutMapping("/pdu/{id}")
-    public ResponseEntity<ResponseBase<Void>> update(@PathVariable Integer id, @RequestBody PduRequest request) {
+    public ResponseEntity<ResponseBase<PduResponse>> update(@PathVariable Integer id, @ModelAttribute PduRequest request) {
         PduResponse response = pduService.updatePdu(id, request);
-        return ResponseEntity.ok(new ResponseBase<>(true, "PDU actualizado correctamente", null));
+        return ResponseEntity.ok(new ResponseBase<>(true, "PDU actualizado correctamente", response));
     }
 
     @PatchMapping("/pduedit/{id}")
-    public ResponseEntity<ResponseBase<PduResponse>> edit(@PathVariable Integer id, @RequestBody PduRequest request) {
+    public ResponseEntity<ResponseBase<PduResponse>> edit(@PathVariable Integer id, @ModelAttribute PduRequest request) {
         PduResponse response = pduService.editPdu(id, request);
         return ResponseEntity.ok(new ResponseBase<>(true, "PDU editado correctamente", response));
     }

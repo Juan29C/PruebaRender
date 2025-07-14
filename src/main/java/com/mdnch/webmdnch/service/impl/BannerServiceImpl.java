@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdnch.webmdnch.dto.request.BannerRequest;
 import com.mdnch.webmdnch.dto.response.BannerResponse;
 import com.mdnch.webmdnch.entity.BannerEntity;
@@ -116,12 +118,35 @@ public class BannerServiceImpl implements BannerService {
             entity.setDireccionImagen(nombreArchivo);
         }
 
-        try {
-            String tituloJson = new com.fasterxml.jackson.databind.ObjectMapper()
-                    .writeValueAsString(request.getTitulo());
-            entity.setTitulo(tituloJson);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al convertir el título a JSON", e);
+        // 👇 Actualización parcial del título
+        if (request.getTitulo() != null && !request.getTitulo().isEmpty()) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                // 1. Leer el título actual desde la base de datos
+                List<String> tituloActual = mapper.readValue(
+                        entity.getTitulo(), new TypeReference<List<String>>() {}
+                );
+
+                // 2. Reemplazar solo los valores no nulos del request
+                List<String> tituloRequest = request.getTitulo();
+                for (int i = 0; i < tituloRequest.size(); i++) {
+                    String nuevoValor = tituloRequest.get(i);
+                    if (nuevoValor != null) {
+                        if (i < tituloActual.size()) {
+                            tituloActual.set(i, nuevoValor); // reemplaza
+                        } else {
+                            // Si viene un índice nuevo, se agrega
+                            tituloActual.add(nuevoValor);
+                        }
+                    }
+                }
+
+                // 3. Volver a guardar como JSON en la entidad
+                String tituloFinalJson = mapper.writeValueAsString(tituloActual);
+                entity.setTitulo(tituloFinalJson);
+            } catch (Exception e) {
+                throw new RuntimeException("Error al procesar el título", e);
+            }
         }
 
         entity.setFechaModificacion(LocalDate.now());

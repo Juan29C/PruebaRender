@@ -1,9 +1,11 @@
 package com.mdnch.webmdnch.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class PduRequest {
     private String titulo;
     private String descripcion;
-    private String linkDocumento;
+    private MultipartFile linkDocumento;
 
     public String getTitulo() {
         return titulo;
@@ -21,11 +23,11 @@ public class PduRequest {
         this.descripcion = descripcion;
     }
 
-    public String getLinkDocumento() {
+    public MultipartFile getLinkDocumento() {
         return linkDocumento;
     }
 
-    public void setLinkDocumento(String linkDocumento) {
+    public void setLinkDocumento(MultipartFile linkDocumento) {
         this.linkDocumento = linkDocumento;
     }
 }
