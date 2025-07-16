@@ -10,6 +10,8 @@ public class TurismoDto {
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
     private String responsable;
+    private String lugar;
+    private String ubicacion;
 
     public Integer getTurismoId() {
         return turismoId;
@@ -60,5 +62,21 @@ public class TurismoDto {
     }
     public void setResponsable(String responsable) {
         this.responsable = responsable;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 }

@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class TurismoRequest {
     private String titulo;
     private String descripcion;
+    private String lugar;
+    private String ubicacion;
     private MultipartFile direccionImagen;
 
     public String getTitulo() {
@@ -21,6 +23,22 @@ public class TurismoRequest {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public MultipartFile getDireccionImagen() {

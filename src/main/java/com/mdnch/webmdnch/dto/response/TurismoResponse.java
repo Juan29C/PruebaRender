@@ -6,6 +6,8 @@ public class TurismoResponse {
     private Integer turismoId;
     private String titulo;
     private String descripcion;
+    private String lugar;
+    private String ubicacion;
     private String direccionImagen;
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
@@ -33,6 +35,22 @@ public class TurismoResponse {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public String getDireccionImagen() {

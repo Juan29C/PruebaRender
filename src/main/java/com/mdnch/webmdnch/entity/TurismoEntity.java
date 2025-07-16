@@ -19,6 +19,11 @@ public class TurismoEntity {
     @Column(name = "descripcion", nullable = false,length = 1000)
     private String descripcion;
 
+    @Column(name = "lugar", nullable = false, length = 200)
+    private String lugar;
+
+    @Column(name = "ubicacion", nullable = false, length = 1000)
+    private String ubicacion;
 
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
@@ -59,6 +64,22 @@ public class TurismoEntity {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public String getDireccionImagen() {
