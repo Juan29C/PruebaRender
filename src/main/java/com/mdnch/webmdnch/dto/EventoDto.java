@@ -12,7 +12,8 @@ public class EventoDto {
     private LocalDate fecha;
     private String titulo;
     private String descripcion;
-    private LocalTime hora;
+    private LocalTime horaInicio;
+    private LocalTime horaFin;
     private String ubicacion;
     private String direccionImagen;
     private LocalDateTime fechaCreacion;
@@ -59,12 +60,20 @@ public class EventoDto {
         this.descripcion = descripcion;
     }
 
-    public LocalTime getHora() {
-        return hora;
+    public LocalTime getHoraInicio() {
+        return horaInicio;
     }
 
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public LocalTime getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(LocalTime horaFin) {
+        this.horaFin = horaFin;
     }
 
     public String getUbicacion() {

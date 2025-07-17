@@ -21,8 +21,11 @@ public class EventosEntity {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
-    @Column(name = "hora", nullable = false)
-    private LocalTime hora;
+    @Column(name = "hora_inicio", nullable = false)
+    private LocalTime horaInicio;
+
+    @Column(name = "hora_fin", nullable = false)
+    private LocalTime horaFin;
 
     @Column(name = "titulo", nullable = false, length = 250)
     private String titulo;
@@ -74,12 +77,20 @@ public class EventosEntity {
         this.fecha = fecha;
     }
 
-    public LocalTime getHora() {
-        return hora;
+    public LocalTime getHoraInicio() {
+        return horaInicio;
     }
 
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public LocalTime getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(LocalTime horaFin) {
+        this.horaFin = horaFin;
     }
 
     public String getTitulo() {
