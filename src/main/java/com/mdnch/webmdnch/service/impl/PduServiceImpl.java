@@ -43,7 +43,9 @@ public class PduServiceImpl implements PduService {
         entity.setFechaCreacion(LocalDate.now());
 
         PduEntity saved = pduRepository.save(entity);
-        return pduMapper.toResponse(saved);
+        PduResponse response = pduMapper.toResponse(saved);
+        response.setLinkDocumento(documentosUrlBase + "pdus/" + saved.getLinkDocumento());
+        return response;
     }
 
     @Override
