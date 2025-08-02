@@ -49,18 +49,6 @@ public class NumeroEmergenciaController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", response));
     }
 
-    /*
-    @PatchMapping("/bannersedit/{id}")
-    public ResponseEntity<ResponseBase<BannerResponse>> editarBanner(
-            @PathVariable Integer id,
-            @RequestBody NumeroEmergenciaRequest request) {
-
-        BannerResponse response = bannerService.editarBanner(id, bannerRequest);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Banner editado con éxito", response));
-    }
-
-     */
-
     @DeleteMapping("/numeros/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarNumeros(@PathVariable Integer id) {
         numeroEmergenciaService.deleteNumeroEmergencia(id);

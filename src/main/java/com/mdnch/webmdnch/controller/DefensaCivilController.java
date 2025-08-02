@@ -50,18 +50,6 @@ public class DefensaCivilController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Defensa Civil actualizado con éxito", response));
     }
 
-    /*
-    @PatchMapping("/bannersedit/{id}")
-    public ResponseEntity<ResponseBase<BannerResponse>> editarBanner(
-            @PathVariable Integer id,
-            @RequestBody NumeroEmergenciaRequest request) {
-
-        BannerResponse response = bannerService.editarBanner(id, bannerRequest);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Banner editado con éxito", response));
-    }
-
-     */
-
     @DeleteMapping("/defensaCivil/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarDefensaCivil(@PathVariable Integer id) {
         defensaCivilService.eliminarPorId(id);
