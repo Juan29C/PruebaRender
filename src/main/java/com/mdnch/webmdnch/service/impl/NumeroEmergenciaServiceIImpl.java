@@ -55,7 +55,16 @@ public class NumeroEmergenciaServiceIImpl implements NumeroEmergenciaService {
 
     @Override
     public NumeroEmergenciaResponse updateNumero(Integer id, NumeroEmergenciaRequest request) {
-        return null;
+        NumeroEmergenciaEntity entity = numeroEmergenciaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Número de emergencia no encontrado con ID: " + id));
+
+        numeroEmergenciaMapper.updateEntityFromRequest(request, entity);
+        entity.setFechaModificacion(LocalDate.now());
+        entity.setResponsable("admin 2");
+
+
+        NumeroEmergenciaEntity saved = numeroEmergenciaRepository.save(entity);
+        return numeroEmergenciaMapper.toResponse(saved);
     }
 
     @Override

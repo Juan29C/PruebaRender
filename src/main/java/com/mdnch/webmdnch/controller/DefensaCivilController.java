@@ -22,7 +22,7 @@ public class DefensaCivilController {
     DefensaCivilService defensaCivilService;
 
     @PostMapping("/defensaCivil/crear")
-    public ResponseEntity<ResponseBase<DefensaCivilResponse>> crearNumeros(@ModelAttribute DefensaCivilRequest request){
+    public ResponseEntity<ResponseBase<DefensaCivilResponse>> crearDefensaCivil(@ModelAttribute DefensaCivilRequest request){
         DefensaCivilResponse response = defensaCivilService.registrarDefensaCivil(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseBase<>(true, "Defensa Civil creado correctamente", response));
@@ -30,27 +30,27 @@ public class DefensaCivilController {
     }
 
     @GetMapping("/defensaCivil")
-    public ResponseEntity<ResponseBase<List<DefensaCivilResponse>>> obtenerNumeros(){
+    public ResponseEntity<ResponseBase<List<DefensaCivilResponse>>> obtenerDefensaCivil(){
         List<DefensaCivilResponse> response = defensaCivilService.obtenerTodos();
         return ResponseEntity.ok(new ResponseBase<>(true, "Lista de Defensa Civil obtenidos con éxito", response));
     }
 
     @GetMapping("/defensaCivil/{id}")
-    public ResponseEntity<ResponseBase<DefensaCivilResponse>> obtenerBannerPorId(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<DefensaCivilResponse>> obtenerDefensaCivilPorId(@PathVariable Integer id) {
         DefensaCivilResponse response = defensaCivilService.obtenerPorId(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Defensa Civil encontrado", response));
     }
 
-    /*
-    @PutMapping("/numeros/{id}")
-    public ResponseEntity<ResponseBase<BannerResponse>> actualizarBanner(
+    @PutMapping("/defensaCivil/{id}")
+    public ResponseEntity<ResponseBase<DefensaCivilResponse>> actualizarDefensaCivil(
             @PathVariable Integer id,
-            @RequestBody NumeroEmergenciaRequest request) {
+            @ModelAttribute DefensaCivilRequest request) {
 
-        BannerResponse response = bannerService.actualizarBanner(id, bannerRequest);
-        return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", response));
+        DefensaCivilResponse response = defensaCivilService.actualizarDefensaCivil(id, request);
+        return ResponseEntity.ok(new ResponseBase<>(true, "Defensa Civil actualizado con éxito", response));
     }
 
+    /*
     @PatchMapping("/bannersedit/{id}")
     public ResponseEntity<ResponseBase<BannerResponse>> editarBanner(
             @PathVariable Integer id,
@@ -63,7 +63,7 @@ public class DefensaCivilController {
      */
 
     @DeleteMapping("/defensaCivil/{id}")
-    public ResponseEntity<ResponseBase<Void>> eliminarBanner(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<Void>> eliminarDefensaCivil(@PathVariable Integer id) {
         defensaCivilService.eliminarPorId(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Defensa Civil eliminado con éxito", null));
     }

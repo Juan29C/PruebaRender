@@ -35,21 +35,21 @@ public class NumeroEmergenciaController {
     }
 
     @GetMapping("/numeros/{id}")
-    public ResponseEntity<ResponseBase<NumeroEmergenciaResponse>> obtenerBannerPorId(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<NumeroEmergenciaResponse>> obtenerNumerosPorId(@PathVariable Integer id) {
         NumeroEmergenciaResponse response = numeroEmergenciaService.findById(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Número de emergencia", response));
     }
 
-    /*
     @PutMapping("/numeros/{id}")
-    public ResponseEntity<ResponseBase<BannerResponse>> actualizarBanner(
+    public ResponseEntity<ResponseBase<NumeroEmergenciaResponse>> actualizarNumeroEmergencia(
             @PathVariable Integer id,
             @RequestBody NumeroEmergenciaRequest request) {
 
-        BannerResponse response = bannerService.actualizarBanner(id, bannerRequest);
+        NumeroEmergenciaResponse response = numeroEmergenciaService.updateNumero(id, request);
         return ResponseEntity.ok(new ResponseBase<>(true, "Banner actualizado con éxito", response));
     }
 
+    /*
     @PatchMapping("/bannersedit/{id}")
     public ResponseEntity<ResponseBase<BannerResponse>> editarBanner(
             @PathVariable Integer id,
@@ -62,7 +62,7 @@ public class NumeroEmergenciaController {
      */
 
     @DeleteMapping("/numeros/{id}")
-    public ResponseEntity<ResponseBase<Void>> eliminarBanner(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<Void>> eliminarNumeros(@PathVariable Integer id) {
         numeroEmergenciaService.deleteNumeroEmergencia(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Número de emergencia eliminado con éxito", null));
     }

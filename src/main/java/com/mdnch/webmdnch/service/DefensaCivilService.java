@@ -9,6 +9,7 @@ public interface DefensaCivilService {
     DefensaCivilResponse registrarDefensaCivil(DefensaCivilRequest request);
     List<DefensaCivilResponse> obtenerTodos();
     DefensaCivilResponse obtenerPorId(Integer id);
+    DefensaCivilResponse actualizarDefensaCivil(Integer id, DefensaCivilRequest request);
     void eliminarPorId(Integer id);
 }
 

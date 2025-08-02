@@ -2,6 +2,7 @@ package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.request.DefensaCivilRequest;
 import com.mdnch.webmdnch.dto.response.DefensaCivilResponse;
+import com.mdnch.webmdnch.entity.BannerEntity;
 import com.mdnch.webmdnch.entity.DefensaCivilEntity;
 import com.mdnch.webmdnch.entity.NumeroEmergenciaEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,6 +67,36 @@ public class DefensaCivilServiceImpl implements DefensaCivilService {
         DefensaCivilEntity entity = defensaCivilRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Defensa civil no encontrada con ID: " + id));
         return construirResponseConRuta(entity);
+    }
+
+    @Override
+    public DefensaCivilResponse actualizarDefensaCivil(Integer id, DefensaCivilRequest request) {
+        DefensaCivilEntity entity = defensaCivilRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Defensa civil no encontrada con ID: " + id));
+
+        defensaCivilMapper.updateEntityFromRequest(request, entity);
+
+        if (request.getNumerosIds() != null && !request.getNumerosIds().isEmpty()) {
+            List<NumeroEmergenciaEntity> numeros = numeroEmergenciaRepository.findAllById(request.getNumerosIds());
+            entity.setNumeros(numeros);
+        }
+
+        MultipartFile archivo = request.getRutaPdf();
+        if (archivo != null && !archivo.isEmpty()) {
+            String carpetaDestino = "documentos/defensa_civil/";
+            String nombreArchivo = FileUploadUtil.guardarArchivo(
+                    archivo,
+                    carpetaDestino,
+                    entity.getRutaPdf()
+            );
+            entity.setRutaPdf(nombreArchivo);
+        }
+
+        entity.setFechaModificacion(LocalDateTime.now());
+        entity.setResponsable("Admin logueado");
+
+        DefensaCivilEntity saved = defensaCivilRepository.save(entity);
+        return construirResponseConRuta(saved);
     }
 
     @Override
