@@ -22,7 +22,7 @@ public class MenuItemController {
     MenuItemService menuItemService;
 
     @PostMapping("/menusItem/crear")
-    public ResponseEntity<ResponseBase<MenuItemResponse>> crearPaginas(@RequestBody MenuItemRequest request){
+    public ResponseEntity<ResponseBase<MenuItemResponse>> crearMenuItem(@RequestBody MenuItemRequest request){
         MenuItemResponse response = menuItemService.createMenuItem(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseBase<>(true, "Menú ítem creado correctamente", response));
@@ -30,19 +30,19 @@ public class MenuItemController {
     }
 
     @GetMapping("/menusItem")
-    public ResponseEntity<ResponseBase<List<MenuItemResponse>>> obtenerNumeros(){
+    public ResponseEntity<ResponseBase<List<MenuItemResponse>>> obtenerMenuItems(){
         List<MenuItemResponse> response = menuItemService.getAllMenuItems();
         return ResponseEntity.ok(new ResponseBase<>(true, "Menús ítems obtenidos con éxito", response));
     }
 
     @GetMapping("/menusItem/{id}")
-    public ResponseEntity<ResponseBase<MenuItemResponse>> obtenerNumerosPorId(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<MenuItemResponse>> obtenerMenuItemPorId(@PathVariable Integer id) {
         MenuItemResponse response = menuItemService.findByIdMenuItem(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Menú ítem obtenido con éxito", response));
     }
 
     @PutMapping("/menusItem/{id}")
-    public ResponseEntity<ResponseBase<MenuItemResponse>> actualizarNumeroEmergencia(
+    public ResponseEntity<ResponseBase<MenuItemResponse>> actualizarMenuItem(
             @PathVariable Integer id,
             @RequestBody MenuItemRequest request) {
 
@@ -51,7 +51,7 @@ public class MenuItemController {
     }
 
     @DeleteMapping("/menusItem/{id}")
-    public ResponseEntity<ResponseBase<Void>> eliminarNumeros(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<Void>> eliminarMenuItem(@PathVariable Integer id) {
         menuItemService.deleteMenuItem(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Menú ítem eliminado con éxito", null));
     }

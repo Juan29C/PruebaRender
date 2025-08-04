@@ -21,7 +21,7 @@ public class PaginaController {
     PaginaService paginaService;
 
     @PostMapping("/paginas/crear")
-    public ResponseEntity<ResponseBase<PaginaResponse>> crearPaginas(@RequestBody PaginaRequest request){
+    public ResponseEntity<ResponseBase<PaginaResponse>> crearPagina(@RequestBody PaginaRequest request){
         PaginaResponse response = paginaService.createPagina(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseBase<>(true, "Página creada correctamente", response));
@@ -29,19 +29,19 @@ public class PaginaController {
     }
 
     @GetMapping("/paginas")
-    public ResponseEntity<ResponseBase<List<PaginaResponse>>> obtenerNumeros(){
+    public ResponseEntity<ResponseBase<List<PaginaResponse>>> obtenePaginas(){
         List<PaginaResponse> response = paginaService.getAllPaginas();
         return ResponseEntity.ok(new ResponseBase<>(true, "Páginas obtenidos con éxito", response));
     }
 
     @GetMapping("/paginas/{id}")
-    public ResponseEntity<ResponseBase<PaginaResponse>> obtenerNumerosPorId(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<PaginaResponse>> obtenerPaginaPorId(@PathVariable Integer id) {
         PaginaResponse response = paginaService.findById(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Página obtenida con éxito", response));
     }
 
     @PutMapping("/paginas/{id}")
-    public ResponseEntity<ResponseBase<PaginaResponse>> actualizarNumeroEmergencia(
+    public ResponseEntity<ResponseBase<PaginaResponse>> actualizarPagina(
             @PathVariable Integer id,
             @RequestBody PaginaRequest request) {
 
@@ -50,7 +50,7 @@ public class PaginaController {
     }
 
     @DeleteMapping("/paginas/{id}")
-    public ResponseEntity<ResponseBase<Void>> eliminarNumeros(@PathVariable Integer id) {
+    public ResponseEntity<ResponseBase<Void>> eliminarPagina(@PathVariable Integer id) {
         paginaService.deletePagina(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Página eliminado con éxito", null));
     }

@@ -1,11 +1,13 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.request.MenuRequest;
+import com.mdnch.webmdnch.dto.response.MenuItemNavResponse;
+import com.mdnch.webmdnch.dto.response.MenuNavResponse;
 import com.mdnch.webmdnch.dto.response.MenuResponse;
-import com.mdnch.webmdnch.dto.response.NumeroEmergenciaResponse;
 import com.mdnch.webmdnch.entity.MenuEntity;
-import com.mdnch.webmdnch.entity.NumeroEmergenciaEntity;
+import com.mdnch.webmdnch.entity.MenuItemEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
+import com.mdnch.webmdnch.mapper.MenuItemMapper;
 import com.mdnch.webmdnch.mapper.MenuMapper;
 import com.mdnch.webmdnch.repository.MenuRepository;
 import com.mdnch.webmdnch.service.MenuService;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +24,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     MenuMapper menuMapper;
+
+    @Autowired
+    MenuItemMapper menuItemMapper;
 
     @Autowired
     MenuRepository menuRepository;
@@ -43,6 +49,25 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findAll().stream()
                 .map(menuMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MenuNavResponse> getMenuNavStructure() {
+        List<MenuEntity> menus = menuRepository.findAll();
+
+        return menus.stream().map(menu -> {
+            MenuNavResponse response = new MenuNavResponse();
+            response.setId(menu.getId());
+            response.setTitulo(menu.getTitulo());
+
+            List<MenuItemNavResponse> items = menu.getItems().stream()
+                    .sorted(Comparator.comparing(MenuItemEntity::getOrden, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .map(menuItemMapper::toResponseNav)
+                    .collect(Collectors.toList());
+
+            response.setItems(items);
+            return response;
+        }).collect(Collectors.toList());
     }
 
     @Override
