@@ -20,8 +20,11 @@ public class NoticiasEntity {
     @Column(name = "categoria", nullable = false,length = 100)
     private String categoria;
 
-    @Column(name = "descripcion", nullable = false)
+    @Column(name = "descripcion", columnDefinition = "LONGTEXT", nullable = false)
     private String descripcion;
+
+    @Column(name = "resumen", length = 500)
+    private String resumen;
 
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
@@ -76,6 +79,14 @@ public class NoticiasEntity {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
     }
 
     public String getDireccionImagen() {

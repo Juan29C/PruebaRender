@@ -10,6 +10,7 @@ public class NoticiasRequest {
     private String titulo;
     private String categoria;
     private String descripcion;
+    private String resumen;
     private LocalDate fechaManual;
     private MultipartFile imagen;
 
@@ -35,6 +36,14 @@ public class NoticiasRequest {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
     }
 
     public LocalDate getFechaManual() {

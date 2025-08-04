@@ -8,6 +8,7 @@ public class NoticiasResponse {
     private String titulo;
     private String categoria;
     private String descripcion;
+    private String resumen;
     private String direccionImagen;
     private String fechaManual;
     private String fechaManualCruda;
@@ -45,6 +46,14 @@ public class NoticiasResponse {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
     }
 
     public String getDireccionImagen() {
