@@ -6,16 +6,17 @@ import com.mdnch.webmdnch.dto.response.MenuItemResponse;
 import com.mdnch.webmdnch.dto.response.MenuResponse;
 import com.mdnch.webmdnch.entity.MenuEntity;
 import com.mdnch.webmdnch.entity.MenuItemEntity;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface MenuItemMapper {
 
     MenuItemEntity toEntity(MenuItemRequest request);
 
+    @Mapping(source = "menu.id", target = "menuId")
+    @Mapping(source = "menu.titulo", target = "nombreMenu")
+    @Mapping(source = "pagina.id", target = "paginaId")
+    @Mapping(source = "pagina.titulo", target = "nombrePagina")
     MenuItemResponse toResponse(MenuItemEntity entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

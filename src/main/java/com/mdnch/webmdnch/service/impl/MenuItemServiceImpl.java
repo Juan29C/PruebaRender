@@ -2,10 +2,14 @@ package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.request.MenuItemRequest;
 import com.mdnch.webmdnch.dto.response.MenuItemResponse;
+import com.mdnch.webmdnch.entity.MenuEntity;
 import com.mdnch.webmdnch.entity.MenuItemEntity;
+import com.mdnch.webmdnch.entity.PaginaEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.MenuItemMapper;
 import com.mdnch.webmdnch.repository.MenuItemRepository;
+import com.mdnch.webmdnch.repository.MenuRepository;
+import com.mdnch.webmdnch.repository.PaginaRepository;
 import com.mdnch.webmdnch.service.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +27,29 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Autowired
     MenuItemRepository menuItemRepository;
 
+    @Autowired
+    private MenuRepository menuRepository;
+
+    @Autowired
+    private PaginaRepository paginaRepository;
+
+
     @Override
     public MenuItemResponse createMenuItem(MenuItemRequest request) {
         MenuItemEntity entity = menuItemMapper.toEntity(request);
+
+        MenuEntity menu = menuRepository.findById(request.getMenuId())
+                .orElseThrow(() -> new RuntimeException("Menú no encontrado"));
+        entity.setMenu(menu);
+
+        if (request.getPaginaId() != null) {
+            PaginaEntity pagina = paginaRepository.findById(request.getPaginaId())
+                    .orElse(null);
+            entity.setPagina(pagina);
+        }
+
         entity.setEstado(true);
-        entity.setFechaModificacion(LocalDate.now());
+        entity.setFechaCreacion(LocalDate.now());
         entity.setResponsable("Admin");
 
         MenuItemEntity saved = menuItemRepository.save(entity);
@@ -72,6 +94,6 @@ public class MenuItemServiceImpl implements MenuItemService {
         MenuItemEntity entity = menuItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Menú ítem no encontrada con ID: " + id));
 
-        menuItemRepository.findById(id);
+        menuItemRepository.deleteById(id);
     }
 }

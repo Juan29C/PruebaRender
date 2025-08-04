@@ -28,6 +28,7 @@ public class PaginaServiceImpl implements PaginaService {
     @Override
     public PaginaResponse createPagina(PaginaRequest request) {
         PaginaEntity paginaEntity = paginaMapper.toEntity(request);
+        paginaEntity.setEstado(true);
         paginaEntity.setFechaCreacion(LocalDate.now());
         paginaEntity.setResponsable("Admin");
 
