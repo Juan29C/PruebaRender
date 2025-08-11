@@ -1,19 +1,24 @@
 package com.mdnch.webmdnch.controller;
 
-import com.mdnch.webmdnch.dto.request.MenuRequest;
-import com.mdnch.webmdnch.dto.request.PaginaRequest;
-import com.mdnch.webmdnch.dto.response.MenuNavResponse;
-import com.mdnch.webmdnch.dto.response.MenuResponse;
-import com.mdnch.webmdnch.dto.response.PaginaResponse;
-import com.mdnch.webmdnch.dto.response.ResponseBase;
-import com.mdnch.webmdnch.service.MenuService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.awt.*;
-import java.util.List;
+import com.mdnch.webmdnch.dto.request.MenuRequest;
+import com.mdnch.webmdnch.dto.response.MenuResponse;
+import com.mdnch.webmdnch.dto.response.ResponseBase;
+import com.mdnch.webmdnch.service.MenuService;
 
 @RestController
 @RequestMapping("/api/authentication")
@@ -22,9 +27,9 @@ public class MenuController {
     @Autowired
     MenuService menuService;
 
-    @PostMapping("/menus/crear")
+    @PostMapping("/menu")
     public ResponseEntity<ResponseBase<MenuResponse>> crearMenu(@RequestBody MenuRequest request){
-        MenuResponse response = menuService.createMenu(request);
+        MenuResponse response = menuService.crearMenu(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseBase<>(true, "Menú creado correctamente", response));
 
@@ -32,34 +37,40 @@ public class MenuController {
 
     @GetMapping("/menus")
     public ResponseEntity<ResponseBase<List<MenuResponse>>> obtenerMenus(){
-        List<MenuResponse> response = menuService.getAllMenus();
+        List<MenuResponse> response = menuService.listarMenus();
         return ResponseEntity.ok(new ResponseBase<>(true, "Menús obtenidos con éxito", response));
     }
 
-    @GetMapping("/menusNav")
-    public ResponseEntity<ResponseBase<List<MenuNavResponse>>> obtenerNav(){
-        List<MenuNavResponse> response = menuService.getMenuNavStructure();
+    @GetMapping("/menus/raiz")
+    public ResponseEntity<ResponseBase<List<MenuResponse>>> obtenerMenusRaiz(){
+        List<MenuResponse> response = menuService.listarMenusRaiz();
+        return ResponseEntity.ok(new ResponseBase<>(true, "Menús raiz obtenidos con éxito", response));
+    }
+
+    @GetMapping("/menus/jerarquicos")
+    public ResponseEntity<ResponseBase<List<MenuResponse>>> obtenerMenusJerarquicos(){
+        List<MenuResponse> response = menuService.listarMenusJerarquicos();
         return ResponseEntity.ok(new ResponseBase<>(true, "Barra de navegación obtenidos con éxito", response));
     }
 
-    @GetMapping("/menus/{id}")
+    @GetMapping("/menu/{id}")
     public ResponseEntity<ResponseBase<MenuResponse>> obtenerMenuPorId(@PathVariable Integer id) {
-        MenuResponse response = menuService.findByIdMenu(id);
+        MenuResponse response = menuService.obtenerMenuPorId(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Menú obtenida con éxito", response));
     }
 
-    @PutMapping("/menus/{id}")
+    @PatchMapping("/menu/{id}")
     public ResponseEntity<ResponseBase<MenuResponse>> actualizarMenu(
             @PathVariable Integer id,
             @RequestBody MenuRequest request) {
 
-        MenuResponse response = menuService.updateMenu(id, request);
+        MenuResponse response = menuService.actualizarMenu(id, request);
         return ResponseEntity.ok(new ResponseBase<>(true, "Menú actualizado con éxito", response));
     }
 
-    @DeleteMapping("/menus/{id}")
+    @DeleteMapping("/menu/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminarMenu(@PathVariable Integer id) {
-        menuService.deleteMenu(id);
+        menuService.eliminarMenu(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Menú eliminado con éxito", null));
     }
 

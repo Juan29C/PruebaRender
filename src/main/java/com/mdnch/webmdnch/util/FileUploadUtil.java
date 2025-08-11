@@ -3,6 +3,7 @@ package com.mdnch.webmdnch.util;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,6 +63,17 @@ public class FileUploadUtil {
         }
 
         return nombreArchivo;
+    }
+
+    public static void eliminarArchivo(String carpetaDestino, String urlCompleta){
+        if(urlCompleta == null || urlCompleta.isEmpty()) return;
+        String nombreArchivo = Paths.get(urlCompleta.substring(urlCompleta.lastIndexOf("/") + 1)).getFileName().toString();
+        Path ruta = Paths.get(carpetaDestino, nombreArchivo);
+        try {
+            Files.deleteIfExists(ruta);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar archivo: " + nombreArchivo, e);
+        }
     }
 
     private static byte[] getHash(byte[] data) {

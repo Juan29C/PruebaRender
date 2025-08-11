@@ -1,10 +1,9 @@
 package com.mdnch.webmdnch.dto.request;
 
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class NoticiasRequest {
     private String titulo;

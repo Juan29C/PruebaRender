@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Entity
-@Table(name = "Noticias")
+@Table(name = "noticias")
 public class NoticiasEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

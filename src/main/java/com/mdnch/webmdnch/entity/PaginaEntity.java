@@ -1,9 +1,7 @@
 package com.mdnch.webmdnch.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Entity
@@ -12,13 +10,20 @@ public class PaginaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_pagina")
     private Integer id;
 
-    @Column(name = "titulo", nullable = false)
+    @Column(name = "titulo", nullable = false, length = 200)
     private String titulo;
 
-    @Column(name = "contenido", columnDefinition = "LONGTEXT", nullable = false)
+    @Column(name = "contenido", columnDefinition = "TEXT", nullable = false)
     private String contenido;
+
+    @Column(name = "slug", nullable = false, unique = true)
+    private String slug;
+
+    @Column(name = "url_imagen", nullable = false)
+    private String url;
 
     @Column(name = "estado", nullable = false)
     private Boolean estado;
@@ -35,6 +40,11 @@ public class PaginaEntity {
     @PrePersist
     public void prePersist() {
         this.fechaCreacion = LocalDate.now(ZoneId.of("America/Lima"));
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.fechaModificacion = LocalDate.now(ZoneId.of("America/Lima"));
     }
 
     public Integer getId() {
@@ -59,6 +69,22 @@ public class PaginaEntity {
 
     public void setContenido(String contenido) {
         this.contenido = contenido;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Boolean getEstado() {
@@ -92,4 +118,5 @@ public class PaginaEntity {
     public void setFechaModificacion(LocalDate fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
     }
+
 }

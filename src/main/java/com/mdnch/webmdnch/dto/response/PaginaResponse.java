@@ -6,6 +6,8 @@ public class PaginaResponse {
     private Integer id;
     private String titulo;
     private String contenido;
+    private String slug;
+    private String url;
     private Boolean estado;
     private String responsable;
     private LocalDate fechaCreacion;
@@ -33,6 +35,22 @@ public class PaginaResponse {
 
     public void setContenido(String contenido) {
         this.contenido = contenido;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Boolean getEstado() {
@@ -66,4 +84,5 @@ public class PaginaResponse {
     public void setFechaModificacion(LocalDate fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
     }
+
 }

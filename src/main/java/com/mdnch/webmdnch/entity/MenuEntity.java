@@ -1,11 +1,23 @@
 package com.mdnch.webmdnch.entity;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "menus")
@@ -15,11 +27,24 @@ public class MenuEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "titulo", nullable = false)
-    private String titulo;
+    @Column(nullable = false)
+    private String nombre;
 
-    @Column(name = "descripcion")
-    private String descripcion;
+    private String path;
+
+    @ManyToOne
+    @JoinColumn(name = "pagina_id")
+    private PaginaEntity pagina;
+
+    @ManyToOne
+    @JoinColumn(name = "padre_id")
+    private MenuEntity padre;
+
+    @OneToMany(mappedBy = "padre", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orden ASC")
+    private List<MenuEntity> hijos = new ArrayList<>();
+
+     private Integer orden = 0;
 
     @Column(name = "estado", nullable = false)
     private Boolean estado;
@@ -32,9 +57,6 @@ public class MenuEntity {
 
     @Column(name = "fechaModificacion", nullable = true)
     private LocalDate fechaModificacion;
-
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MenuItemEntity> items = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
@@ -49,20 +71,52 @@ public class MenuEntity {
         this.id = id;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getPath() {
+        return path;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public PaginaEntity getPagina() {
+        return pagina;
+    }
+
+    public void setPagina(PaginaEntity pagina) {
+        this.pagina = pagina;
+    }
+
+    public MenuEntity getPadre() {
+        return padre;
+    }
+
+    public void setPadre(MenuEntity padre) {
+        this.padre = padre;
+    }
+
+    public List<MenuEntity> getHijos() {
+        return hijos;
+    }
+
+    public void setHijos(List<MenuEntity> hijos) {
+        this.hijos = hijos;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
 
     public Boolean getEstado() {
@@ -97,12 +151,6 @@ public class MenuEntity {
         this.fechaModificacion = fechaModificacion;
     }
 
-    public List<MenuItemEntity> getItems() {
-        return items;
-    }
-
-    public void setItems(List<MenuItemEntity> items) {
-        this.items = items;
-    }
+   
 }
 
