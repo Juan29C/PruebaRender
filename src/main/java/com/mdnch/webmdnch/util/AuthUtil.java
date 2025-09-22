@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthUtil {
-
     private final UsuarioRepository usuarioRepository;
 
     public AuthUtil(UsuarioRepository usuarioRepository) {
@@ -16,15 +15,18 @@ public class AuthUtil {
     }
 
     public UsuarioEntity getUsuarioAutenticado() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            throw new IllegalStateException("No hay usuario autenticado");
+        }
+        String username = auth.getName();
         return usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
+                .orElseThrow(() -> new IllegalStateException("Usuario autenticado no encontrado"));
     }
 
     public String getNombreCompletoUsuarioAutenticado() {
-        UsuarioEntity usuario = getUsuarioAutenticado();
-        return usuario.getNombres() + " " + usuario.getApellidos();
+        var u = getUsuarioAutenticado();
+        return u.getNombres() + " " + u.getApellidos();
     }
 }
+

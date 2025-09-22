@@ -29,28 +29,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        // Autenticar
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
-        // Buscar usuario en DB
         UsuarioEntity user = usuarioRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // ✅ Claims
         Map<String, Object> claims = new HashMap<>();
         claims.put("rol", user.getRol().name());
 
-        // Crear token
         String token = jwtUtil.generateToken(claims, user.getUsername());
 
-        // Armar respuesta
         LoginResponse response = new LoginResponse();
         response.setToken(token);
         response.setUsername(user.getUsername());
         response.setRol(user.getRol().name());
+        response.setExpiresAt(jwtUtil.extractExpiration(token).getTime()); // 👈
 
         return response;
     }
+
 }

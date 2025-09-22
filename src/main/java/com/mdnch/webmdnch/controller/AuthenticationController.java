@@ -4,9 +4,8 @@ import com.mdnch.webmdnch.dto.request.LoginRequest;
 import com.mdnch.webmdnch.dto.response.LoginResponse;
 import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.AuthenticationService;
-import org.apache.coyote.Response;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,10 +20,9 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseBase<LoginResponse>> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ResponseBase<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse loginResponse = authenticationService.login(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Usuario autenticado con éxito", loginResponse));
+        return ResponseEntity.ok(new ResponseBase<>(true, "Usuario autenticado con éxito", loginResponse));
     }
 }
