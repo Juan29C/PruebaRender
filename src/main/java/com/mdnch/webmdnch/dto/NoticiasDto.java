@@ -9,6 +9,7 @@ public class NoticiasDto {
     private String categoria;
     private String descripcion;
     private String direccionImagen;
+    private String lugar;
     private LocalDate fechaManual;
     private String fechaManualCruda;
     private LocalDateTime fechaCreacion;
@@ -53,6 +54,14 @@ public class NoticiasDto {
 
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 
     public LocalDate getFechaManual() {

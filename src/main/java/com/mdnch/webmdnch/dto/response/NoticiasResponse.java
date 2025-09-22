@@ -9,6 +9,7 @@ public class NoticiasResponse {
     private String categoria;
     private String descripcion;
     private String resumen;
+    private String lugar;
     private String direccionImagen;
     private String fechaManual;
     private String fechaManualCruda;
@@ -54,6 +55,14 @@ public class NoticiasResponse {
 
     public void setResumen(String resumen) {
         this.resumen = resumen;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 
     public String getDireccionImagen() {

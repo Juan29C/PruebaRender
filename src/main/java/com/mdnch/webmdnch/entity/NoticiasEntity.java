@@ -26,6 +26,9 @@ public class NoticiasEntity {
     @Column(name = "resumen", length = 500)
     private String resumen;
 
+    @Column(name = "lugar", length = 500)
+    private String lugar;
+
     @Column(name = "direccionImagen", nullable = false)
     private String direccionImagen;
 
@@ -87,6 +90,14 @@ public class NoticiasEntity {
 
     public void setResumen(String resumen) {
         this.resumen = resumen;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 
     public String getDireccionImagen() {
