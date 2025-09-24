@@ -45,7 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         response.setToken(token);
         response.setUsername(user.getUsername());
         response.setRol(user.getRol().name());
-        response.setExpiresAt(jwtUtil.extractExpiration(token).getTime()); // 👈
+        response.setExpiresAt(jwtUtil.extractExpiration(token).getTime());
 
         return response;
     }

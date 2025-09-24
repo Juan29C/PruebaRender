@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/documentos/**","/imagenes/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         // swagger dev (opcional):
-                        // .requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
 
                         .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/api/authentication/agenda").hasAnyRole("ADMINISTRADOR","ALCALDIA")
