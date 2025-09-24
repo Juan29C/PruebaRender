@@ -2,6 +2,9 @@ package com.mdnch.webmdnch.controller;
 
 import java.util.List;
 
+import com.mdnch.webmdnch.dto.request.DocumentoConfigRequest;
+import com.mdnch.webmdnch.entity.ConvocatoriaCasEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +56,14 @@ public class ConvocatoriaCasController {
     public ResponseEntity<ResponseBase<Void>> eliminar(@PathVariable Integer id) {
         service.delete(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Convocatoria eliminada con éxito", null));
+    }
+
+    @PatchMapping(value = "/convocatorias/{id}/documentos/config")
+    public ResponseEntity<ResponseBase<ConvocatoriaCasResponse>> actualizarConfig(
+            @PathVariable Integer id,
+            @RequestBody List<DocumentoConfigRequest> config) {
+        ConvocatoriaCasResponse r = service.updateDocsConfig(id, config);
+
+        return ResponseEntity.ok(new ResponseBase<>(true, "Configuración actualizada", r));
     }
 }

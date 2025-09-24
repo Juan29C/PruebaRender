@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ConvocatoriaCasResponse {
     private Integer id;
@@ -23,6 +24,12 @@ public class ConvocatoriaCasResponse {
     private String responsable;
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
+
+    private List<DocumentoItemResponse> documentos;
+
+
+    public List<DocumentoItemResponse> getDocumentos() { return documentos; }
+    public void setDocumentos(List<DocumentoItemResponse> documentos) { this.documentos = documentos; }
 
     public Integer getId() {
         return id;

@@ -2,6 +2,8 @@ package com.mdnch.webmdnch.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "convocatoria_cas")
@@ -47,6 +49,13 @@ public class ConvocatoriaCasEntity {
 
     @Column(name = "fecha_modificacion")
     private LocalDate fechaModificacion;
+
+    @OneToMany(mappedBy = "convocatoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ConvocatoriaDocumentoEntity> documentos = new ArrayList<>();
+
+
+    public List<ConvocatoriaDocumentoEntity> getDocumentos() { return documentos; }
+    public void setDocumentos(List<ConvocatoriaDocumentoEntity> documentos) { this.documentos = documentos; }
 
     public Integer getId() {
         return id;
