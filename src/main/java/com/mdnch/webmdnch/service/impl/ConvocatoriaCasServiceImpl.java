@@ -54,11 +54,7 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
         entity.setResponsable("Admin");
         entity.setFechaCreacion(java.time.LocalDate.now());
 
-
-// Inicializa (si deseas crear entradas aunque no haya archivos aún, opcional)
-
-
-// Por cada campo archivo conocido, crea/actualiza doc
+        // Por cada campo archivo conocido, crea/actualiza doc
         java.util.Map<DocumentoTipo, MultipartFile> archivos = new java.util.LinkedHashMap<>();
         archivos.put(DocumentoTipo.BASES, request.getBases());
         archivos.put(DocumentoTipo.ANEXOS, request.getAnexos());
@@ -82,20 +78,17 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
             }
         }
 
-
-// Aplica configuración (habilitado/titulo/descripcion/orden)
+        // Aplica configuración (habilitado/titulo/descripcion/orden)
         applyConfig(entity, request.getConfig());
 
-
-// Persistir
+        // Persistir
         ConvocatoriaCasEntity saved = repo.save(entity);
 
-
-// Construir response
+        // Construir response
         ConvocatoriaCasResponse res = mapper.toResponse(saved);
-// mantener compatibilidad si aún usas ...Url (opcional)
+        // mantener compatibilidad si aún usas ...Url (opcional)
         res.setDocumentos(mapDocs(saved.getDocumentos()));
-        res = withPublicUrls(res);
+        //res = withPublicUrls(res);
         return res;
     }
 
@@ -181,7 +174,7 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
 
         ConvocatoriaCasResponse res = mapper.toResponse(updated);
         res.setDocumentos(mapDocs(updated.getDocumentos()));
-        res = withPublicUrls(res);
+        //res = withPublicUrls(res);
         return res;
     }
 
@@ -211,7 +204,7 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
 
         ConvocatoriaCasResponse r = mapper.toResponse(saved);
         r.setDocumentos(mapDocs(saved.getDocumentos()));
-        r = withPublicUrls(r);
+        //r = withPublicUrls(r);
         return r;
     }
 
@@ -237,6 +230,7 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
         return base + path;
     }
 
+    /*
     private ConvocatoriaCasResponse withPublicUrls(ConvocatoriaCasResponse r) {
         if (r == null) return null;
         r.setBasesUrl(                toPublicUrl(r.getBasesUrl()));
@@ -249,6 +243,8 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
         r.setResultadosFinalesUrl(    toPublicUrl(r.getResultadosFinalesUrl()));
         return r;
     }
+
+     */
 
     private DocumentoItemResponse toDocResponse(ConvocatoriaDocumentoEntity e) {
         DocumentoItemResponse r = new DocumentoItemResponse();
