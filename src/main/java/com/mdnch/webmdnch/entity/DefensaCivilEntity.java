@@ -1,5 +1,6 @@
 package com.mdnch.webmdnch.entity;
 
+import com.mdnch.webmdnch.audit.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "defensa_civil")
-public class DefensaCivilEntity {
+public class DefensaCivilEntity extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

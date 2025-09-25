@@ -1,12 +1,13 @@
 package com.mdnch.webmdnch.entity;
 
+import com.mdnch.webmdnch.audit.Auditable;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "AlcaldesIndex")
-public class AlcaldePageEntity {
+public class AlcaldePageEntity extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alcaldeId")

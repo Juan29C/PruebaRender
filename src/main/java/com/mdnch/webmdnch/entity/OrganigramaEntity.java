@@ -1,5 +1,6 @@
 package com.mdnch.webmdnch.entity;
 
+import com.mdnch.webmdnch.audit.Auditable;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.time.ZoneId;
 
 @Entity
 @Table (name = "Organigrama")
-public class OrganigramaEntity {
+public class OrganigramaEntity extends Auditable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "organigramaId")

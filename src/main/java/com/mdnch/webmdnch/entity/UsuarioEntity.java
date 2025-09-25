@@ -1,5 +1,6 @@
 package com.mdnch.webmdnch.entity;
 
+import com.mdnch.webmdnch.audit.Auditable;
 import com.mdnch.webmdnch.dto.enums.Rol;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuarios")
-public class UsuarioEntity {
+public class UsuarioEntity extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
