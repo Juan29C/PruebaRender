@@ -1,7 +1,9 @@
 package com.mdnch.webmdnch.service.impl;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.mdnch.webmdnch.dto.enums.DocumentoTipo;
@@ -55,7 +57,7 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
         entity.setFechaCreacion(java.time.LocalDate.now());
 
         // Por cada campo archivo conocido, crea/actualiza doc
-        java.util.Map<DocumentoTipo, MultipartFile> archivos = new java.util.LinkedHashMap<>();
+        Map<DocumentoTipo, MultipartFile> archivos = new LinkedHashMap<>();
         archivos.put(DocumentoTipo.BASES, request.getBases());
         archivos.put(DocumentoTipo.ANEXOS, request.getAnexos());
         archivos.put(DocumentoTipo.COMUNICADO1, request.getComunicado1());
@@ -73,9 +75,20 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
                 doc.setConvocatoria(entity);
                 doc.setTipo(entry.getKey());
                 doc.setUrl(saveFile(mf));
-                doc.setHabilitado(true);
+                doc.setHabilitado(false);
                 entity.getDocumentos().add(doc);
             }
+        }
+
+        if (request.getPostulacion() != null && !request.getPostulacion().isBlank()) {
+            ConvocatoriaDocumentoEntity docPost = new ConvocatoriaDocumentoEntity();
+            docPost.setConvocatoria(entity);
+            docPost.setTipo(DocumentoTipo.POSTULACION);
+            docPost.setUrl(normalizeUrl(request.getPostulacion()));
+            docPost.setTitulo("Postulación");
+            docPost.setHabilitado(false);
+            // opcional: docPost.setOrden(10);
+            entity.getDocumentos().add(docPost);
         }
 
         // Aplica configuración (habilitado/titulo/descripcion/orden)
@@ -311,5 +324,8 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
         doc.setUrl(saveFile(nuevo));
     }
 
+    private String normalizeUrl(String url) {
+        return url == null ? null : url.trim();
+    }
 
 }

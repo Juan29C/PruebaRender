@@ -26,9 +26,6 @@ public class ConvocatoriaCasEntity {
     @Column(name = "vacantes")
     private Integer vacantes;
 
-    @Column(name = "postulacion", length = 500)
-    private String postulacion; // enlace externo
-
     @Column(name = "estado")
     private Boolean estado;
 
@@ -86,14 +83,6 @@ public class ConvocatoriaCasEntity {
 
     public void setVacantes(Integer vacantes) {
         this.vacantes = vacantes;
-    }
-
-    public String getPostulacion() {
-        return postulacion;
-    }
-
-    public void setPostulacion(String postulacion) {
-        this.postulacion = postulacion;
     }
 
     public Boolean getEstado() {
