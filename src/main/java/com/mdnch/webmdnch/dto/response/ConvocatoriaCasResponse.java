@@ -9,7 +9,6 @@ public class ConvocatoriaCasResponse {
     private String convocatoria;
     private String area;
     private Integer vacantes;
-    private String postulacion;
     private Boolean estado;
     private String responsable;
     private LocalDate fechaCreacion;
@@ -59,14 +58,6 @@ public class ConvocatoriaCasResponse {
 
     public void setVacantes(Integer vacantes) {
         this.vacantes = vacantes;
-    }
-
-    public String getPostulacion() {
-        return postulacion;
-    }
-
-    public void setPostulacion(String postulacion) {
-        this.postulacion = postulacion;
     }
 
     public Boolean getEstado() {

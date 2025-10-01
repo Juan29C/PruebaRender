@@ -140,12 +140,12 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
         mapper.updateFromRequest(request, entity); // actualiza campos simples
 
 
-// indexar documentos existentes por tipo
+    // indexar documentos existentes por tipo
         var byTipo = entity.getDocumentos().stream()
                 .collect(java.util.stream.Collectors.toMap(d -> d.getTipo(), d -> d, (a,b)->a));
 
 
-        java.util.Map<DocumentoTipo, MultipartFile> archivos = new java.util.LinkedHashMap<>();
+        Map<DocumentoTipo, MultipartFile> archivos = new java.util.LinkedHashMap<>();
         archivos.put(DocumentoTipo.BASES, request.getBases());
         archivos.put(DocumentoTipo.ANEXOS, request.getAnexos());
         archivos.put(DocumentoTipo.COMUNICADO1, request.getComunicado1());
@@ -164,26 +164,47 @@ public class ConvocatoriaCasServiceImpl implements ConvocatoriaCasService {
                 if (doc == null) {
                     doc = new ConvocatoriaDocumentoEntity();
                     doc.setConvocatoria(entity);
+                    doc.setHabilitado(false);
                     doc.setTipo(tipo);
                     entity.getDocumentos().add(doc);
                     byTipo.put(tipo, doc);
                 }
                 replaceFile(doc, mf); // elimina anterior y guarda nuevo
-// no cambiamos habilitado/título/orden aquí (lo hará config si llega)
+                // no cambiamos habilitado/título/orden aquí (lo hará config si llega)
             }
         }
 
+        if (request.getPostulacion() != null) {
+            String nuevaUrl = normalizeUrl(request.getPostulacion());
 
-// Aplica configuración
+            // Si no existe el documento POSTULACION, lo creamos (manteniendo coherencia con create: habilitado=false por defecto)
+            ConvocatoriaDocumentoEntity docPost = byTipo.get(DocumentoTipo.POSTULACION);
+            if (docPost == null) {
+                docPost = new ConvocatoriaDocumentoEntity();
+                docPost.setConvocatoria(entity);
+                docPost.setTipo(DocumentoTipo.POSTULACION);
+                //docPost.setTitulo("Postulación");
+                docPost.setHabilitado(false);
+                entity.getDocumentos().add(docPost);
+                byTipo.put(DocumentoTipo.POSTULACION, docPost);
+            }
+
+            // Solo cambiamos la URL. No tocamos habilitado/título/orden.
+            if (!nuevaUrl.isBlank()) {
+                docPost.setUrl(nuevaUrl);           // externa: se devolverá tal cual por toPublicUrl()
+            }
+            // Si viene blank ("") NO hacemos nada para no alterar el estado actual.
+            // Si quisieras limpiar la URL cuando venga blank, reemplaza por:
+            // else { docPost.setUrl(null); }
+        }
+
+        // Aplica configuración
         applyConfig(entity, request.getConfig());
 
-
         entity.setResponsable("Admin Update");
-        entity.setFechaModificacion(java.time.LocalDate.now());
-
+        entity.setFechaModificacion(LocalDate.now());
 
         ConvocatoriaCasEntity updated = repo.save(entity);
-
 
         ConvocatoriaCasResponse res = mapper.toResponse(updated);
         res.setDocumentos(mapDocs(updated.getDocumentos()));
