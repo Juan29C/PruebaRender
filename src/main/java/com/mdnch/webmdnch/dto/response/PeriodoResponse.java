@@ -1,5 +1,9 @@
 package com.mdnch.webmdnch.dto.response;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+
 public class PeriodoResponse {
     private Integer periodoId;
     private Integer transparenciaId;
@@ -9,8 +13,8 @@ public class PeriodoResponse {
     private String trimestre3;
     private String trimestre4;
     private String responsable;
-    private String fechaCreacion;
-    private String fechaModificacion;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaModificacion;
 
     public Integer getPeriodoId() {
         return periodoId;
@@ -76,19 +80,19 @@ public class PeriodoResponse {
         this.responsable = responsable;
     }
 
-    public String getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public String getFechaModificacion() {
+    public LocalDate getFechaModificacion() {
         return fechaModificacion;
     }
 
-    public void setFechaModificacion(String fechaModificacion) {
+    public void setFechaModificacion(LocalDate fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
     }
 }

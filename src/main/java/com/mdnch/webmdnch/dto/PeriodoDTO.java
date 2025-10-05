@@ -1,5 +1,7 @@
 package com.mdnch.webmdnch.dto;
 
+import java.time.LocalDate;
+
 public class PeriodoDTO {
     private Integer periodoId;
     private Integer transparenciaId;
@@ -9,8 +11,8 @@ public class PeriodoDTO {
     private String trimestre3;
     private String trimestre4;
     private String responsable;
-    private String fechaCreacion;
-    private String fechaActualizacion;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaActualizacion;
 
     public Integer getPeriodoId() {
         return periodoId;
@@ -76,19 +78,19 @@ public class PeriodoDTO {
         this.responsable = responsable;
     }
 
-    public String getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public String getFechaActualizacion() {
+    public LocalDate getFechaActualizacion() {
         return fechaActualizacion;
     }
 
-    public void setFechaActualizacion(String fechaActualizacion) {
+    public void setFechaActualizacion(LocalDate fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
     }
 }
