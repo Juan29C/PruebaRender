@@ -26,6 +26,15 @@ public class DefensaCivilEntity {
     @Column(name = "ruta_pdf", nullable = true)
     private String rutaPdf;
 
+    @Column(name = "numero_serenazgo", nullable = true)
+    private String numeroSerenazgo;
+
+    @Column(name = "numero_salud", nullable = true)
+    private String numeroSalud;
+
+    @Column(name = "numero_bomberos", nullable = true)
+    private String numeroBomberos;
+
     @Column(name = "fechaCreacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
@@ -34,14 +43,6 @@ public class DefensaCivilEntity {
 
     @Column(name = "responsable", nullable = false, length = 100)
     private String responsable;
-
-    @ManyToMany
-    @JoinTable(
-            name = "defensa_civil_numeros",
-            joinColumns = @JoinColumn(name = "defensa_civil_id"),
-            inverseJoinColumns = @JoinColumn(name = "numero_emergencia_id")
-    )
-    private List<NumeroEmergenciaEntity> numeros;
 
     @PrePersist
     public void prePersist() {
@@ -80,6 +81,30 @@ public class DefensaCivilEntity {
         this.rutaPdf = rutaPdf;
     }
 
+    public String getNumeroSerenazgo() {
+        return numeroSerenazgo;
+    }
+
+    public void setNumeroSerenazgo(String numeroSerenazgo) {
+        this.numeroSerenazgo = numeroSerenazgo;
+    }
+
+    public String getNumeroSalud() {
+        return numeroSalud;
+    }
+
+    public void setNumeroSalud(String numeroSalud) {
+        this.numeroSalud = numeroSalud;
+    }
+
+    public String getNumeroBomberos() {
+        return numeroBomberos;
+    }
+
+    public void setNumeroBomberos(String numeroBomberos) {
+        this.numeroBomberos = numeroBomberos;
+    }
+
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
@@ -104,12 +129,6 @@ public class DefensaCivilEntity {
         this.responsable = responsable;
     }
 
-    public List<NumeroEmergenciaEntity> getNumeros() {
-        return numeros;
-    }
 
-    public void setNumeros(List<NumeroEmergenciaEntity> numeros) {
-        this.numeros = numeros;
-    }
 }
 

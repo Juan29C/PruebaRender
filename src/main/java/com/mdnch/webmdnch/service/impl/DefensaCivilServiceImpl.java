@@ -44,9 +44,6 @@ public class DefensaCivilServiceImpl implements DefensaCivilService {
 
         DefensaCivilEntity entity = defensaCivilMapper.toEntity(request);
 
-        List<NumeroEmergenciaEntity> numeros = numeroEmergenciaRepository.findAllById(request.getNumerosIds());
-        entity.setNumeros(numeros);
-
         entity.setRutaPdf(nombreArchivo);
         entity.setResponsable("admin");
         entity.setFechaCreacion(LocalDateTime.now());
@@ -75,11 +72,6 @@ public class DefensaCivilServiceImpl implements DefensaCivilService {
                 .orElseThrow(() -> new ResourceNotFoundException("Defensa civil no encontrada con ID: " + id));
 
         defensaCivilMapper.updateEntityFromRequest(request, entity);
-
-        if (request.getNumerosIds() != null && !request.getNumerosIds().isEmpty()) {
-            List<NumeroEmergenciaEntity> numeros = numeroEmergenciaRepository.findAllById(request.getNumerosIds());
-            entity.setNumeros(numeros);
-        }
 
         MultipartFile archivo = request.getRutaPdf();
         if (archivo != null && !archivo.isEmpty()) {

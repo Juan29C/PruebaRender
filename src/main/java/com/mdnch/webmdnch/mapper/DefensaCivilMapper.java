@@ -14,7 +14,6 @@ public interface DefensaCivilMapper {
     DefensaCivilResponse toResponse(DefensaCivilEntity entity);
 
     @Mapping(target = "rutaPdf", ignore = true)
-    @Mapping(target = "numeros", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(DefensaCivilRequest request, @MappingTarget DefensaCivilEntity entity);
 }
