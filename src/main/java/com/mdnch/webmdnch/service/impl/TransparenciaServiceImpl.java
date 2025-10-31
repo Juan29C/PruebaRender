@@ -2,14 +2,18 @@ package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.request.TransparenciaRequest;
 import com.mdnch.webmdnch.dto.response.TransparenciaResponse;
+import com.mdnch.webmdnch.entity.PeriodoEntity;
 import com.mdnch.webmdnch.entity.TransparenciaEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.PeriodoMapper;
 import com.mdnch.webmdnch.mapper.TransparenciaMapper;
 import com.mdnch.webmdnch.repository.TransparenciaRepository;
 import com.mdnch.webmdnch.service.TransparenciaService;
+import com.mdnch.webmdnch.util.FileUploadUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -78,5 +82,50 @@ public class TransparenciaServiceImpl implements TransparenciaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Transparencia no encontrada"));
         transparenciaRepository.delete(entity);
     }
+
+    @Override
+    public TransparenciaResponse uploadPeriodFiles(Integer transparenciaId, String anio,
+                                                MultipartFile trimestre1,
+                                                MultipartFile trimestre2,
+                                                MultipartFile trimestre3,
+                                                MultipartFile trimestre4) {
+
+        TransparenciaEntity transparencia = transparenciaRepository.findById(transparenciaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Transparencia no encontrada"));
+
+        // Buscar o crear el periodo correspondiente
+        PeriodoEntity periodo = transparencia.getPeriodos().stream()
+                .filter(p -> p.getAño().equals(anio))
+                .findFirst()
+                .orElseGet(() -> {
+                    PeriodoEntity nuevo = new PeriodoEntity();
+                    nuevo.setAño(anio);
+                    nuevo.setTransparencia(transparencia);
+                    nuevo.setFechaCreacion(LocalDate.now());
+                    nuevo.setResponsable("young flex");
+                    transparencia.getPeriodos().add(nuevo);
+                    return nuevo;
+                });
+
+        String uploadDir = "uploads/transparencia/" + transparenciaId + "/" + anio + "/";
+
+        if (trimestre1 != null && !trimestre1.isEmpty())
+            periodo.setTrimestre1(FileUploadUtil.guardarArchivo(trimestre1, uploadDir));
+
+        if (trimestre2 != null && !trimestre2.isEmpty())
+            periodo.setTrimestre2(FileUploadUtil.guardarArchivo(trimestre2, uploadDir));
+
+        if (trimestre3 != null && !trimestre3.isEmpty())
+            periodo.setTrimestre3(FileUploadUtil.guardarArchivo(trimestre3, uploadDir));
+
+        if (trimestre4 != null && !trimestre4.isEmpty())
+            periodo.setTrimestre4(FileUploadUtil.guardarArchivo(trimestre4, uploadDir));
+
+        periodo.setFechaModificacion(LocalDate.now());
+        transparenciaRepository.save(transparencia);
+
+        return transparenciaMapper.toResponse(transparencia);
+    }
+
 
 }
