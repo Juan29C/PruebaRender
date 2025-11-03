@@ -22,6 +22,9 @@ public class PresupuestoParticipativoEntity {
     @Column(name = "linkDocumento", nullable = false)  //TODO: CAMBIAR AQUÍ, YA NO SERÍA LINK | YA NO SERÍA LINK | YA NO SERÍA LINK | YA NO SERÍA LINK
     private String linkDocumento;
 
+    @Column(name = "fecha", nullable = false)
+    private LocalDate fecha;
+
     @Column(name = "fechaCreacion", nullable = false, updatable = false)
     private LocalDate fechaCreacion;
 
@@ -66,6 +69,14 @@ public class PresupuestoParticipativoEntity {
 
     public void setLinkDocumento(String linkDocumento) {
         this.linkDocumento = linkDocumento;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
     public LocalDate getFechaCreacion() {
