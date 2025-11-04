@@ -1,6 +1,7 @@
 package com.mdnch.webmdnch.service.impl;
 
 import com.mdnch.webmdnch.dto.request.TransparenciaRequest;
+import com.mdnch.webmdnch.dto.response.PeriodoResponse;
 import com.mdnch.webmdnch.dto.response.TransparenciaResponse;
 import com.mdnch.webmdnch.entity.PeriodoEntity;
 import com.mdnch.webmdnch.entity.TransparenciaEntity;
@@ -12,6 +13,7 @@ import com.mdnch.webmdnch.service.TransparenciaService;
 import com.mdnch.webmdnch.util.FileUploadUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +23,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class TransparenciaServiceImpl implements TransparenciaService {
+
+    @Value("${documentos.urlBase}")
+    private String documentosBase;
+
     @Autowired
     private TransparenciaRepository transparenciaRepository;
 
     @Autowired
     private TransparenciaMapper transparenciaMapper;
+
+    private static final String CARPETA_WEB = "transparencia";
 
     @Override
     public TransparenciaResponse createTransparencia(TransparenciaRequest request) {
@@ -35,23 +43,21 @@ public class TransparenciaServiceImpl implements TransparenciaService {
         TransparenciaEntity savedEntity = transparenciaRepository.save(transparenciaEntity);
 
         TransparenciaEntity saved = transparenciaRepository.save(transparenciaEntity);
-        TransparenciaResponse response = transparenciaMapper.toResponse(saved);
-        return response;
+        return construirResponseConDocumentos(saved);
     }
 
     @Override
     public List<TransparenciaResponse> getAllTransparencias() {
-        List<TransparenciaEntity> entities = transparenciaRepository.findAll();
-        return entities.stream()
-                .map(transparenciaMapper::toResponse)
-                .collect(Collectors.toList());
+        return transparenciaRepository.findAll().stream()
+                .map(this::construirResponseConDocumentos)
+                .toList();
     }
 
     @Override
-    public TransparenciaResponse getByIdTransparencia(Integer id){
+    public TransparenciaResponse getByIdTransparencia(Integer id) {
         TransparenciaEntity entity = transparenciaRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Transparencia no encontrada"));
-        return transparenciaMapper.toResponse(entity);
+                .orElseThrow(() -> new ResourceNotFoundException("Transparencia no encontrada"));
+        return construirResponseConDocumentos(entity);
     }
 
     @Override
@@ -62,7 +68,7 @@ public class TransparenciaServiceImpl implements TransparenciaService {
         entity.setFechaModificacion(LocalDate.now());
         entity.setResponsable("young flex");
         TransparenciaEntity updated = transparenciaRepository.save(entity);
-        return transparenciaMapper.toResponse(updated);
+        return construirResponseConDocumentos(updated);
     }
 
     @Override
@@ -73,7 +79,7 @@ public class TransparenciaServiceImpl implements TransparenciaService {
         entity.setFechaModificacion(LocalDate.now());
         entity.setResponsable("young flex");
         TransparenciaEntity updated = transparenciaRepository.save(entity);
-        return transparenciaMapper.toResponse(updated);
+        return construirResponseConDocumentos(updated);
     }
 
     @Override
@@ -83,19 +89,24 @@ public class TransparenciaServiceImpl implements TransparenciaService {
         transparenciaRepository.delete(entity);
     }
 
+    // -----------------------------
+    // SUBIR/ACTUALIZAR ARCHIVOS (lo que ya tenías)
+    // -----------------------------
     @Override
-    public TransparenciaResponse uploadPeriodFiles(Integer transparenciaId, String anio,
-                                                MultipartFile trimestre1,
-                                                MultipartFile trimestre2,
-                                                MultipartFile trimestre3,
-                                                MultipartFile trimestre4) {
+    public TransparenciaResponse uploadPeriodFiles(
+            Integer transparenciaId,
+            String anio,
+            MultipartFile trimestre1,
+            MultipartFile trimestre2,
+            MultipartFile trimestre3,
+            MultipartFile trimestre4) {
 
         TransparenciaEntity transparencia = transparenciaRepository.findById(transparenciaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Transparencia no encontrada"));
 
-        // Buscar o crear el periodo correspondiente
+        // buscar o crear periodo
         PeriodoEntity periodo = transparencia.getPeriodos().stream()
-                .filter(p -> p.getAño().equals(anio))
+                .filter(p -> anio.equals(p.getAño()))
                 .findFirst()
                 .orElseGet(() -> {
                     PeriodoEntity nuevo = new PeriodoEntity();
@@ -107,25 +118,46 @@ public class TransparenciaServiceImpl implements TransparenciaService {
                     return nuevo;
                 });
 
-        String uploadDir = "uploads/transparencia/" + transparenciaId + "/" + anio + "/";
+        // ruta física: documentos/transparencia/{id}/{anio}/
+        final String carpetaDestino = "documentos/" + CARPETA_WEB + "/" + transparenciaId + "/" + anio + "/";
 
         if (trimestre1 != null && !trimestre1.isEmpty())
-            periodo.setTrimestre1(FileUploadUtil.guardarArchivo(trimestre1, uploadDir));
+            periodo.setTrimestre1(FileUploadUtil.guardarArchivo(trimestre1, carpetaDestino));
 
         if (trimestre2 != null && !trimestre2.isEmpty())
-            periodo.setTrimestre2(FileUploadUtil.guardarArchivo(trimestre2, uploadDir));
+            periodo.setTrimestre2(FileUploadUtil.guardarArchivo(trimestre2, carpetaDestino));
 
         if (trimestre3 != null && !trimestre3.isEmpty())
-            periodo.setTrimestre3(FileUploadUtil.guardarArchivo(trimestre3, uploadDir));
+            periodo.setTrimestre3(FileUploadUtil.guardarArchivo(trimestre3, carpetaDestino));
 
         if (trimestre4 != null && !trimestre4.isEmpty())
-            periodo.setTrimestre4(FileUploadUtil.guardarArchivo(trimestre4, uploadDir));
+            periodo.setTrimestre4(FileUploadUtil.guardarArchivo(trimestre4, carpetaDestino));
 
         periodo.setFechaModificacion(LocalDate.now());
-        transparenciaRepository.save(transparencia);
+        transparenciaRepository.saveAndFlush(transparencia);
 
-        return transparenciaMapper.toResponse(transparencia);
+        return construirResponseConDocumentos(transparencia);
     }
+
+    private TransparenciaResponse construirResponseConDocumentos(TransparenciaEntity entity) {
+        TransparenciaResponse response = transparenciaMapper.toResponse(entity);
+
+        if (response.getPeriodos() != null) {
+            for (PeriodoResponse p : response.getPeriodos()) {
+                String base = documentosBase + CARPETA_WEB + "/" + entity.getTransparenciaId() + "/" + p.getAño() + "/";
+                p.setTrimestre1(urlOrNull(base, p.getTrimestre1()));
+                p.setTrimestre2(urlOrNull(base, p.getTrimestre2()));
+                p.setTrimestre3(urlOrNull(base, p.getTrimestre3()));
+                p.setTrimestre4(urlOrNull(base, p.getTrimestre4()));
+            }
+        }
+        return response;
+    }
+
+    private String urlOrNull(String baseRuta, String nombreArchivo) {
+        return (nombreArchivo == null || nombreArchivo.isEmpty()) ? null : baseRuta + nombreArchivo;
+    }
+
 
 
 }
