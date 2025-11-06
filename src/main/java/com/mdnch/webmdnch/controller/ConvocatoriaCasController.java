@@ -2,6 +2,9 @@ package com.mdnch.webmdnch.controller;
 
 import java.util.List;
 
+import com.mdnch.webmdnch.dto.request.DocumentoConfigRequest;
+import com.mdnch.webmdnch.entity.ConvocatoriaCasEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,33 +18,33 @@ import com.mdnch.webmdnch.dto.response.ResponseBase;
 import com.mdnch.webmdnch.service.ConvocatoriaCasService;
 
 @RestController
-@RequestMapping("/api/convocatorias")
+@RequestMapping("/api/authentication")
 @Validated
 public class ConvocatoriaCasController {
 
     @Autowired
     private ConvocatoriaCasService service;
 
-    @PostMapping(value = "", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/convocatorias", consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseBase<ConvocatoriaCasResponse>> crear(@ModelAttribute ConvocatoriaCasRequest request) {
         ConvocatoriaCasResponse res = service.create(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseBase<>(true, "Convocatoria creada correctamente", res));
     }
 
-    @GetMapping("")
+    @GetMapping("/convocatorias")
     public ResponseEntity<ResponseBase<List<ConvocatoriaCasResponse>>> listar() {
         List<ConvocatoriaCasResponse> data = service.getAll();
         return ResponseEntity.ok(new ResponseBase<>(true, "Convocatorias obtenidas con éxito", data));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/convocatorias/{id}")
     public ResponseEntity<ResponseBase<ConvocatoriaCasResponse>> obtener(@PathVariable Integer id) {
         ConvocatoriaCasResponse data = service.findById(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Convocatoria obtenida con éxito", data));
     }
 
-    @PatchMapping(value = "/{id}", consumes = {"multipart/form-data"})
+    @PatchMapping(value = "/convocatorias/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseBase<ConvocatoriaCasResponse>> actualizar(
             @PathVariable Integer id,
             @ModelAttribute ConvocatoriaCasRequest request) {
@@ -49,9 +52,18 @@ public class ConvocatoriaCasController {
         return ResponseEntity.ok(new ResponseBase<>(true, "Convocatoria actualizada con éxito", data));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/convocatorias/{id}")
     public ResponseEntity<ResponseBase<Void>> eliminar(@PathVariable Integer id) {
         service.delete(id);
         return ResponseEntity.ok(new ResponseBase<>(true, "Convocatoria eliminada con éxito", null));
+    }
+
+    @PatchMapping(value = "/convocatorias/{id}/documentos/config")
+    public ResponseEntity<ResponseBase<ConvocatoriaCasResponse>> actualizarConfig(
+            @PathVariable Integer id,
+            @RequestBody List<DocumentoConfigRequest> config) {
+        ConvocatoriaCasResponse r = service.updateDocsConfig(id, config);
+
+        return ResponseEntity.ok(new ResponseBase<>(true, "Configuración actualizada", r));
     }
 }

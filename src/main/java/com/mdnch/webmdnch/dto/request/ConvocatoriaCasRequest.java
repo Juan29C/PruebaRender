@@ -2,6 +2,8 @@ package com.mdnch.webmdnch.dto.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public class ConvocatoriaCasRequest {
     private String codigo;
     private String convocatoria;
@@ -17,6 +19,12 @@ public class ConvocatoriaCasRequest {
     private MultipartFile evaluacionEntrevista;
     private MultipartFile absolucionReclamos;
     private MultipartFile resultadosFinales;
+
+    private List<DocumentoConfigRequest> config; // opcional
+
+
+    public List<DocumentoConfigRequest> getConfig() { return config; }
+    public void setConfig(List<DocumentoConfigRequest> config) { this.config = config; }
 
     public String getCodigo() {
         return codigo;

@@ -7,6 +7,7 @@ public class PresupuestoParticipativoResponse {
     private String titulo;
     private String tipo;
     private String linkDocumento;
+    private LocalDate fecha;
     private LocalDate fechaCreacion;
     private LocalDate fechaModificacion;
     private String responsable;
@@ -41,6 +42,14 @@ public class PresupuestoParticipativoResponse {
 
     public void setLinkDocumento(String linkDocumento) {
         this.linkDocumento = linkDocumento;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate   fecha) {
+        this.fecha = fecha;
     }
 
     public LocalDate getFechaCreacion() {

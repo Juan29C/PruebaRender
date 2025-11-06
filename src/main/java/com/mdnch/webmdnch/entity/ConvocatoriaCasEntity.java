@@ -2,6 +2,8 @@ package com.mdnch.webmdnch.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "convocatoria_cas")
@@ -24,18 +26,6 @@ public class ConvocatoriaCasEntity {
     @Column(name = "vacantes")
     private Integer vacantes;
 
-    @Column(name = "postulacion", length = 500)
-    private String postulacion; // enlace externo
-
-    @Column(name = "bases_url", length = 500)                 private String basesUrl;
-    @Column(name = "anexos_url", length = 500)                private String anexosUrl;
-    @Column(name = "comunicado1_url", length = 500)           private String comunicado1Url;
-    @Column(name = "comunicado2_url", length = 500)           private String comunicado2Url;
-    @Column(name = "eval_curricular_url", length = 500)       private String evaluacionCurricularUrl;
-    @Column(name = "eval_entrevista_url", length = 500)       private String evaluacionEntrevistaUrl;
-    @Column(name = "absolucion_reclamos_url", length = 500)   private String absolucionReclamosUrl;
-    @Column(name = "resultados_finales_url", length = 500)    private String resultadosFinalesUrl;
-
     @Column(name = "estado")
     private Boolean estado;
 
@@ -47,6 +37,13 @@ public class ConvocatoriaCasEntity {
 
     @Column(name = "fecha_modificacion")
     private LocalDate fechaModificacion;
+
+    @OneToMany(mappedBy = "convocatoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ConvocatoriaDocumentoEntity> documentos = new ArrayList<>();
+
+
+    public List<ConvocatoriaDocumentoEntity> getDocumentos() { return documentos; }
+    public void setDocumentos(List<ConvocatoriaDocumentoEntity> documentos) { this.documentos = documentos; }
 
     public Integer getId() {
         return id;
@@ -86,78 +83,6 @@ public class ConvocatoriaCasEntity {
 
     public void setVacantes(Integer vacantes) {
         this.vacantes = vacantes;
-    }
-
-    public String getPostulacion() {
-        return postulacion;
-    }
-
-    public void setPostulacion(String postulacion) {
-        this.postulacion = postulacion;
-    }
-
-    public String getBasesUrl() {
-        return basesUrl;
-    }
-
-    public void setBasesUrl(String basesUrl) {
-        this.basesUrl = basesUrl;
-    }
-
-    public String getAnexosUrl() {
-        return anexosUrl;
-    }
-
-    public void setAnexosUrl(String anexosUrl) {
-        this.anexosUrl = anexosUrl;
-    }
-
-    public String getComunicado1Url() {
-        return comunicado1Url;
-    }
-
-    public void setComunicado1Url(String comunicado1Url) {
-        this.comunicado1Url = comunicado1Url;
-    }
-
-    public String getComunicado2Url() {
-        return comunicado2Url;
-    }
-
-    public void setComunicado2Url(String comunicado2Url) {
-        this.comunicado2Url = comunicado2Url;
-    }
-
-    public String getEvaluacionCurricularUrl() {
-        return evaluacionCurricularUrl;
-    }
-
-    public void setEvaluacionCurricularUrl(String evaluacionCurricularUrl) {
-        this.evaluacionCurricularUrl = evaluacionCurricularUrl;
-    }
-
-    public String getEvaluacionEntrevistaUrl() {
-        return evaluacionEntrevistaUrl;
-    }
-
-    public void setEvaluacionEntrevistaUrl(String evaluacionEntrevistaUrl) {
-        this.evaluacionEntrevistaUrl = evaluacionEntrevistaUrl;
-    }
-
-    public String getAbsolucionReclamosUrl() {
-        return absolucionReclamosUrl;
-    }
-
-    public void setAbsolucionReclamosUrl(String absolucionReclamosUrl) {
-        this.absolucionReclamosUrl = absolucionReclamosUrl;
-    }
-
-    public String getResultadosFinalesUrl() {
-        return resultadosFinalesUrl;
-    }
-
-    public void setResultadosFinalesUrl(String resultadosFinalesUrl) {
-        this.resultadosFinalesUrl = resultadosFinalesUrl;
     }
 
     public Boolean getEstado() {

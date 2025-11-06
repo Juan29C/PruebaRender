@@ -8,8 +8,10 @@ public class DefensaCivilRequest {
 
     private String titulo;
     private String descripcion;
-    private List<Integer> numerosIds;
     private MultipartFile rutaPdf;
+    private String numeroSerenazgo;
+    private String numeroSalud;
+    private String numeroBomberos;
 
     public String getTitulo() {
         return titulo;
@@ -27,19 +29,35 @@ public class DefensaCivilRequest {
         this.descripcion = descripcion;
     }
 
-    public List<Integer> getNumerosIds() {
-        return numerosIds;
-    }
-
-    public void setNumerosIds(List<Integer> numerosIds) {
-        this.numerosIds = numerosIds;
-    }
-
     public MultipartFile getRutaPdf() {
         return rutaPdf;
     }
 
     public void setRutaPdf(MultipartFile rutaPdf) {
         this.rutaPdf = rutaPdf;
+    }
+
+    public String getNumeroSerenazgo() {
+        return numeroSerenazgo;
+    }
+
+    public void setNumeroSerenazgo(String numeroSerenazgo) {
+        this.numeroSerenazgo = numeroSerenazgo;
+    }
+
+    public String getNumeroSalud() {
+        return numeroSalud;
+    }
+
+    public void setNumeroSalud(String numeroSalud) {
+        this.numeroSalud = numeroSalud;
+    }
+
+    public String getNumeroBomberos() {
+        return numeroBomberos;
+    }
+
+    public void setNumeroBomberos(String numeroBomberos) {
+        this.numeroBomberos = numeroBomberos;
     }
 }

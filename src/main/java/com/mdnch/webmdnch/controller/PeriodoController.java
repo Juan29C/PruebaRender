@@ -22,11 +22,9 @@ public class PeriodoController {
     private PeriodoService periodoService;
 
     @PostMapping("/periodo/crear")
-    public ResponseEntity<ResponseBase<PeriodoResponse>> createPeriodo(@Valid @RequestBody PeriodoRequest request) {
+    public ResponseEntity<ResponseBase<PeriodoResponse>> createPeriodo(@ModelAttribute PeriodoRequest request) {
         PeriodoResponse response = periodoService.createPeriodo(request);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseBase<>(true, "Periodo creado correctamente", response));
+        return ResponseEntity.ok(new ResponseBase<>(true, "Periodo creado correctamente", response));
     }
 
     @GetMapping("/periodo/listar")
@@ -43,7 +41,8 @@ public class PeriodoController {
 
     @PutMapping("/periodo/{id}")
     public ResponseEntity<ResponseBase<PeriodoResponse>> updatePeriodo(
-            @PathVariable Integer id,  @Valid @RequestBody PeriodoRequest request) {
+            @PathVariable Integer id,
+            @ModelAttribute PeriodoRequest request) {
 
         PeriodoResponse response = periodoService.updatePeriodo(id, request);
         return ResponseEntity.ok(new ResponseBase<>(true, "Periodo actualizado correctamente", response));
@@ -51,7 +50,8 @@ public class PeriodoController {
 
     @PatchMapping("/periodo/{id}")
     public ResponseEntity<ResponseBase<PeriodoResponse>> editPeriodo(
-            @PathVariable Integer id, @Valid @RequestBody PeriodoRequest request) {
+            @PathVariable Integer id,
+            @ModelAttribute PeriodoRequest request) {
 
         PeriodoResponse response = periodoService.editPeriodo(id, request);
         return ResponseEntity.ok(new ResponseBase<>(true, "Periodo actualizado parcialmente correctamente", response));

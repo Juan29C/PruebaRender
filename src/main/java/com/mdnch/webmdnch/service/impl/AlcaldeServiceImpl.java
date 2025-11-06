@@ -62,7 +62,7 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         entity.setFechaCreacion(LocalDate.now());
 
         AlcaldePageEntity saved = alcaldePageRepository.save(entity);
-        return construirPageResponseConImagen(saved);
+        return construirPageIndexResponseConImagen(saved);
 
     }
 
@@ -78,7 +78,7 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     public List<AlcaldePageResponse> getAllAlcaldesPages() {
         return alcaldePageRepository.findAll()
                 .stream()
-                .map(this::construirPageResponseConImagen)
+                .map(this::construirPageIndexResponseConImagen)
                 .collect(Collectors.toList());
     }
 
@@ -94,7 +94,7 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         AlcaldePageEntity entity = alcaldePageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alcalde no encontrado con ID: " + id));
         AlcaldePageResponse response = alcaldeMapper.toResponsePage(entity);
-        response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
+        response.setDireccionImagen(urlBase + "alcaldesIndex/" + entity.getDireccionImagen());
         return response;
     }
 
@@ -155,7 +155,7 @@ public class AlcaldeServiceImpl implements AlcaldeService {
 
         MultipartFile archivo = request.getDireccionImagen();
         if (archivo != null && !archivo.isEmpty()) {
-            String carpetaDestino = "imagenes/alcaldes/";
+            String carpetaDestino = "imagenes/alcaldesIndex/";
             String nombreArchivo = FileUploadUtil.guardarArchivo(
                     archivo,
                     carpetaDestino,
@@ -167,7 +167,7 @@ public class AlcaldeServiceImpl implements AlcaldeService {
         entity.setResponsable("jonz");
 
         AlcaldePageEntity saved = alcaldePageRepository.save(entity);
-        return construirPageResponseConImagen(saved);
+        return construirPageIndexResponseConImagen(saved);
     }
 
     @Override
@@ -195,6 +195,12 @@ public class AlcaldeServiceImpl implements AlcaldeService {
     private AlcaldePageResponse construirPageResponseConImagen(AlcaldePageEntity entity) {
         AlcaldePageResponse response = alcaldeMapper.toResponsePage(entity);
         response.setDireccionImagen(urlBase + "alcaldes/" + entity.getDireccionImagen());
+        return response;
+    }
+
+    private AlcaldePageResponse construirPageIndexResponseConImagen(AlcaldePageEntity entity) {
+        AlcaldePageResponse response = alcaldeMapper.toResponsePage(entity);
+        response.setDireccionImagen(urlBase + "alcaldesIndex/" + entity.getDireccionImagen());
         return response;
     }
 }

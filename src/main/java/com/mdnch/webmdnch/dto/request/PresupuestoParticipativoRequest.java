@@ -2,9 +2,12 @@ package com.mdnch.webmdnch.dto.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+
 public class PresupuestoParticipativoRequest {
     private String titulo;
     private String tipo;
+    private LocalDate fecha;
     private MultipartFile linkDocumento;
 
     public String getTitulo() {
@@ -21,6 +24,14 @@ public class PresupuestoParticipativoRequest {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
     public MultipartFile getLinkDocumento() {

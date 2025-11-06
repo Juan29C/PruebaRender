@@ -9,7 +9,9 @@ public class DefensaCivilResponse {
     private String titulo;
     private String descripcion;
     private String rutaPdf;
-    private List<NumeroEmergenciaResponse> numeros;
+    private String numeroSerenazgo;
+    private String numeroSalud;
+    private String numeroBomberos;
     private String responsable;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
@@ -46,12 +48,28 @@ public class DefensaCivilResponse {
         this.rutaPdf = rutaPdf;
     }
 
-    public List<NumeroEmergenciaResponse> getNumeros() {
-        return numeros;
+    public String getNumeroSerenazgo() {
+        return numeroSerenazgo;
     }
 
-    public void setNumeros(List<NumeroEmergenciaResponse> numeros) {
-        this.numeros = numeros;
+    public void setNumeroSerenazgo(String numeroSerenazgo) {
+        this.numeroSerenazgo = numeroSerenazgo;
+    }
+
+    public String getNumeroSalud() {
+        return numeroSalud;
+    }
+
+    public void setNumeroSalud(String numeroSalud) {
+        this.numeroSalud = numeroSalud;
+    }
+
+    public String getNumeroBomberos() {
+        return numeroBomberos;
+    }
+
+    public void setNumeroBomberos(String numeroBomberos) {
+        this.numeroBomberos = numeroBomberos;
     }
 
     public String getResponsable() {
