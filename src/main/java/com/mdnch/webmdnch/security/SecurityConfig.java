@@ -180,120 +180,85 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/authentication/turismo/{id}").hasRole("ADMINISTRADOR")
 
                     // --- ALCALDE ---
-                    .requestMatchers(HttpMethod.GET,
-                            "/api/authentication/alcaldes",
-                            "/api/authentication/alcaldes/{id}",
-                            "/api/authentication/alcaldesIndex",
-                            "/api/authentication/alcaldepage/{id}"
+                    .requestMatchers(HttpMethod.GET, "/api/authentication/alcaldes", "/api/authentication/alcaldes/{id}",
+                            "/api/authentication/alcaldesIndex", "/api/authentication/alcaldepage/{id}"
                     ).permitAll()
 
                     .requestMatchers(HttpMethod.POST,
-                            "/api/authentication/alcaldes/crear",
-                            "/api/authentication/alcaldesIndex/crear"
+                            "/api/authentication/alcaldes/crear", "/api/authentication/alcaldesIndex/crear"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.PUT,
-                            "/api/authentication/alcaldes/{id}"
+                    .requestMatchers(HttpMethod.PUT, "/api/authentication/alcaldes/{id}").hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(HttpMethod.PATCH, "/api/authentication/alcaldeedit/{id}", "/api/authentication/alcaldeEditIndex/{id}"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.PATCH,
-                            "/api/authentication/alcaldeedit/{id}",
-                            "/api/authentication/alcaldeEditIndex/{id}"
+                    .requestMatchers(HttpMethod.DELETE, "/api/authentication/alcaldes/{id}", "/api/authentication/alcaldesIndex/{id}"
                     ).hasRole("ADMINISTRADOR")
-
-                    .requestMatchers(HttpMethod.DELETE,
-                            "/api/authentication/alcaldes/{id}",
-                            "/api/authentication/alcaldesIndex/{id}"
-                    ).hasRole("ADMINISTRADOR")
-
 
                     // --- CONTRA CORRUPCIÓN ---
-                    .requestMatchers(HttpMethod.GET,
-                            "/api/authentication/contraCorrupcion",
-                            "/api/authentication/contraCorrupcion/{id}"
+                    .requestMatchers(HttpMethod.GET, "/api/authentication/contraCorrupcion", "/api/authentication/contraCorrupcion/{id}"
                     ).permitAll()
 
-                    .requestMatchers(HttpMethod.POST,
-                            "/api/authentication/contraCorrupcion/registrar"
+                    .requestMatchers(HttpMethod.POST, "/api/authentication/contraCorrupcion/registrar"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.PUT,
-                            "/api/authentication/contraCorrupcion/{id}"
+                    .requestMatchers(HttpMethod.PUT, "/api/authentication/contraCorrupcion/{id}"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.DELETE,
-                            "/api/authentication/contraCorrupcion/{id}"
+                    .requestMatchers(HttpMethod.DELETE, "/api/authentication/contraCorrupcion/{id}"
                     ).hasRole("ADMINISTRADOR")
 
 
                     // --- DESTINO TURÍSTICO ---
-                    .requestMatchers(HttpMethod.GET,
-                            "/api/authentication/destinoTuristico",
-                            "/api/authentication/destinoTuristico/{id}"
+                    .requestMatchers(HttpMethod.GET, "/api/authentication/destinoTuristico", "/api/authentication/destinoTuristico/{id}"
                     ).permitAll()
 
-                    .requestMatchers(HttpMethod.POST,
-                            "/api/authentication/destinoTuristico/registrar"
+                    .requestMatchers(HttpMethod.POST, "/api/authentication/destinoTuristico/registrar"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.PATCH,
-                            "/api/authentication/destinoTuristico/{id}"
+                    .requestMatchers(HttpMethod.PATCH, "/api/authentication/destinoTuristico/{id}"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.DELETE,
-                            "/api/authentication/destinoTuristico/{id}"
+                    .requestMatchers(HttpMethod.DELETE, "/api/authentication/destinoTuristico/{id}"
                     ).hasRole("ADMINISTRADOR")
 
 
                     // --- POPUP ---
-                    .requestMatchers(HttpMethod.GET,
-                            "/api/authentication/popups",
-                            "/api/authentication/popups/{id}"
+                    .requestMatchers(HttpMethod.GET, "/api/authentication/popups", "/api/authentication/popups/{id}"
                     ).permitAll()
 
-                    .requestMatchers(HttpMethod.POST,
-                            "/api/authentication/popup/registrar"
+                    .requestMatchers(HttpMethod.POST, "/api/authentication/popup/registrar"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.PUT,
-                            "/api/authentication/popups/{id}"
+                    .requestMatchers(HttpMethod.PUT, "/api/authentication/popups/{id}"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.DELETE,
-                            "/api/authentication/popups/{id}"
+                    .requestMatchers(HttpMethod.DELETE, "/api/authentication/popups/{id}"
                     ).hasRole("ADMINISTRADOR")
 
 
                     // --- SERVICIOS MUNICIPALES ---
-                    .requestMatchers(HttpMethod.GET,
-                            "/api/authentication/serviciosmuni/listar",
-                            "/api/authentication/serviciosmuni/{id}"
+                    .requestMatchers(HttpMethod.GET, "/api/authentication/serviciosmuni/listar", "/api/authentication/serviciosmuni/{id}"
                     ).permitAll()
 
-                    .requestMatchers(HttpMethod.POST,
-                            "/api/authentication/serviciosmuni/crear"
+                    .requestMatchers(HttpMethod.POST, "/api/authentication/serviciosmuni/crear"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.PUT,
-                            "/api/authentication/serviciosmuni/{id}"
+                    .requestMatchers(HttpMethod.PUT, "/api/authentication/serviciosmuni/{id}"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.PATCH,
-                            "/api/authentication/serviciosmuniedit/{id}"
+                    .requestMatchers(HttpMethod.PATCH, "/api/authentication/serviciosmuniedit/{id}"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.DELETE,
-                            "/api/authentication/serviciosmuni/{id}"
+                    .requestMatchers(HttpMethod.DELETE, "/api/authentication/serviciosmuni/{id}"
                     ).hasRole("ADMINISTRADOR")
 
                     // --- USUARIOS Y ROLES ---
-                    .requestMatchers(HttpMethod.GET,
-                            "/api/authentication/usuarios",
-                            "/api/authentication/roles"
+                    .requestMatchers(HttpMethod.GET, "/api/authentication/usuarios", "/api/authentication/roles"
                     ).hasRole("ADMINISTRADOR")
 
-                    .requestMatchers(HttpMethod.POST,
-                            "/api/authentication/usuario/crear"
+                    .requestMatchers(HttpMethod.POST, "/api/authentication/usuario/crear"
                     ).hasRole("ADMINISTRADOR")
 
                     // --- USUARIOS ---
