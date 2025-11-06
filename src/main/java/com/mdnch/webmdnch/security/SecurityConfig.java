@@ -182,6 +182,7 @@ public class SecurityConfig {
                 // --- USUARIOS ---
                 .requestMatchers(HttpMethod.GET, "/api/authentication/usuarios").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.POST, "/api/authentication/usuario/crear").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.GET, "/api/authentication/roles").hasRole("ADMINISTRADOR")
 
                 // --- CUALQUIER OTRA RUTA ---
                 .anyRequest().authenticated()
