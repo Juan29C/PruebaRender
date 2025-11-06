@@ -3,6 +3,7 @@ package com.mdnch.webmdnch.service.impl;
 import com.mdnch.webmdnch.dto.request.UsuarioRequest;
 import com.mdnch.webmdnch.dto.response.UsuarioResponse;
 import com.mdnch.webmdnch.entity.UsuarioEntity;
+import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.UsuarioMapper;
 import com.mdnch.webmdnch.repository.UsuarioRepository;
 import com.mdnch.webmdnch.service.UsuarioService;
@@ -31,7 +32,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         Optional<UsuarioEntity> existente = usuarioRepository.findByUsername(request.getUsername());
         if (existente.isPresent()) {
-            throw new RuntimeException("El username ya está en uso.");
+            throw new ResourceNotFoundException("El username ya está en uso.");
         }
 
         UsuarioEntity entity = new UsuarioEntity();

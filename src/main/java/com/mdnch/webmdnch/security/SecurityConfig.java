@@ -65,16 +65,16 @@ public class SecurityConfig {
 
                 // --- AGENDA ---
                 .requestMatchers(HttpMethod.GET, "/api/authentication/agenda", "/api/authentication/agenda/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/authentication/agenda/registrar").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PUT, "/api/authentication/agenda/{id}").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PATCH, "/api/authentication/agendaedit/{id}").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/authentication/agenda/{id}").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/api/authentication/agenda/registrar").hasAnyRole("ADMINISTRADOR", "ALCALDIA")
+                .requestMatchers(HttpMethod.PUT, "/api/authentication/agenda/{id}").hasAnyRole("ADMINISTRADOR", "ALCALDIA")
+                .requestMatchers(HttpMethod.PATCH, "/api/authentication/agendaedit/{id}").hasAnyRole("ADMINISTRADOR", "ALCALDIA")
+                .requestMatchers(HttpMethod.DELETE, "/api/authentication/agenda/{id}").hasAnyRole("ADMINISTRADOR", "ALCALDIA")
 
                 // --- BANNER ---
                 .requestMatchers(HttpMethod.GET, "/api/authentication/banners", "/api/authentication/banners/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/authentication/banner/registrar").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.PUT, "/api/authentication/banners/{id}").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PATCH, "/api/authentication/bannersedit/{id}").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PATCH, "/api/authe  ntication/bannersedit/{id}").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.DELETE, "/api/authentication/banners/{id}").hasRole("ADMINISTRADOR")
 
                 // --- CONSEJO MUNICIPAL ---
@@ -126,10 +126,10 @@ public class SecurityConfig {
 
                 // --- NOTICIAS ---
                 .requestMatchers(HttpMethod.GET, "/api/authentication/noticias", "/api/authentication/noticias/{id}", "/api/authentication/noticias/top5").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/authentication/noticias/crear").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PUT, "/api/authentication/noticias/{id}").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PATCH, "/api/authentication/noticiasedit/{id}").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/authentication/noticias/{id}").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/api/authentication/noticias/crear").hasAnyRole("ADMINISTRADOR", "IMAGEN")
+                .requestMatchers(HttpMethod.PUT, "/api/authentication/noticias/{id}").hasAnyRole("ADMINISTRADOR", "IMAGEN")
+                .requestMatchers(HttpMethod.PATCH, "/api/authentication/noticiasedit/{id}").hasAnyRole("ADMINISTRADOR", "IMAGEN")
+                .requestMatchers(HttpMethod.DELETE, "/api/authentication/noticias/{id}").hasAnyRole("ADMINISTRADOR", "IMAGEN")
 
                 // --- NÚMEROS DE EMERGENCIA ---
                 .requestMatchers(HttpMethod.GET, "/api/authentication/numeros", "/api/authentication/numeros/{id}").permitAll()
