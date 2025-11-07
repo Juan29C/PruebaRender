@@ -8,6 +8,7 @@ import com.mdnch.webmdnch.entity.TransparenciaEntity;
 import com.mdnch.webmdnch.exception.ResourceNotFoundException;
 import com.mdnch.webmdnch.mapper.PeriodoMapper;
 import com.mdnch.webmdnch.mapper.TransparenciaMapper;
+import com.mdnch.webmdnch.repository.PeriodoRepository;
 import com.mdnch.webmdnch.repository.TransparenciaRepository;
 import com.mdnch.webmdnch.service.TransparenciaService;
 import com.mdnch.webmdnch.util.FileUploadUtil;
@@ -32,6 +33,9 @@ public class TransparenciaServiceImpl implements TransparenciaService {
 
     @Autowired
     private TransparenciaMapper transparenciaMapper;
+
+    @Autowired
+    private PeriodoRepository periodoRepository;
 
     private static final String CARPETA_WEB = "transparencia";
 
@@ -104,22 +108,22 @@ public class TransparenciaServiceImpl implements TransparenciaService {
         TransparenciaEntity transparencia = transparenciaRepository.findById(transparenciaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Transparencia no encontrada"));
 
-        // buscar o crear periodo
-        PeriodoEntity periodo = transparencia.getPeriodos().stream()
-                .filter(p -> anio.equals(p.getAño()))
-                .findFirst()
+        String anioLimpio = anio.trim();
+
+        // Buscar periodo directamente en la base de datos
+        PeriodoEntity periodo = periodoRepository
+                .findByTransparencia_TransparenciaIdAndAño(transparenciaId, anioLimpio)
                 .orElseGet(() -> {
                     PeriodoEntity nuevo = new PeriodoEntity();
-                    nuevo.setAño(anio);
+                    nuevo.setAño(anioLimpio);
                     nuevo.setTransparencia(transparencia);
                     nuevo.setFechaCreacion(LocalDate.now());
                     nuevo.setResponsable("young flex");
-                    transparencia.getPeriodos().add(nuevo);
                     return nuevo;
                 });
 
         // ruta física: documentos/transparencia/{id}/{anio}/
-        final String carpetaDestino = "documentos/" + CARPETA_WEB + "/" + transparenciaId + "/" + anio + "/";
+        final String carpetaDestino = "documentos/" + CARPETA_WEB + "/" + transparenciaId + "/" + anioLimpio + "/";
 
         if (trimestre1 != null && !trimestre1.isEmpty())
             periodo.setTrimestre1(FileUploadUtil.guardarArchivo(trimestre1, carpetaDestino));
@@ -134,7 +138,15 @@ public class TransparenciaServiceImpl implements TransparenciaService {
             periodo.setTrimestre4(FileUploadUtil.guardarArchivo(trimestre4, carpetaDestino));
 
         periodo.setFechaModificacion(LocalDate.now());
-        transparenciaRepository.saveAndFlush(transparencia);
+
+        // Guardar el periodo de forma independiente
+        periodoRepository.save(periodo);
+
+        // Asegurar que la transparencia tenga el periodo agregado
+        if (!transparencia.getPeriodos().contains(periodo)) {
+            transparencia.getPeriodos().add(periodo);
+            transparenciaRepository.save(transparencia);
+        }
 
         return construirResponseConDocumentos(transparencia);
     }
