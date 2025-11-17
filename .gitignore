@@ -31,3 +31,28 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker ###
+.dockerignore
+docker-compose.override.yml
+
+### Variables de entorno ###
+.env
+.env.local
+.env.production
+.env.*.local
+
+### Archivos de producción sensibles ###
+application-local.properties
+application-dev.properties
+
+### Logs ###
+*.log
+logs/
+
+### Archivos del sistema ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~

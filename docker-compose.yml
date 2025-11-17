@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Base de datos MySQL (opcional para desarrollo local)
+  mysql:
+    image: mysql:8.0
+    container_name: webmdnch-mysql
+    environment:
+      MYSQL_DATABASE: web_mdnch_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: mdnch_user
+      MYSQL_PASSWORD: mdnch_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - webmdnch-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Aplicación Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webmdnch-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Configuración de base de datos
+      DATABASE_URL: jdbc:mysql://mysql:3306/web_mdnch_db?useSSL=false&serverTimezone=America/Lima&allowPublicKeyRetrieval=true
+      DATABASE_USERNAME: mdnch_user
+      DATABASE_PASSWORD: mdnch_password
+      
+      # JWT
+      JWT_SECRET: OYDDIeIjzB7ifqcxzfri/11CwOTk6eQwhpElw88mKPWfV84gWjw/lqzFgqPbPAn7d3gjIoVQFGA67pHGqzr4JQ==
+      JWT_EXPIRATION_MS: 86400000
+      
+      # Base URL
+      BASE_URL: http://localhost:8080
+      
+      # Profile activo
+      SPRING_PROFILES_ACTIVE: prod
+    volumes:
+      # Volúmenes para persistir imágenes y documentos
+      - ./imagenes:/app/imagenes
+      - ./documentos:/app/documentos
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - webmdnch-network
+    restart: unless-stopped
+
+networks:
+  webmdnch-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
