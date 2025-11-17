@@ -1,0 +1,92 @@
+========================================
+VARIABLES DE ENTORNO PARA RENDER
+========================================
+
+COPIAR Y PEGAR UNA POR UNA EN RENDER DASHBOARD
+
+Ir a: https://dashboard.render.com
+Seleccionar tu servicio > Environment > Add Environment Variable
+
+========================================
+VARIABLE 1 de 8
+========================================
+Key: DATABASE_URL
+Value: jdbc:mysql://158.69.104.108:3306/wwwgobch_web_mdnch?useSSL=false&serverTimezone=America/Lima&allowPublicKeyRetrieval=true
+
+========================================
+VARIABLE 2 de 8
+========================================
+Key: DATABASE_USERNAME
+Value: wwwgobch_user_web_mdnch
+
+========================================
+VARIABLE 3 de 8
+========================================
+Key: DATABASE_PASSWORD
+Value: MDNCH*2025
+
+========================================
+VARIABLE 4 de 8
+========================================
+Key: JWT_SECRET
+Value: OYDDIeIjzB7ifqcxzfri/11CwOTk6eQwhpElw88mKPWfV84gWjw/lqzFgqPbPAn7d3gjIoVQFGA67pHGqzr4JQ==
+
+========================================
+VARIABLE 5 de 8
+========================================
+Key: JWT_EXPIRATION_MS
+Value: 86400000
+
+========================================
+VARIABLE 6 de 8
+========================================
+Key: BASE_URL
+Value: https://tu-app.onrender.com
+
+IMPORTANTE: Reemplaza "tu-app" con el nombre real de tu aplicación en Render.
+Ejemplo: https://webmdnch-backend.onrender.com
+
+========================================
+VARIABLE 7 de 8
+========================================
+Key: SPRING_PROFILES_ACTIVE
+Value: prod
+
+========================================
+VARIABLE 8 de 8
+========================================
+Key: JAVA_OPTS
+Value: -Xmx512m -Xms256m
+
+========================================
+DESPUÉS DE CONFIGURAR
+========================================
+
+1. Click en "Save Changes" en Render
+2. Render redespleará automáticamente (5-10 minutos)
+3. Monitorea los logs en tiempo real
+4. Verifica: https://tu-app.onrender.com/actuator/health
+
+Debería responder: {"status":"UP"}
+
+========================================
+NOTAS IMPORTANTES
+========================================
+
+- NO se configura en Docker ni en el código
+- TODO se configura en Render Dashboard
+- El Dockerfile ya está correcto
+- Solo falta la configuración de variables de entorno
+
+========================================
+POSIBLES PROBLEMAS
+========================================
+
+Si la BD no conecta:
+1. Verifica que el servidor MySQL (158.69.104.108) permita acceso remoto
+2. Configura whitelist de IPs de Render en tu hosting
+3. Asegúrate que el puerto 3306 esté abierto
+4. El asterisco (*) en la contraseña podría causar problemas
+   - Si falla, cambia la contraseña o usa: MDNCH%2A2025
+
+Para más detalles: Lee SOLUCION-ERROR-RENDER.md
